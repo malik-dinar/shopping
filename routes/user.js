@@ -290,7 +290,7 @@ router.post('/sendotp',(req,res)=>{
                 .then(verification =>{
                   console.log(verification.status)
                 //  req.session.preuser=response.user
-                req.session.user=response.user
+                req.session.user=response.user //sthyuh
                   res.render('user/otp-page',{otpSend:true})
                 })
     } else {
