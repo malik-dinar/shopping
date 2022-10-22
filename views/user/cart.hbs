@@ -1,0 +1,308 @@
+<div class="site-section">
+    {{#if products}}
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="site-blocks-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="product-thumbnail">Image</th>
+                                <th class="product-name">Product</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                {{!-- <th class="product-total">Total</th> --}}
+                                <th class="product-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products}}
+                            <tr>
+                                <td class="product-thumbnail">
+                                    <img src="/product-images/{{this.product._id}}.jpg" alt="Image"
+                                        style="width: 200px; height: 130px;" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black">{{this.product.name}}</h2>
+                                </td>
+                                <td>Rs.{{this.product.price}}</td>
+                                <td>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-primary js-btn-minus"
+                                                onclick="return changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)"> &minus; </button>
+                                        </div>
+                                        <span class="form-control text-center" id="{{this.product._id}}"
+                                            style="max-width: 59px;">{{this.quantity}}</span>
+                                        {{!-- <input type="number" class="form-control text-center"                                                                                                                                                                                             
+                                            value="{{this.quantity}}" style="max-width: 59px;"> --}}
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-primary js-btn-plus"
+                                                onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)" > &plus; </button>
+                                        </div>
+                                    </div>
+                                </td>
+                                {{!-- <td>Rs.{{totalOne}}</td> --}}
+                                {{!-- <td>Rs.10000 </td> --}}
+                                {{!--<td><strong class="text-black" id="{{this.product._id}}">Rs.{{totalOne.totalOne}}</strong></td> --}}
+                          
+                                <td><button class="btn btn-primary btn-sm"
+                                        onclick="removeProduct('{{this._id}}','{{this.product._id}}')">X</button></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row mb-5">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <a href="/continue-shopping" class="btn btn-primary btn-sm btn-block">Back to Shopping</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/continue-shopping" class="btn btn-outline-primary btn-sm btn-block">Continue Shopping</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text-black h4" for="coupon">Coupon</label>
+                        <p>Enter your coupon code if you have one.</p>
+                    </div>
+                    <div class="col-md-8 mb-3 mb-md-0">
+                        <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary btn-sm">Apply Coupon</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pl-5">
+                <div class="row justify-content-end">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-12 text-right border-bottom mb-5">
+                                <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            </div>
+                        </div>
+                        {{!-- <div class="row mb-3">
+                            <div class="col-md-6">
+                                <span class="text-black">Subtotal</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black"  id="total" >Rs.{{total}}</strong>
+                            </div>
+                        </div> --}}
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <span class="text-black">Total</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black" id="total" >Rs.{{total}}</strong>
+                                {{!-- span id="total" --}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="/place-order" class="btn btn-primary btn-lg py-3 btn-block">Proceed To Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="container">
+        <div class="row mb-5  d-flex justify-content-center">
+            <div class="card" style="width: 30rem;">
+                <h1 class="headinggg">Your cart is empty</h1>
+                <img class="card-img-top " src="/product-images/cart-empty.webp" alt="Card image cap">
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</div>
+
+
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-white text-muted">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with us on social networks:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links  -->
+  <section class="">
+    <div class="container text-center text-md-start mt-5">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            <i class="fas fa-gem me-3 text-secondary"></i>D Dress
+          </h6>
+          <p>
+            Evening events are prime time for fashion. You look your best when you feel your best, and our dress can inspire confidence in anyone.
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Products
+          </h6>
+          <p>
+            <a href="#!" class="text-reset">Shirt</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">pant</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">kurthi</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">leggins</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Useful links
+          </h6>
+          <p>
+            <a href="#!" class="text-reset">Pricing</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Settings</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Orders</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Help</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+          <p><i class="fas fa-home me-3 text-secondary"></i> kochi, kerala, India</p>
+          <p>
+            <i class="fas fa-envelope me-3 text-secondary"></i>
+            malik@gmail.com
+          </p>
+          <p><i class="fas fa-phone me-3 text-secondary"></i>+91 8129520382</p>
+          <p><i class="fas fa-print me-3 text-secondary"></i>+91 8235267845</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links  -->
+
+  <!-- Copyright -->
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+    © 2021 :
+    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">Ddress.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+
+
+    
+
+<script>
+    function changeQuantity(cartId, proId, userId, count) {
+        let quantity = parseInt(document.getElementById(proId).innerHTML)
+        count = parseInt(count)
+        $.ajax({
+            url: '/change-product-quantity',
+            data: {     
+                cart:cartId,
+                product: proId,
+                user:userId,
+                count: count,
+                quantity: quantity
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.removeProduct) {
+                    alert("Product Removed from cart")
+                    location.reload()
+                } else {
+                    document.getElementById(proId).innerHTML = quantity + count
+                    document.getElementById('total').innerHTML = response.total
+                }
+            }
+        })
+    }
+
+
+    function removeProduct(cartId, proId) {
+        $.ajax({
+            url: '/remove-product',
+            data: {
+                cart: cartId,
+                product: proId,
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.removeProduct) {
+                    confirm("('Are you want to delete this cart')")
+                    location.reload()
+                }
+            }
+        })
+    }
+</script>
+
+{{!-- else{
+document.getElementById(proId).innerHTML=quantity+count
+} --}}

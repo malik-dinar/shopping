@@ -1,0 +1,69 @@
+{{!-- 
+
+<div class="container ">
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div class="site-blocks-table mt-5">
+        <h4  style="color: #553c9a;text-align: center;">Product Details</h4>
+        <table class="table table-bordered mt-4">
+          <thead>
+            <tr>
+              <th class="product-thumbnail">Image</th>
+              <th class="product-name">Product</th>
+              <th class="product-price">Price</th>
+              <th>Quantity</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {{#each products}}
+            <tr>
+              <td class="product-thumbnail">
+                <img src="/product-images/{{this.product._id}}.jpg" alt="Image" style="width: 200px; height: 130px;"
+                  class="img-fluid">
+              </td>
+              <td class="product-name">
+                <h2 class="h5 text-black">{{this.product.name}}</h2>
+              </td>
+              <td>Rs.{{this.product.price}}</td>
+              <td>{{this.quantity}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div> --}}
+
+
+<section  class="h-100 mt-4  ">
+      <h2 class="text-center">Product Details</h2>
+    
+      <div class="container  table-responsive">
+        <table class="table shadow text-center ">
+          <thead class="table-dark">
+            <tr>
+            <th >Image</th>
+              <th scope="col">Product</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody class="searchable "> 
+            {{#each products}}         
+            <tr >
+         <td class="product-thumbnail">
+                <img src="/product-images/{{this.product._id}}.jpg" alt="Image" style="width: auto;height: 8rem;"
+                  class="img-fluid">
+              </td>
+              <td class="p-5">{{this.product.name}}</td>
+              <td class="p-5">Rs.{{this.product.price}}</td>
+              <td class="p-5">{{this.quantity}}</td>   
+              {{/each}}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+</section>

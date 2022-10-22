@@ -1,0 +1,106 @@
+<section style="    width: 80%; padding-left: 2rem;">
+  <div>
+    <h1>Add product</h1>
+    <form action="/admin/add-product" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="formGroupExampleInput">Product Name</label>
+        <input type="text" class="form-control" id="formGroupExampleInput" name="name" placeholder="name">
+      </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput2">Categoty</label>
+        <select class="form-select" name="category" aria-label="Default select example">
+          <option></option>
+          {{#each datacategory}}
+          <option value="{{this.categories}}">{{this.categories}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput2">price</label>
+        <input type="number" class="form-control" id="formGroupExampleInput2" name="price" placeholder="price">
+      </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput2">Description</label>
+        <input type="text" class="form-control" id="formGroupExampleInput2" name="description"
+          placeholder="Description">
+      </div>
+      <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image" onchange="show(event)"
+          required>
+        <img src="" id="image1" alt="" class="imggmi" style="height:100px">
+      </div>
+      <div style="display:flex">
+        <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
+      </div>
+      <button type="button" class=" btn btn-outline-info " id="crop-1" >Crop</button>
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </form>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<script>
+
+  const imagebox1 = document.getElementById('screen1')
+  const crop_btn1 = document.getElementById('crop-1')
+  const input1 = document.getElementById('imgFile')
+
+
+  function viewImage1(event) {
+    var fileInput1 = document.getElementById('imgFile');
+    var filePath1 = fileInput1.value;
+    var allowedExtensions = /(\.jpg)$/i;
+    if (!allowedExtensions.exec(filePath1)) {
+      fileInput1.value = '';
+      swal("There is a problem!", "Please choose image file.");
+      return false;
+    } else {
+      document.getElementById('image1').src = URL.createObjectURL(event.target.files[0])
+    }
+  }
+
+  input1.addEventListener('change', () => {
+    const img_data1 = input1.files[0]
+    const url1 = URL.createObjectURL(img_data1)
+    imagebox1.innerHTML = `<img src="${url1}" id="img1" style="width:100%;">`
+    const img1 = document.getElementById('img1')
+    document.getElementById('screen1').style.display = 'block'
+
+    document.getElementById('crop-1').style.display = 'block'
+    document.getElementById('image1').style.display = 'block'
+
+    const cropper1 = new Cropper(img1, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 50,
+      minCropBoxHeight: 50,
+      aspectRatio: 1 / 1,
+    })
+
+    crop_btn1.addEventListener('click', () => {
+
+      cropper1.getCroppedCanvas().toBlob((blob) => {
+        let fileInputElement1 = document.getElementById('imgFile');
+        let file1 = new File([blob], img_data1.name, { type: "image/*", lastModified: new Date().getTime() });
+        let container1 = new DataTransfer();
+        container1.items.add(file1);
+        fileInputElement1.files = container1.files;
+        document.getElementById('image1').src = URL.createObjectURL(fileInputElement1.files[0])
+        document.getElementById('screen1').style.display = 'none'
+        document.getElementById('crop-1').style.display = 'none'
+      })
+    })
+
+  })
+
+</script>

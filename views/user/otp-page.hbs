@@ -1,0 +1,122 @@
+<style>
+.title{
+  font-weight:600;
+  margin-top:20px;
+  font-size:24px
+}
+
+.customBtn{
+  border-radius:0px;
+  padding:10px;
+}
+
+form input{
+  display:inline-block;
+  width:50px;
+  height:50px;
+  text-align:center;
+}   
+</style>
+
+
+
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <!-- Pills navs -->
+            <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="tab-login" data-mdb-toggle="pill" href="#pills-login" role="tab"
+                        aria-controls="pills-login" aria-selected="true">Login</a>
+                </li>
+
+            </ul>
+            <!-- Pills navs -->
+
+            <!-- Pills content -->
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+                    <form action="/sendotp" method="post">
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="" name="number" class="form-control" />
+                            <label class="form-label" for="">Mobile number</label>
+                        </div>
+                        {{#if noaccount}}
+                        <p class="text-danger">number is not verified</p>
+                        {{/if}}
+                        <button type="submit" class="btn btn-primary btn-block mb-4">Get OTP</button>
+
+
+                    </form>
+
+
+                    {{#if otpSend}}
+                    <p class="text-success">otp successfully sent</p>
+                    {{/if}}
+
+                    <form action="/verifyotp" class="digit-group" data-group-name="digits" data-autosubmit="false"autocomplete="off" method="post">
+                        <!--otp input -->
+                        <div class="form-outline mb-4 " style="text-align: center;">
+                            {{!-- <input type="number" name="otp" id="" class="form-control" /> --}}
+                                <input type="text" id="digit-1" name="digit-1" data-next="digit-2"/>
+                                <input type="text" id="digit-2" name="digit-2" data-next="digit-3"data-previous="digit-1" />
+                                <input type="text" id="digit-3" name="digit-3" data-next="digit-4"data-previous="digit-2" />
+                                <input type="text" id="digit-4" name="digit-4" data-next="digit-5"data-previous="digit-3" />
+                                <input type="text" id="digit-5" name="digit-5" data-next="digit-6"data-previous="digit-4" />
+                                <input type="text" id="digit-6" name="digit-6" data-previous="digit-5"/>
+                        </div>
+                        {{#if otpErr}}
+                        <p class="text-danger">incorrect otp</p>
+                        {{/if}}
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+
+                    </form>
+
+
+
+                    <!-- Register buttons -->
+                    <div class="text-center">
+                        <p>Not a member? <a href="/sign" method="get">Register</a></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{!-- <form action="/verifyotp" method="post">
+        <input type="text" name="otp" id="" class="form-control" />
+        <button type="submit">ok</button>
+    </form> --}}
+    <script>
+
+        $('.digit-group').find('input').each(function () {
+            $(this).attr('maxlength', 1);
+            $(this).on('keyup', function (e) {
+                var parent = $($(this).parent());
+
+                if (e.keyCode === 8 || e.keyCode === 37) {
+                    var prev = parent.find('input#' + $(this).data('previous'));
+
+                    if (prev.length) {
+                        $(prev).select();
+                    }
+                } else if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
+                    var next = parent.find('input#' + $(this).data('next'));
+
+                    if (next.length) {
+                        $(next).select();
+                    } else {
+                        if (parent.data('autosubmit')) {
+                            parent.submit();
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+
+  

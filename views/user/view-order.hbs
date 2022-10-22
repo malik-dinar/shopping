@@ -1,0 +1,65 @@
+<section>
+    <div class="container">
+        <table class="table mt-4" id="usersTable">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">date</th>
+                    <th scope="col">name</th>
+                    <th scope="col">address</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">mobile</th>
+                    <th scope="col">Details</th>    
+                    <th scope="col">status</th>
+                    <th scope="col">orders</th>
+                    <th scope="col">cancel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td ><span class="create_index"></span></td>
+                    <td>{{this.date}}</td>
+                    <td class="text-capitalize"> {{this.deliveryDetails.name}}</td>           
+                    <td>{{this.deliveryDetails.address}} {{this.deliveryDetails.pincode}} {{this.deliveryDetails.state}} {{this.deliveryDetails.address2}}</td>
+                    <td>{{this.deliveryDetails.email}} {{this.deliveryDetails.email2}}</td>
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>Price:{{this.totalAmount}} 
+                    {{!-- <br>Qty:{{this.quantity}} --}}
+                    </td>
+                    <td><p class="badge btn-danger text-capitalize" id="{{this._id}}">{{this.status}}</p> </td>                                   
+                    <td><a href="/view-ordered-products/{{this._id}}" class="btn" style="color: white;background-color: black;">View products</a></td>
+                    {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="return confirm('Are you want to Cancel this order ')">Cancel Order</a></td> --}}
+                    {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="">Cancel Order</a></td> --}}
+                    <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Cancel Order</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<script>
+    var divs = document.querySelectorAll('.create_index');
+    for (var i = 0; i < divs.length; ++i) {
+        divs[i].innerHTML = i + 1;
+    }
+
+    function changeStatusCancel(orderId){
+            $.ajax({
+            url:'/change-order-status-to-cancel',                                                                                                   
+            data:{
+                order:orderId
+            },
+            method: 'post',
+            success:(response)=>{
+                console.log('Reached')
+                console.log(response)
+                document.getElementById(orderId).innerHTML="Cancelled"
+            }
+        })
+    }   
+</script>
+
+

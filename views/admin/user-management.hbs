@@ -1,0 +1,47 @@
+<section>
+    <div class="container">
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">index</th>
+                    <th scope="col">name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Block</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each user}}
+                <tr>
+                    <td ><span class="create_index"></span></td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.email}}</td>
+                    {{#if this.isBlocked}}
+                    <td><a href="/admin/user-unblock/{{this._id}}" id="" class="btn" style="color: white;background-color: red;"
+                            onclick="return confirm('Are you want to unblock this {{this.name}} user')">Un Block</a></td>
+                    {{else}}
+                    <td><a href="/admin/user-block/{{this._id}}" id="" class="btn" style="color: white;background-color: red;"
+                            onclick="return confirm('Are you want to unblock this {{this.name}} user')">Block</a></td>
+                    {{/if}}        
+                    {{!--/admin/{{this._id}} onclick="return confirm('Are you want to bloock this {{this.name}} user')"
+                    --}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{{!-- <script>
+    function block() {
+        document.getElementById('userajay')
+        console.log({{ this._id }})
+    }
+</script> --}}
+
+
+<script>
+    var divs = document.querySelectorAll('.create_index');
+    for (var i = 0; i < divs.length; ++i) {
+        divs[i].innerHTML = i + 1;
+    }
+</script>

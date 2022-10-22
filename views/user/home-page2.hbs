@@ -1,0 +1,146 @@
+<div class="container mx-auto mt-4">
+  <div class="row d-flex justify-content-center">
+    {{#each products}}
+    <div class="col-md-4 d-flex justify-content-center">
+       <a href="/product-view/{{this._id}}" style="text-decoration: none;" >   
+      <div class="card" style="width: 18rem;">
+       
+        <img style="width: 16rem; height: 16rem;" src="/product-images/{{this._id}}.jpg" alt="">
+        
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">Rs.{{this.price}} </h6>
+          <h5 class="card-title text-muted">{{this.name}}</h5>
+          <p class="card-text text-muted">{{this.category}}</p>
+          <p class="card-text text-muted">{{this.description}}</p>
+          <a href="/add-to-cart/{{this._id}}" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;"></i>Add to Cart</a>
+          <a href="#" class="btn" style="background-color: rgb(196, 39, 39); color: aliceblue;"></i>Buy Now</a>
+        </div>
+      </div>
+       </a> 
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-white text-muted">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with us on social networks:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="" class="me-4 link-secondary">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links  -->
+  <section class="">
+    <div class="container text-center text-md-start mt-5">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            <i class="fas fa-gem me-3 text-secondary"></i>D Dress
+          </h6>
+          <p>
+            Evening events are prime time for fashion. You look your best when you feel your best, and our dress can inspire confidence in anyone.
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Products
+          </h6>
+          <p>
+            <a href="#!" class="text-reset">Shirt</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">pant</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">kurthi</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">leggins</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Useful links
+          </h6>
+          <p>
+            <a href="#!" class="text-reset">Pricing</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Settings</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Orders</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Help</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+          <p><i class="fas fa-home me-3 text-secondary"></i> kochi, kerala, India</p>
+          <p>
+            <i class="fas fa-envelope me-3 text-secondary"></i>
+            malik@gmail.com
+          </p>
+          <p><i class="fas fa-phone me-3 text-secondary"></i>+91 8129520382</p>
+          <p><i class="fas fa-print me-3 text-secondary"></i>+91 8235267845</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links  -->
+
+  <!-- Copyright -->
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+    © 2021 :
+    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">Ddress.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>

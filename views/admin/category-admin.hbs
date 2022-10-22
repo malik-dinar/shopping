@@ -1,0 +1,45 @@
+<section>
+    <div class="container">
+         <div class="row mt-4">
+            <h1>Add Category</h1>
+                <form action="/admin/add-category" method="post" class="form-check mb-3 mb-md-0" >
+                   <input type="text" name="categories" id="loginPassword" class="form-control" required/>
+                    <label class="form-label"  for="loginPassword">Category</label>
+                    <p class="text-danger fs-bold">{{CatErr}}</p>
+                    <button  type="submit" class="btn btn-success ml-auto mt-3" style="width: 18%;" >Submit</button>
+                </form>
+        </div>
+        <table class="table mt-4" id="usersTable">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each datacategory}}
+                <tr>
+                    <td ><span class="create_index"></span></td>
+                    <td>{{this.categories}}</td>
+                    <td><a href="/admin/edit-category/{{this.categories}}" class="btn" style="color: white;background-color: black;">Edit</a></td>
+                    <td> <a href="/admin/delete-category/{{this.categories}}" class="btn" style="color: red;" onclick="return confirm('Are you want to delete {{this.categories}}')">Delete</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{{!-- <script>
+  $(document).ready( function () {
+    $('#usersTable').DataTable();
+} );
+</script> --}}
+<script>
+    var divs = document.querySelectorAll('.create_index');
+    for (var i = 0; i < divs.length; ++i) {
+        divs[i].innerHTML = i + 1;
+    }
+</script>

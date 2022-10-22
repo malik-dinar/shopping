@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+
+
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="tab-register" data-mdb-toggle="pill" href="#pills-register" role="tab"
+                        aria-controls="pills-register" aria-selected="false">Register</a>
+                </li>
+                
+            <div class="tab-pane" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+                <form action="/signup" method="post">
+                    <div class="text-center mb-3">
+
+                    <!-- Name input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="name" name="name" onblur="validateName()" class="form-control" required />
+                        <label class="form-label" for="registerName">Name</label>
+                    </div>
+                    <span class="text-danger" id="fname-error"></span>
+                    
+
+                    <!-- Username input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="contact-mobile" name="number" onblur="validateMobile()" class="form-control" required />
+                        <label class="form-label" for="registerUsername">Phone number</label>
+                    </div>
+                    <span class="text-danger" id="mobile-error"></span>
+
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <input type="email" id="contact-email" name="email" class="form-control" onblur="validateEmail()" required />
+                        <label class="form-label" for="registerEmail">Email</label>
+                    </div>
+                    <span class="text-danger" id="email-error"></span>
+
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <input type="password" id="contact-password" name="password" class="form-control" onblur="validatePassword()" required />
+                        <label class="form-label" for="registerPassword">Password</label>
+                    </div>
+                    <span class="text-danger" id="password-error"></span>
+
+                    <!-- Repeat Password input -->
+                    <div class="form-outline mb-4">
+                        <input type="password" id="contact-password" class="form-control" name="text" onblur="validatePassword()" required />
+                        <label class="form-label" for="registerRepeatPassword">Repeat password</label>
+                    </div>
+                    <span class="text-danger" id="password-error"></span>
+
+                    <!-- Checkbox -->
+                    <div class="form-check d-flex justify-content-center mb-4">
+                        <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" checked
+                            aria-describedby="registerCheckHelpText" />
+                        <label class="form-check-label" for="registerCheck">
+                            I have read and agree to the terms
+                        </label>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
+                     <a href="/loginn" method="get">Already logged in ?</a>
+                </form>
+            </div>
+        </div>
+        <!-- Pills content -->
+    </div>
+</div>

@@ -1,0 +1,59 @@
+{{!-- <div class="container ">
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div class="site-blocks-table mt-5">
+     <h4  style="color: #553c9a;text-align: center;">User Details</h4>
+        <table class="table table-bordered mt-5" >
+          <thead>
+            <tr>
+              <th class="product-thumbnail">Id</th>
+              <th class="product-name">name</th>
+              <th class="product-price">email</th>
+              <th>Phone number</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {{#each users}}
+            <tr>
+              <td >{{users._id}}</td>
+              <td class="text-capitalize" >{{users.name}}</td>
+              <td>{{users.email}}</td>
+              <td>{{users.number}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div> --}}
+
+
+<section  class="h-100 mt-4  ">
+      <h2 class="text-center">User Details</h2>
+    
+      <div class="container  table-responsive">
+        <table class="table shadow text-center ">
+          <thead class="table-dark">
+            <tr>
+            <th >Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">phone number</th>
+            </tr>
+          </thead>
+          <tbody class="searchable "> 
+            {{#each users}}         
+            <tr >
+              <td >{{users._id}}</td>
+              <td class="text-capitalize" >{{users.name}}</td>
+              <td>{{users.email}}</td>
+              <td>{{users.number}}</td> 
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+</section>

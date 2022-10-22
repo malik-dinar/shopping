@@ -1,0 +1,54 @@
+
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/add-product" class="btn btn-success ml-auto" style="width: 18%;">Add products</a>
+        </div>
+        <table  class="table mt-4" id="productsTable">
+            {{!--   class="cell-border compact stripe" --}}
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td ><span class="create_index"></span></td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.category}}</td>            
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                                        
+                    <td><img style="width: 50px; height: 50px;" src="/product-images/{{this._id}}.jpg" alt=""></td>
+                    <td><a href="/admin/edit-product/{{this._id}}" class="btn" style="color: white;background-color: black;">Edit</a></td>
+                    <td> <a href="/admin/delete-product/{{this._id}}" class="btn" style="color: red;" onclick="return confirm('Are you want to delete {{this.name}} user')">Delete</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<script>
+  $(document).ready( function () {
+    $('#productsTable').DataTable({
+        searching:false   
+    });
+} );
+</script>
+<script>
+    var divs = document.querySelectorAll('.create_index');
+    for (var i = 0; i < divs.length; ++i) {
+        divs[i].innerHTML = i + 1;
+    }
+</script>
