@@ -10,7 +10,7 @@ const Razorpay = require('razorpay');
 const { resolve } = require('node:path')
 
 //paypal
-const paypal = require('paypal-rest-sdk');
+var paypal = require('paypal-rest-sdk');
 
 
 var instance = new Razorpay({
@@ -335,7 +335,11 @@ module.exports = {
     getCartProductList: (userId) => {
         return new Promise(async (resolve, reject) => {
             let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
-            resolve(cart.products)
+            if (cart) {
+                resolve(cart.products)
+            } else {
+                resolve()
+            }
         })
     },
     //====================Place Order====================
@@ -364,7 +368,6 @@ module.exports = {
                             address: '$UserAddress.address',
                             state: '$UserAddress.state',
                             pincode: '$UserAddress.pincode'
-
                         }
                     },
                     {
@@ -602,7 +605,7 @@ module.exports = {
                 }
             ]).toArray()
             // console.log(cartItems[0].products);
-            console.log('addresssssssssssssssssssssssssssssssss');
+
             console.log(address);
             if (address.length === 0) {
                 resolve()
@@ -614,7 +617,7 @@ module.exports = {
     generateRazorpay: (orderId, total) => {
         return new Promise(async (resolve, reject) => {
             let order = await instance.orders.create({
-                amount: total*100,
+                amount: total * 100,
                 currency: "INR",
                 receipt: "" + orderId,
                 notes: {
@@ -641,18 +644,51 @@ module.exports = {
 
         })
     },
-    changePaymentStatus:(orderId)=>{
-        return new Promise((resolve,reject)=>{
+    changePaymentStatus: (orderId) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION)
-            .updateOne({_id:objectId(orderId)},
-            {
-                $set:{
-                    status:'placed'
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: {
+                            status: 'placed'
+                        }
+                    }).then(() => {
+                        resolve()
+                    })
+        })
+    },
+
+    // helper functions 
+
+    createPay: (payment) => {
+        return new Promise((resolve, reject) => {
+            paypal.payment.create(payment, function (err, payment) {
+                if (err) {
+                    reject(err);
                 }
-            }).then(()=>{
-                resolve()
+                else {
+                    resolve(payment);
+                }
+            });
+        });
+    },
+
+    //=============================Delete saved address==========
+
+    deleteAddress: (details) => {
+        console.log('push');
+        console.log(details.addressId);
+        console.log( objectId(details.addressId));
+        return new Promise(async (resolve, reject) => {
+            await db.get().collection(collection.USER_COLLECTIONS)
+                .updateOne({ _id: objectId(details.addressId) },
+                    {
+                        $pull: { UserAddress: { no: details.addressno} }
+                    }
+                ).then((response) => {
+                    resolve({ removeAddress: true })
             })
         })
-    }
+    }   
 }
 
