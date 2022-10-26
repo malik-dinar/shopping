@@ -246,18 +246,17 @@
     $(document).ready(function () {
       $('#checkBtn').click(function () {
         checked = $("input[type=checkbox]:checked").length;
-
         if (!checked) {
           alert("You must Select a Payment Method.");
           return false;
         }
       });
     });
+    
 
     function procedToPayment() {
       addressRadio = document.querySelector('input[name="addressRadio"]:checked').value
       paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value
-
       $.ajax({
         url: '/place-order',
         data: {
@@ -359,8 +358,7 @@
             removeAddress(addressId, addressno);
             swal("Address deleted succesfully..", {
               icon: "success",
-            });
-            console.log('workedddddd')
+            });            
           } else {
             swal("Address is safe");
           }

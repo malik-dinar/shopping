@@ -26,21 +26,19 @@
       </div>
       <div class="form-group">
         <label for="image">Image</label>
-        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image" onchange="show(event)"
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"    {{!-- onchange="show(event)" --}}
           required>
+       
         <img src="" id="image1" alt="" class="imggmi" style="height:100px">
       </div>
       <div style="display:flex">
         <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
       </div>
-      <button type="button" class=" btn btn-outline-info " id="crop-1" >Crop</button>
+      <button type="button" class=" btn btn-outline-info " id="crop-1">Crop</button>
       <button class="btn btn-primary" type="submit">Submit form</button>
     </form>
   </div>
 </section>
-
-
-
 
 
 

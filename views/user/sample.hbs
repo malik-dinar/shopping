@@ -1,0 +1,95 @@
+<script>
+    fetchMonth:()=>{
+        return new Promise(async (resolve, reject) => {
+            let monthNumber = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: { status: "Delivered" }
+                },
+                {
+                    $group:
+                    { _id: { month: { $month: { $toDate: "$date" } } } }
+                },
+                {
+                    $sort:{"_id.month": 1}
+                },
+                {
+                    $project:{_id:0,month:'$_id.month'}
+                }
+            ]).toArray()
+            
+            // let monNumArray=[]
+            monthNumber.forEach(element => {
+                // monNumArray.push(element.month)
+                //element.month="hai"
+
+                function toMonthName(monthNumber) {
+                    const date = new Date();
+                    date.setMonth(monthNumber - 1);
+                  
+                    return date.toLocaleString('en-US', {
+                      month: 'long',
+                    });
+                }
+                element.month=toMonthName(element.month)
+
+            });
+
+            //console.log("################### monthNumber ###################");
+            //console.log(monthNumber);
+            // console.log(monNumArray)
+
+            resolve(monthNumber)
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let totalArray=[]
+
+{{#each sales}}
+  totalArray.push({{this.total}})
+{{/each}}
+console.log(totalArray)
+
+let Month=[]
+
+{{#each monthNames}}
+  Month.push("{{this.month}}")
+{{/each}}
+
+new Chart("pieChart", {
+  type: "doughnut",
+  data: {
+  labels: Month,
+  datasets: [{
+    label: 'My First Dataset',
+    data: totalArray,
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)',
+      'rgb(155, 89, 182 )',
+      'rgb(72, 201, 176)',
+      'rgb(248, 196, 113 )',
+      'rgb(208, 211, 212)',
+    ],
+    hoverOffset: 4
+  }]
+}
+});
+</script>

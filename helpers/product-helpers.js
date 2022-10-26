@@ -25,7 +25,7 @@ module.exports={
     getAllProducts:()=>{
         return new Promise(async(resolve,reject)=>{
             let products=await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-            resolve(products)   
+            resolve(products.reverse())   
         })
     },
     deleteProduct:(proId)=>{
@@ -100,7 +100,6 @@ module.exports={
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.PRODUCT_COLLECTION).find({category:Cate}).toArray().then((product)=>{  //ask       
                 console.log(Cate)
-                console.log('inbetween');
                 console.log(product)
                 resolve(product)
             })

@@ -310,8 +310,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
           })
         .catch((err) => {
           console.log(err);
-          console.log('35');
-          res.redirect('/place-order');
+          res.send('Error');
+          // res.redirect('/place-order');
         });
     } else {
       res.send('Error');

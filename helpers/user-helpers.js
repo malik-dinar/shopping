@@ -490,10 +490,6 @@ module.exports = {
             ]).toArray()
 
             // console.log(users.length);
-            console.log('users');
-            console.log(orderId);
-            console.log(users.user);
-            console.log(users);
             resolve(users)
         })
     },
@@ -658,7 +654,7 @@ module.exports = {
         })
     },
 
-    // helper functions 
+    //====================helper functions paypal============= 
 
     createPay: (payment) => {
         return new Promise((resolve, reject) => {
@@ -673,22 +669,227 @@ module.exports = {
         });
     },
 
-    //=============================Delete saved address==========
+    //=============================Delete saved address===============
 
     deleteAddress: (details) => {
         console.log('push');
         console.log(details.addressId);
-        console.log( objectId(details.addressId));
+        console.log(objectId(details.addressId));
         return new Promise(async (resolve, reject) => {
             await db.get().collection(collection.USER_COLLECTIONS)
                 .updateOne({ _id: objectId(details.addressId) },
                     {
-                        $pull: { UserAddress: { no: details.addressno} }
+                        $pull: { UserAddress: { no: details.addressno } }
                     }
                 ).then((response) => {
                     resolve({ removeAddress: true })
-            })
+                })
         })
-    }   
+    },
+
+    //===========================Total Sale Occurred==================//
+
+    TotalSale: () => {
+        return new Promise(async (resolve, reject) => {
+            let total = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalSale: { $sum: '$totalAmount' }
+                    }
+                }
+            ]).toArray()
+            console.log('to sale');
+            console.log(total[0]);
+            resolve(total[0])
+        })
+    },
+
+
+    //===========================Total number of users==================//
+
+    totalUsers: () => {
+        return new Promise(async (resolve, reject) => {
+            let totalUsers = await db.get().collection(collection.USER_COLLECTIONS).count()
+            resolve(totalUsers)
+        })
+    },
+    //===========================Total number of users==================//
+
+    totalOrders: () => {
+        return new Promise(async (resolve, reject) => {
+            let totalOrders = await db.get().collection(collection.ORDER_COLLECTION).count()
+            resolve(totalOrders)
+        })
+    },
+
+    //===========================GET ALL DATE==================//
+    allDate: () => {
+        return new Promise(async (resolve, reject) => {
+            let allDate = await db.get().collection(collection.ORDER_COLLECTION)
+                .aggregate([
+                    {
+                        $group: {
+                            _id: null, day: { $addToSet: "$date" }
+                        },
+                    },
+                ]).toArray()
+
+            let array = allDate[0].day
+            let newdays=[]
+
+            array.forEach(element =>
+                
+                newdays.push(element.slice(0,-7))
+            );
+                console.log(newdays)
+        })
+    },
+
+    //===========================GET STATUS ACCORDING TO MONTH=====================//
+
+    stausHistory:() =>{
+        let statuses={}
+        return new Promise(async(resolve,reject)=>{
+            let placed=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'placed'
+                    },
+                },
+                { 
+                    $group: { _id: {month1:{ $month:{ $toDate: "$date" } }}, count: { $sum: 1 } } 
+                },
+                {
+                    $sort:{"_id.month1": -1}
+                }
+            ]).toArray()
+            statuses.placedNo=placed[0].count
+
+            let pending=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'pending'
+                    },
+                },
+                { 
+                    $group: { _id: {month2:{ $month:{ $toDate: "$date" } }}, count: { $sum: 1 } } 
+                }
+            ]).toArray()
+            statuses.pendingNo=pending[0].count
+
+            let shipped=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'shipped'
+                    },
+                },
+                { 
+                    $group: { _id: {month3:{ $month:{ $toDate: "$date" } }}, count: { $sum: 1 } } 
+                }   
+            ]).toArray()
+            statuses.shippedNo=shipped[0].count
+    
+
+            let cancelled=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'cancelled'
+                    }
+                },
+                { 
+                    $group: { _id: {month4:{ $month:{ $toDate: "$date" } }}, count: { $sum: 1 } } 
+                }
+            ]).toArray()
+            statuses.cancelledNo=cancelled[0].count
+            console.log(statuses);
+            resolve(statuses)
+        })
+    },
+    getOrders2: () => {
+        return new Promise(async (resolve, reject) => {
+            let order =await db.get().collection(collection.ORDER_COLLECTION).find().sort( { "date": -1 } ).limit(5).toArray()
+            console.log('lew');
+            console.log(order);
+            resolve(order)
+        })
+    },
+
+    monthlySale:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let monthSale= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        status:"placed"
+                    }
+                },
+                {
+                    $group: {
+                        _id: {month:{ $month:{ $toDate: "$date" }}} ,totalSale:{$sum:'$totalAmount'}  
+                    }    
+                },
+                {
+                    $sort:{"_id.month": -1}
+                },
+                {
+                    $project:{
+                        _id:0,
+                        totalSale:1
+                    }
+                }      
+            ]).toArray()
+            let month=monthSale[0].totalSale
+            console.log(month);
+            resolve(month)
+        })
+    },
+    getMonths:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let months= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $group: {
+                        _id: {month:{ $month:{ $toDate: "$date" }}} ,totalSale:{$sum:'$totalAmount'}  
+                    }    
+                },
+                {
+                    $sort:{"_id.month": -1}
+                },
+                {
+                    $limit:6
+                },
+                {
+                    $project:{
+                        _id:0,month:'$_id.month',
+                        //_id:0,month:{$reverseArray:'$_id.month'},
+                        totalSale:1,
+                        //monthii:{$reverseArray:'$_id.month'}
+                    }
+                }
+            ]).toArray()
+            months.forEach(element => {
+                // monNumArray.push(element.month)
+                //element.month="hai"
+
+                function toMonthName(months) {
+                    const date = new Date();
+                    date.setMonth(months - 1);
+                  
+                    return date.toLocaleString('en-US', {
+                      month: 'long',
+                    });
+                }
+                element.month=toMonthName(element.month)
+            }); 
+            console.log(months.reverse()); 
+            console.log(months); 
+            resolve(months.reverse())  
+        })
+    }
+
 }
+
+
+
+
+
 

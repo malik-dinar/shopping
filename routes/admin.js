@@ -234,5 +234,26 @@ router.get('/view-ordered-users-admin/:id',async(req,res)=>{
 })
 
 
+//================================= Admin dashboard =======================//
+
+router.get('/admin-dashboard',async(req,res)=>{
+  let total=await userHelpers.TotalSale()
+  let totalUsers= await userHelpers.totalUsers()
+  let totalOrders= await userHelpers.totalOrders()
+ // let date= await userHelpers.allDate()                                              //daily set
+  let status= await userHelpers.stausHistory()
+  let orders=await userHelpers.getOrders2()
+  let monthlySale= await userHelpers.monthlySale()
+  let getmonths= await userHelpers.getMonths()
+  res.render('admin/admin-dashboard',{admin:true,total,status,totalUsers,totalOrders,orders,monthlySale,getmonths});
+})
+
+router.get('/view-users-products/:id',async(req,res)=>{
+  let users=await userHelpers.getOrderUser(req.params.id)
+  let products=await userHelpers.getOrderProducts(req.params.id)
+  res.render('admin/pro-and-users',{admin:true,users,products})
+})
+
+
 module.exports = router;
 
