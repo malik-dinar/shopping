@@ -240,12 +240,17 @@ router.get('/admin-dashboard',async(req,res)=>{
   let total=await userHelpers.TotalSale()
   let totalUsers= await userHelpers.totalUsers()
   let totalOrders= await userHelpers.totalOrders()
- // let date= await userHelpers.allDate()                                              //daily set
+//  let date= await userHelpers.allDate()                                              //daily set
   let status= await userHelpers.stausHistory()
   let orders=await userHelpers.getOrders2()
   let monthlySale= await userHelpers.monthlySale()
   let getmonths= await userHelpers.getMonths()
-  res.render('admin/admin-dashboard',{admin:true,total,status,totalUsers,totalOrders,orders,monthlySale,getmonths});
+  let getYears= await userHelpers.getYears()
+  let getDays= await userHelpers.getDays()
+  userHelpers.getOrders().then((order)=>{
+    res.render('admin/admin-dashboard',{admin:true,total,status,totalUsers,totalOrders,orders,monthlySale,getmonths,getYears,getDays,order});
+  })
+ 
 })
 
 router.get('/view-users-products/:id',async(req,res)=>{

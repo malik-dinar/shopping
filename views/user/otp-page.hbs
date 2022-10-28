@@ -33,6 +33,7 @@ form input{
             </ul>
             <!-- Pills navs -->
 
+{{#if otpSended}}
             <!-- Pills content -->
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
@@ -54,17 +55,20 @@ form input{
                     {{#if otpSend}}
                     <p class="text-success">otp successfully sent</p>
                     {{/if}}
+{{else}}
 
                     <form action="/verifyotp" class="digit-group" data-group-name="digits" data-autosubmit="false"autocomplete="off" method="post">
                         <!--otp input -->
                         <div class="form-outline mb-4 " style="text-align: center;">
-                            {{!-- <input type="number" name="otp" id="" class="form-control" /> --}}
-                                <input type="text" id="digit-1" name="digit-1" data-next="digit-2"/>
+                            <input type="number" name="otp" id="" class="form-control" />
+                            <label class="form-label" for="">Enter Otp</label>
+
+                                {{!-- <input type="text" id="digit-1" name="digit-1" data-next="digit-2"/>
                                 <input type="text" id="digit-2" name="digit-2" data-next="digit-3"data-previous="digit-1" />
                                 <input type="text" id="digit-3" name="digit-3" data-next="digit-4"data-previous="digit-2" />
                                 <input type="text" id="digit-4" name="digit-4" data-next="digit-5"data-previous="digit-3" />
                                 <input type="text" id="digit-5" name="digit-5" data-next="digit-6"data-previous="digit-4" />
-                                <input type="text" id="digit-6" name="digit-6" data-previous="digit-5"/>
+                                <input type="text" id="digit-6" name="digit-6" data-previous="digit-5"/> --}}
                         </div>
                         {{#if otpErr}}
                         <p class="text-danger">incorrect otp</p>
@@ -73,8 +77,7 @@ form input{
                         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
 
                     </form>
-
-
+{{/if}}
 
                     <!-- Register buttons -->
                     <div class="text-center">
@@ -91,7 +94,6 @@ form input{
         <button type="submit">ok</button>
     </form> --}}
     <script>
-
         $('.digit-group').find('input').each(function () {
             $(this).attr('maxlength', 1);
             $(this).on('keyup', function (e) {

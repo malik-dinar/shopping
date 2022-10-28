@@ -181,10 +181,10 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
             await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(details.order)},{
                 $set:{
-                    status:'cancelled'
+                    status:'cancelled',
                 }
             }).then((response)=>{
-                resolve({status:true})
+                resolve(response)
             })
         })
     }

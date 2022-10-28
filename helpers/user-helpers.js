@@ -114,10 +114,15 @@ module.exports = {
         })
     },
     //====================Add to Cart====================
-    addToCart: ((proId, userId) => {
+    addToCart: (async(proId, userId) => {
+        let proName=await db.get().collection(collection.PRODUCT_COLLECTION).find({ _id: objectId(proId) }).toArray( )
+        console.log('proName.name');
+        console.log(proName);
+        console.log(proName[0].name);
         let proObj = {
             item: objectId(proId),
-            quantity: 1
+            quantity: 1,
+            name:proName[0].name
         }
         return new Promise(async (resolve, reject) => {
             let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
@@ -450,8 +455,9 @@ module.exports = {
     },
     getOrders: () => {
         return new Promise(async (resolve, reject) => {
-            let order = db.get().collection(collection.ORDER_COLLECTION).find().toArray()
-            resolve(order)
+            let order =await db.get().collection(collection.ORDER_COLLECTION).find().toArray()
+            console.log(order)
+            resolve(order.reverse())
         })
     },
     cancelOrder: (proId) => {
@@ -549,6 +555,7 @@ module.exports = {
                 resolve()
             })
         })
+
     },
     //====================change user password====================
     changePassword: (Pass, userId) => {
@@ -692,6 +699,9 @@ module.exports = {
     TotalSale: () => {
         return new Promise(async (resolve, reject) => {
             let total = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                { 
+                    $match: { 'status': { $nin: ['cancelled'] } } 
+                },  
                 {
                     $group: {
                         _id: null,
@@ -734,15 +744,17 @@ module.exports = {
                         },
                     },
                 ]).toArray()
+                console.log('alllllllllllllllllllll');
+                console.log(allDate);
 
-            let array = allDate[0].day
-            let newdays=[]
+            // let array = allDate[0].day
+            // let newdays=[]
 
-            array.forEach(element =>
+            // array.forEach(element =>
                 
-                newdays.push(element.slice(0,-7))
-            );
-                console.log(newdays)
+            //     newdays.push(element.slice(0,-7))
+            // );
+            //     console.log(newdays)
         })
     },
 
@@ -814,15 +826,12 @@ module.exports = {
             resolve(order)
         })
     },
-
     monthlySale:()=>{
         return new Promise(async(resolve,reject)=>{
             let monthSale= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-                {
-                    $match:{
-                        status:"placed"
-                    }
-                },
+                { 
+                    $match: { 'status': { $nin: ['cancelled'] } } 
+                },  
                 {
                     $group: {
                         _id: {month:{ $month:{ $toDate: "$date" }}} ,totalSale:{$sum:'$totalAmount'}  
@@ -845,11 +854,35 @@ module.exports = {
     },
     getMonths:()=>{
         return new Promise(async(resolve,reject)=>{
+            // let yearsForCheck=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            //     {
+            //         $group:{
+            //             _id: {year:{ $year :{ $toDate: "$date" }}}
+            //         }
+            //     },
+            //     {
+            //         $sort:{"_id.year": -1}
+            //     },
+            //     {
+            //         $limit:1
+            //     },
+            //     {
+            //         $project:{
+            //             _id:0,year:'$_id.year',
+            //         }
+            //     }
+            // ]).toArray()
+            // let check=yearsForCheck[0].year
+            // console.log(check)
+            // console.log(yearsForCheck);
             let months= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                { 
+                    $match: { 'status': { $nin: ['cancelled'] } } 
+                },  
                 {
                     $group: {
                         _id: {month:{ $month:{ $toDate: "$date" }}} ,totalSale:{$sum:'$totalAmount'}  
-                    }    
+                    }  
                 },
                 {
                     $sort:{"_id.month": -1}
@@ -857,15 +890,25 @@ module.exports = {
                 {
                     $limit:6
                 },
+                //orginal
                 {
                     $project:{
                         _id:0,month:'$_id.month',
-                        //_id:0,month:{$reverseArray:'$_id.month'},
                         totalSale:1,
-                        //monthii:{$reverseArray:'$_id.month'}
                     }
                 }
+ 
+                //testing
+                // {
+                //     $project:{
+                //         _id:0,month:'$_id.month',               
+                //         totalSale:1,
+                //         qtyEq250: { $eq: [ {year:{ $year :{ $toDate: "$date" }}}, check ] },
+                //         hi:1
+                //     }
+                //}      
             ]).toArray()
+            console.log(months);
             months.forEach(element => {
                 // monNumArray.push(element.month)
                 //element.month="hai"
@@ -880,16 +923,72 @@ module.exports = {
                 }
                 element.month=toMonthName(element.month)
             }); 
-            console.log(months.reverse()); 
-            console.log(months); 
-            resolve(months.reverse())  
+            console.log('m');
+            console.log(months);
+            resolve(months)  
         })
+    },
+    getYears:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let years=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                { 
+                    $match: { 'status': { $nin: ['cancelled'] } } 
+                },
+                {
+                    $group:{
+                        _id: {year:{ $year :{ $toDate: "$date" }}} ,totalSaleYear:{$sum:'$totalAmount'} 
+                    }
+                },
+                {
+                    $sort:{"_id.year": -1}
+                },
+                {
+                    $limit:6
+                },
+                {
+                    $project:{
+                        _id:0,year:'$_id.year',
+                        totalSaleYear:1,
+                    }
+                }
+            ]).toArray()
+console.log('years');
+            console.log(years);
+            resolve(years)
+        })
+    },
+    getDays:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let days=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                { 
+                    $match: { 'status': { $nin: ['cancelled'] } } 
+                },
+                {
+                    $group:{
+                        _id: {day:{ $dayOfMonth :{ $toDate: "$date" }}} ,totalSaleDay:{$sum:'$totalAmount'} 
+                    }
+                },
+                {
+                    $sort:{"_id.day": -1}       
+                },
+                {
+                    $limit:5
+                },
+                {
+                    $project:{
+                        _id:0,day:'$_id.day',
+                        totalSaleDay:1,
+                    }
+                }
+            ]).toArray()
+            console.log('days');
+            console.log(days);
+            resolve(days)
+        })
+    },
+    orderForPdf:()=>{
+        
     }
 
 }
-
-
-
-
-
 

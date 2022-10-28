@@ -324,7 +324,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
 
 // Get Otp login Page
 router.get('/otp-page', (req, res) => {
-  res.render('user/otp-page')
+  req.session.otpSended=true;
+  res.render('user/otp-page',{otpSended:req.session.otpSended})
 })
 
 //POST Send Otp To Twilio 
@@ -341,7 +342,7 @@ router.post('/sendotp', (req, res) => {
         .then(verification => {
           console.log(verification.status)
           //  req.session.preuser=response.user
-          req.session.user = response.user //sthyuh
+          req.session.user = response.user    
           res.render('user/otp-page', { otpSend: true })
         })
     } else {
@@ -355,16 +356,15 @@ router.post('/verifyotp', (req, res) => {
   console.log(req.session.number);
   let ph_no = req.session.number
   let otp = req.body.otp
-
   client.verify.v2.services('VA4c79484d8c15cb91629c185adacb4c30')
     .verificationChecks
     .create({ to: ph_no, code: otp })
     .then(verification_check => {
       console.log(verification_check.status)
       if (verification_check.status == 'approved') {
-        user=req.session.user
-        console.log(user);
-        //req.session.user=req.session.preuser
+        // user=req.session.user
+        // console.log('lo');
+        // req.session.user=req.session.preuser
 
         res.redirect('/home')
       } else {
@@ -377,9 +377,8 @@ router.post('/verifyotp', (req, res) => {
 router.get('/orders', verifyUserLogin, async (req, res) => {
   let orders = await userHelpers.getUserOrders(req.session.user._id)
   //userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
-  res.render('user/view-order', { user: req.session.user, orders })
+  res.render('user/view-order', { user: req.session.user, orders ,cancelledPro:req.session.cancelledPro})
   // })
-
 })
 
 
@@ -431,6 +430,7 @@ router.get('/view-ordered-products/:id', async (req, res) => {
 
 router.post('/change-order-status-to-cancel', async (req, res) => {
   productHelpers.changeOrderStatustoCancel(req.body).then((response) => {
+    req.session.cancelledPro=true;
     res.json(response)
   })
 })

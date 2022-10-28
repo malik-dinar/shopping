@@ -1,334 +1,4 @@
-<style>
-    /********** Template CSS **********/
-:root {
-    --primary: #EB1616;
-    --secondary: #191C24;
-    --light: #6C7293;
-    --dark: #000000;
-}
-.back-to-top {
-    position: fixed;
-    display: none;
-    right: 45px;
-    bottom: 45px;
-    z-index: 99;
-}
 
-
-/*** Spinner ***/
-#spinner {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity .5s ease-out, visibility 0s linear .5s;
-    z-index: 99999;
-}
-
-#spinner.show {
-    transition: opacity .5s ease-out, visibility 0s linear 0s;
-    visibility: visible;
-    opacity: 1;
-}
-
-
-/*** Button ***/
-.btn {
-    transition: .5s;
-}
-
-.btn-square {
-    width: 38px;
-    height: 38px;
-}
-
-.btn-sm-square {
-    width: 32px;
-    height: 32px;
-}
-
-.btn-lg-square {
-    width: 48px;
-    height: 48px;
-}
-
-.btn-square,
-.btn-sm-square,
-.btn-lg-square {
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: normal;
-    border-radius: 50px;
-}
-
-
-/*** Layout ***/
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 250px;
-    height: 100vh;
-    overflow-y: auto;
-    background: var(--secondary);
-    transition: 0.5s;
-    z-index: 999;
-}
-
-.content {
-    margin-left: 250px;
-    min-height: 100vh;
-    background: var(--dark);
-    transition: 0.5s;
-}
-
-@media (min-width: 992px) {
-    .sidebar {
-        margin-left: 0;
-    }
-
-    .sidebar.open {
-        margin-left: -250px;
-    }
-
-    .content {
-        width: calc(100% - 250px);
-    }
-
-    .content.open {
-        width: 100%;
-        margin-left: 0;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 991.98px) {
-    .sidebar {
-        margin-left: -250px;
-    }
-
-    .sidebar.open {
-        margin-left: 0;
-    }
-
-    .content {
-        width: 100%;
-        margin-left: 0;
-    }
-}
-
-
-/*** Navbar ***/
-.sidebar .navbar .navbar-nav .nav-link {
-    padding: 7px 20px;
-    color: var(--light);
-    font-weight: 500;
-    border-left: 3px solid var(--secondary);
-    border-radius: 0 30px 30px 0;
-    outline: none;
-}
-
-.sidebar .navbar .navbar-nav .nav-link:hover,
-.sidebar .navbar .navbar-nav .nav-link.active {
-    color: var(--primary);
-    background: var(--dark);
-    border-color: var(--primary);
-}
-
-.sidebar .navbar .navbar-nav .nav-link i {
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--dark);
-    border-radius: 40px;
-}
-
-.sidebar .navbar .navbar-nav .nav-link:hover i,
-.sidebar .navbar .navbar-nav .nav-link.active i {
-    background: var(--secondary);
-}
-
-.sidebar .navbar .dropdown-toggle::after {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    border: none;
-    content: "\f107";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    transition: .5s;
-}
-
-.sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
-    transform: rotate(-180deg);
-}
-
-.sidebar .navbar .dropdown-item {
-    padding-left: 25px;
-    border-radius: 0 30px 30px 0;
-    color: var(--light);
-}
-
-.sidebar .navbar .dropdown-item:hover,
-.sidebar .navbar .dropdown-item.active {
-    background: var(--dark);
-}
-
-.content .navbar .navbar-nav .nav-link {
-    margin-left: 25px;
-    padding: 12px 0;
-    color: var(--light);
-    outline: none;
-}
-
-.content .navbar .navbar-nav .nav-link:hover,
-.content .navbar .navbar-nav .nav-link.active {
-    color: var(--primary);
-}
-
-.content .navbar .sidebar-toggler,
-.content .navbar .navbar-nav .nav-link i {
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--dark);
-    border-radius: 40px;
-}
-
-.content .navbar .dropdown-item {
-    color: var(--light);
-}
-
-.content .navbar .dropdown-item:hover,
-.content .navbar .dropdown-item.active {
-    background: var(--dark);
-}
-
-.content .navbar .dropdown-toggle::after {
-    margin-left: 6px;
-    vertical-align: middle;
-    border: none;
-    content: "\f107";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    transition: .5s;
-}
-
-.content .navbar .dropdown-toggle[aria-expanded=true]::after {
-    transform: rotate(-180deg);
-}
-
-@media (max-width: 575.98px) {
-    .content .navbar .navbar-nav .nav-link {
-        margin-left: 15px;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*** Date Picker ***/
-.bootstrap-datetimepicker-widget.bottom {
-    top: auto !important;
-}
-
-.bootstrap-datetimepicker-widget .table * {
-    border-bottom-width: 0px;
-}
-
-.bootstrap-datetimepicker-widget .table th {
-    font-weight: 500;
-}
-
-.bootstrap-datetimepicker-widget.dropdown-menu {
-    padding: 10px;
-    border-radius: 2px;
-}
-
-.bootstrap-datetimepicker-widget table td.active,
-.bootstrap-datetimepicker-widget table td.active:hover {
-    background: var(--primary);
-}
-
-.bootstrap-datetimepicker-widget table td.today::before {
-    border-bottom-color: var(--primary);
-}
-
-
-/*** Testimonial ***/
-.progress .progress-bar {
-    width: 0px;
-    transition: 2s;
-}
-
-
-/*** Testimonial ***/
-.testimonial-carousel .owl-dots {
-    margin-top: 24px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.testimonial-carousel .owl-dot {
-    position: relative;
-    display: inline-block;
-    margin: 0 5px;
-    width: 15px;
-    height: 15px;
-    border: 5px solid var(--primary);
-    border-radius: 15px;
-    transition: .5s;
-}
-
-.testimonial-carousel .owl-dot.active {
-    background: var(--dark);
-    border-color: var(--primary);
-}
-
-</style>
 
 
 <body>
@@ -418,7 +88,7 @@
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-secondary text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
+                                <h6 class="mb-0">Yearly Sales</h6>
                                 {{!-- <a href="">Show All</a> --}}
                             </div>
                             <canvas id="myChart4"></canvas>
@@ -434,6 +104,11 @@
                 <div class="bg-secondary text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Recent Salse</h6>
+                        {{!-- <h6 class="mr">sales report</h6> --}}
+                        {{!-- <h3 >Sales report</h3> --}}
+                        <a class="ml-auto">Sales report</a>
+                        <button type="button"  id="btnExport" value="Export" onclick="Export()">pdf</button>
+                        <button type="submit"  onclick="exportTableToExcel('tableData')">exel</button>
                         <a href="/admin/orders-admin">Show All</a>
                     </div>
                     <div class="table-responsive">
@@ -475,6 +150,52 @@
         <!-- Content End -->
 
 
+        <section>
+    <div   class="table-responsive">
+        <table  class="table text-start align-middle table-bordered table-hover mb-0" id="tableData" hidden>
+            <thead>
+                <tr>
+                    <th rowspan="2">No</th>
+                    <th rowspan="2">date</th>
+                    <th rowspan="2">name</th>
+                    <th rowspan="2">address</th>
+                    <th colspan="2">Items</th>
+                    <th rowspan="2">mobile</th>
+                    <th rowspan="2">payment Method</th>
+                    <th rowspan="2">Amount</th>
+                </tr>
+                <tr>
+                    <td>product</td>
+                    <td>Quanitity</td>
+                </tr>
+            </thead>
+            <tbody class=" fw-bold fs-7">
+                {{#each order}}
+                <tr>
+                    <td ><span class="create_index"></span></td>
+                    <td>{{this.date}}</td>
+                    <td>{{this.deliveryDetails.name}}</td>           
+                    <td>{{this.deliveryDetails.address}} {{this.deliveryDetails.pincode}} {{this.deliveryDetails.state}}</td>
+                    <td>{{#each products}}
+                        {{this.name}}
+                        {{/each}}
+                    </td>
+                    <td>{{#each products}}
+                        {{this.quantity}} <br>
+                        {{/each}}
+                    </td>                    
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.PaymentMethod}}</td>
+                    <td>Rs.{{this.totalAmount}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
         <!-- Back to Top -->
         {{!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> --}}
     </div>
@@ -482,38 +203,67 @@
 
     <!-- Template Javascript -->
 </body>
+<script>
+    var divs = document.querySelectorAll('.create_index');
+    for (var i = 0; i < divs.length; ++i) {
+        divs[i].innerHTML = i + 1;
+    }
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 {{!-- ==================  chart 1================= --}}
 <script>
-  const labels = [
-    'Monday',
-    'Tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ];
+    let day=[];
+        console.log('lllllllllllllllllllllllllllllllllll')
+        let demo=[];
+        {{#each getmonths}}    
+            demo.unshift('{{this.month}}')
+        {{/each}} 
+        let a=demo.length
+      console.log(demo[a-1])
+      var num=demo[a-1];
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'Daily Sales',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  };
+      let demo2=[];
+      {{#each getYears}}
+            demo2.unshift('{{this.year}}')
+      {{/each}}
+      let b=demo2.length
+      console.log(demo2[b-1])
+      var num2=demo2[b-1]
 
-  const config = {
-    type: 'line',
-    data: data,
-    options: {}
-  };
+      
+
+    {{#each getDays}}
+      day.unshift('{{this.day}}/'+num+'/'+num2)
+    {{/each}}
+    
+    let priceDay=[]
+    {{#each getDays}}
+    priceDay.unshift('{{this.totalSaleDay}}')
+    {{/each}}
+
+
+
+
+new Chart("myChart", {
+  type: "line",
+        data: {
+            labels: day,
+            datasets: [{
+                    label: "daily sales",
+                    data: priceDay,          
+                    backgroundColor: '#D2042D',
+                    borderColor:'#D2042D'
+                }]
+            },
+        options: {
+            responsive: true
+        }
+});
+
 </script>
-
- <script>
+    <script>
   const myChart = new Chart(
     document.getElementById('myChart'),
     config
@@ -526,16 +276,12 @@
     let month=[];
     {{#each getmonths}}
       month.unshift('{{this.month}}')
-    {{/each}}
+    {{/each}} 
     
     let price=[]
     {{#each getmonths}}
     price.unshift('{{this.totalSale}}')
     {{/each}}
-
-    console.log('lo')
-    console.log(price)
-
 
 
 new Chart("myChart2", {
@@ -543,10 +289,10 @@ new Chart("myChart2", {
         data: {
             labels: month,
             datasets: [{
-                    label: "status",
+                    label: "monthly sales",
                     data: price,          
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: '#D2042D',
+                    borderColor:'#D2042D'
                 }]
             },
         options: {
@@ -575,8 +321,8 @@ new Chart("myChart3", {
             datasets: [{
                     label: "status",
                     data: yValues,          
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: '#D2042D',
+                    borderColor:'#D2042D'
                 }]
             },
         options: {
@@ -587,7 +333,7 @@ new Chart("myChart3", {
 </script>
  <script>
   const myChart3 = new Chart(
-    document.getElementById('myChart'),
+    document.getElementById('myChart3'),
     config
   );
 </script>
@@ -598,40 +344,96 @@ new Chart("myChart3", {
 {{!-- =========================== chart 4 ===================== --}}
 
 <script>
-var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-var yValues = [55, 49, 44, 24, 15];
-var barColors = ["red", "green","blue","orange","brown"];
+    let year=[];
+    {{#each getYears}}
+      year.unshift('{{this.year}}')
+    {{/each}}
+    
+    let priceYear=[]
+    {{#each getYears}}
+    priceYear.unshift('{{this.totalSaleYear}}')
+    {{/each}}
+
 
 new Chart("myChart4", {
-  type: "bar",
+  type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: year,
             datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
-                    backgroundColor: "rgba(235, 22, 22, .7)"
-                },
-                 
-                {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
-                    backgroundColor: "rgba(235, 22, 22, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(235, 22, 22, .3)"
-                }
-            ]
+                    label: "yearly sales",
+                    data: priceYear,          
+                    backgroundColor: '#D2042D',
+                   // borderColor: 'rgb(255, 99, 132)',
+                    borderColor:'#D2042D'
+                }]
             },
         options: {
             responsive: true
         }
 });
+
 </script>
- <script>
+    <script>
   const myChart4 = new Chart(
-    document.getElementById('myChart'),
+    document.getElementById('myChart4'),
     config
   );
 </script>
+
+<script>
+    function exportTableToExcel(tableData, filename = 'order details'){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableData);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
+</script>
+
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script>
+        function Export() {
+            console.log('1')
+            html2canvas(document.getElementById('tableData'), {
+                onrendered: function (canvas) {
+                                console.log('2')
+
+                    var data = canvas.toDataURL();
+                                console.log('3')
+
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("Table.pdf");
+                }
+            });
+        }
+</script>
+

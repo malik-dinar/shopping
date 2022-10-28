@@ -31,7 +31,11 @@
                     <td><a href="/view-ordered-products/{{this._id}}" class="btn" style="color: white;background-color: black;">View products</a></td>
                     {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="return confirm('Are you want to Cancel this order ')">Cancel Order</a></td> --}}
                     {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="">Cancel Order</a></td> --}}
+                    {{#if cancelledPro}}
+                    <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Order</a></td>
+                    {{else}}
                     <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Cancel Order</a></td>
+                    {{/if}}
                 </tr>
                 {{/each}}
             </tbody>
@@ -40,7 +44,7 @@
 </section>
 
 
-<script>
+<script>    
     var divs = document.querySelectorAll('.create_index');
     for (var i = 0; i < divs.length; ++i) {
         divs[i].innerHTML = i + 1;
@@ -54,6 +58,7 @@
             },
             method: 'post',
             success:(response)=>{
+                console.log({{cancelledPro}})
                 console.log('Reached')
                 console.log(response)
                 document.getElementById(orderId).innerHTML="Cancelled"
