@@ -37,19 +37,38 @@
             <div class="form-check border p-1 mb-5">
               <input class="form-check-input" type="radio" value="{{this.no}}" name="addressRadio"
                 id="flexRadioDefault2" checked>
-              <div class="row p-2">
-                <label class="form-check-label ms-2" for="flexRadioDefault2">
-                  <button class="btn float-right"  onclick="sweetAlert('{{this._id}}','{{this.no}}')" ><i
-                   {{!-- onclick="removeAddress('{{this._id}}','{{this.no}}')" --}}
-                      class="fa fa-trash"></i></button>
-                  <P name="name"> {{this.name}} <br></P>
+              <div class="row p-2" id="enable-edit">
+                  <label class="form-check-label ms-2" for="flexRadioDefault2">
+                  <button class="btn float-right" onclick="sweetAlert('{{this._id}}','{{this.no}}')" title="delete"><i class="fa fa-trash"></i></button>
+                  
+
+                  <a class="btn float-right" onclick='enableEdit("A1{{@index}}", "A2{{@index}}", "A3{{@index}}" , "A4{{@index}}" , "A5{{@index}}" , "A6{{@index}}" ,"enable-btn{{@index}}" )'
+                    title="edit"><i class="fa fa-edit"></i></a>
+                  {{!-- <P name="name"> {{this.name}} <br></P> --}}
+                  <input class="adds border-0 outline-0" type="text" id="A1{{@index}}" value="{{this.name}}"
+                    readonly><br>
+                  <input class="adds border-0 outline-0" type="text" id="A2{{@index}}" value="{{this.email}}" readonly>
+                  <br>
+                  <input class="adds border-0 outline-0" type="text" id="A3{{@index}}" value=" {{this.number}}"
+                    readonly><br>
+                  <input class="adds border-0 outline-0" type="text" id="A4{{@index}}" value="{{this.address}}"
+                    readonly><br>
+                  <input class="adds border-0 outline-0" type="text" id="A5{{@index}}" value="{{this.state}}"
+                    readonly><br>
+                  <input class="adds border-0 outline-0" type="text" id="A6{{@index}}" value="{{this.pincode}}"
+                    readonly>
+                  <button class="btn btn-primary btn-sm float-right" type="submit" id="enable-btn{{@index}}" hidden>Save</button>
+                  {{!--
                   <p name="email"> {{this.email}} <br></p>
                   <p name="mobile"> {{this.number}} <br></p>
                   <p name="address"> {{this.address}} <br></p>
                   <p name="state"> {{this.state}} <br></p>
-                  <p name="pincode"> {{this.pincode}}</p>
+                  <p name="pincode"> {{this.pincode}}</p> --}}
                 </label>
+
               </div>
+
+
             </div>
             {{/each}}
 
@@ -166,13 +185,13 @@
                   <tbody>
                     <tr>
                       <td>{{this.product.name}}<strong class="mx-2">x</strong>{{this.quantity}}</td>
-                      <td>Rs.{{this.product.price}}x{{this.quantity}}</td>
+                      <td><span>{{this.product.price}}</span>x{{this.quantity}}</td>
                       {{!-- <td>Rs.{{this.totalOne}}</td> --}}
                     </tr>
                     {{/each}}
                     <tr>
                       <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                      <td class="text-black font-weight-bold" name="total"><strong>Rs.{{total}}</strong></td>
+                      <td class="text-black font-weight-bold" name="total"><strong class="format-price" >{{total}}</strong></td>
                     </tr>
                   </tbody>
                 </table>
@@ -203,6 +222,15 @@
                   </h3>
                 </div>
 
+                <div class="border p-3 mb-3"> 
+                  <h3 class="h6 mb-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="flexCheckDefault" value="Wallet"
+                        name="paymentMethod" />
+                      <label class="form-check-label" for="flexCheckDefault"> <i class="fas fa-wallet"></i>&nbsp; wallet</label>
+                  </h3>
+                </div>
+
                 <div class="form-group">
                   <button class="btn btn-primary btn-lg py-3 btn-block" type="submit" onclick="procedToPayment()">Place
                     Order</button>
@@ -219,9 +247,11 @@
   </div>
 
 
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+    integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
 
 
@@ -252,7 +282,7 @@
         }
       });
     });
-    
+
 
     function procedToPayment() {
       addressRadio = document.querySelector('input[name="addressRadio"]:checked').value
@@ -346,6 +376,7 @@
 
 
     function sweetAlert(addressId, addressno) {
+      console.log('1')
       swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this Address",
@@ -358,10 +389,39 @@
             removeAddress(addressId, addressno);
             swal("Address deleted succesfully..", {
               icon: "success",
-            });            
+            });
           } else {
             swal("Address is safe");
           }
         });
     }
+
+
+
+    function enableEdit(a1, a2, a3, a4, a5, a6, a7) {
+      document.getElementById(a1).removeAttribute('readonly')
+      document.getElementById(a2).removeAttribute('readonly')
+      document.getElementById(a3).removeAttribute('readonly')
+      document.getElementById(a4).removeAttribute('readonly')
+      document.getElementById(a5).removeAttribute('readonly')
+      document.getElementById(a6).removeAttribute('readonly')
+
+      enableButton2(a7);
+      function enableButton2() {
+        document.getElementById(a7).hidden = false;
+      }
+    }
+
   </script>
+
+
+{{!-- accepts price (using class name) and formats to thousands separator Indian Format --}}
+<script>
+  var price = document.getElementsByClassName("format-price")
+  console.log(price)
+  for (let i = 0; i < price.length; i++) {
+    var tempPrice = parseFloat(price[i].innerHTML)
+    tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
+    price[i].innerHTML = tempPrice
+  }
+</script>

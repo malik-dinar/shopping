@@ -23,6 +23,7 @@
     "nodemon": "^2.0.20",
     "paypal-rest-sdk": "^1.8.1",
     "razorpay": "^2.8.3",
+    "swal": "^0.1.0",
     "twilio": "^3.82.2",
     "uid": "^2.0.1"
   }

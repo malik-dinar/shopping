@@ -45,7 +45,7 @@
         <img style="width: 16rem; height: 16rem;" src="/product-images/{{this._id}}.jpg" alt="">
         
         <div class="card-body">
-          <h6 class="card-subtitle mb-2 text-muted">Rs.{{this.price}} </h6>
+          <h6 class="card-subtitle mb-2 text-muted format-price">{{this.price}} </h6>
           <h5 class="card-title text-muted">{{this.name}}</h5>
           <p class="card-text text-muted">{{this.category}}</p>
           <p class="card-text text-muted">{{this.description}}</p>
@@ -186,3 +186,14 @@
 </footer>
 <!-- Footer -->
 
+
+{{!-- accepts price (using class name) and formats to thousands separator Indian Format --}}
+<script>
+  var price = document.getElementsByClassName("format-price")
+  console.log(price)
+  for (let i = 0; i < price.length; i++) {
+    var tempPrice = parseFloat(price[i].innerHTML)
+    tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
+    price[i].innerHTML = tempPrice
+  }
+</script>

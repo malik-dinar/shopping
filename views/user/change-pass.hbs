@@ -18,6 +18,9 @@
                             <input type="text" id="" name="oldpassword" class="form-control" required/>
                             <label class="form-label" for="">Existing Password</label>
                         </div>
+                        {{#if passError}}
+                        <span style="color: red;">{{passError}}</span>
+                        {{/if}}
                         <div class="form-outline mb-4">
                             <input type="password" name="newpassword" id="" class="form-control" required/>
                             <label class="form-label"  for="">New Password</label>
@@ -30,3 +33,4 @@
         </div>
     </div>
 </div>
+

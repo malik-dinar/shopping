@@ -25,14 +25,17 @@
                         <input type="text" id="contact-mobile" name="number" onblur="validateMobile()" class="form-control" required />
                         <label class="form-label" for="registerUsername">Phone number</label>
                     </div>
-                    <span class="text-danger" id="mobile-error"></span>
-
+                    {{#if Err1}}
+                        <p style="color: red;">{{Err1}}</p>
+                    {{/if}}
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                         <input type="email" id="contact-email" name="email" class="form-control" onblur="validateEmail()" required />
                         <label class="form-label" for="registerEmail">Email</label>
                     </div>
-                    <span class="text-danger" id="email-error"></span>
+                    {{#if Err}}
+                        <p style="color: red;">{{Err}}</p>
+                    {{/if}}
 
 
                     <!-- Password input -->
@@ -48,6 +51,15 @@
                         <label class="form-label" for="registerRepeatPassword">Repeat password</label>
                     </div>
                     <span class="text-danger" id="password-error"></span>
+
+                    <!-- Referel -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="" class="form-control" name="referl" onblur="validatePassword()" />
+                        <label class="form-label" for="registerRepeatPassword">Referel id(optional)</label>
+                    </div>
+                    {{#if Err2}}
+                        <p style="color: red;">{{Err2}}</p>
+                    {{/if}}
 
                     <!-- Checkbox -->
                     <div class="form-check d-flex justify-content-center mb-4">

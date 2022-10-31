@@ -15,8 +15,8 @@ const paypal = require('paypal-rest-sdk');
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live 
-  'client_id': 'AWg1WYasdHj_AUw2WqSFEIAld6COjgrNi35aalmUR_GsuqWVnd6h6WZVxtDnX4sM4p80oC5vDb_ZLD9i', 
-  'client_secret': 'EJVcBHZWa46bJRL-n2zzAK_wM0OdKJAKAQn31nBN41mPIeIYbBDgssueS8tAIjEu-zyie8UfXZLnNl0B' 
+  'client_id': 'AWg1WYasdHj_AUw2WqSFEIAld6COjgrNi35aalmUR_GsuqWVnd6h6WZVxtDnX4sM4p80oC5vDb_ZLD9i',
+  'client_secret': 'EJVcBHZWa46bJRL-n2zzAK_wM0OdKJAKAQn31nBN41mPIeIYbBDgssueS8tAIjEu-zyie8UfXZLnNl0B'
 });
 
 //Custome Middleware to check if user is logged in
@@ -61,16 +61,39 @@ router.get('/login-page', function (req, res) {
   res.render('user/login-page', { log: true });
 });
 
+router.get('/sign', (req, res) => {
+  console.log('something goes wrong');
+  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr })
+  req.session.emailErr = null;
+  req.session.numErr = null;
+  req.session.refErr = null;
+});
+
+
 //POST 
 router.post('/signup', (req, res) => {
   userHelpers.doSignup(req.body).then((response) => {
-    //
-    console.log('response');
-    // req.session.user=true
-    req.session.user = response
-    // let user=req.session.user
-    res.redirect('/home')
-
+    if (response.emailcheck) {
+      req.session.emailErr = 'Email Already Exist'
+      res.redirect('/sign')
+    }
+    else if (response.numcheck) {
+      req.session.numErr = 'phone number already Exist'
+      res.redirect('/sign')
+    } else if (response.refcheck) {
+      req.session.refErr = 'referal id doesnt exists'
+      console.log('loo');
+      res.redirect('/sign')
+      console.log('phoine');
+    }
+    else {
+      console.log('lollo');
+      console.log('response');
+      // req.session.user=true
+      req.session.user = response
+      // let user=req.session.user
+      res.redirect('/home')
+    }
   })
 
 });
@@ -85,7 +108,7 @@ router.get('/login', function (req, res, next) {
     // console.log('errrrrrrr');
 
     res.render('user/login-page', { logginErr: req.session.loginErr, log: true });
-    req.session.logginErr = null;
+    req.session.loginErr = null;
   }
   //res.render('user/login-page',{log:true});
 });
@@ -115,9 +138,6 @@ router.post('/login', (req, res, next) => {
   })
 });
 
-router.get('/sign', (req, res) => {
-  res.render('user/signup-page', { log: true })
-});
 
 
 router.get('/logout', (req, res) => {
@@ -263,7 +283,7 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
     }
     else if (req.body['paymentMethod'] == 'Razorpay') {
       await userHelpers.generateRazorpay(orderId, totalPrice).then((response) => {
-        response.razor=true
+        response.razor = true
         res.json(response)
       })
     }
@@ -286,34 +306,36 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
         }]
       }
       // call the create Pay method 
-      userHelpers.createPay( payment ) 
-          .then( ( transaction ) => {
-              var id = transaction.id; 
-              var links = transaction.links;
-              var counter = links.length; 
-              while( counter -- ) {
-                  if ( links[counter].rel === 'approval_url') {     //  if ( links[counter].method == 'REDIRECT') {  
-            // redirect to paypal where user approves the transaction 
-                      // res.json({paypalsuccess:true})  ///i added
-                      console.log(links[counter].href);
-                      // return res.redirect( links[counter].href ) 
-                      transaction.pay=true
-                      transaction.linkto=links[counter].href
-                      transaction.orderId=orderId
-                      console.log(payment)
-                      userHelpers.changePaymentStatus(orderId).then(() => {
-                          res.json(transaction)
-                      })
-             
-                  }
-              }
-          })
+      userHelpers.createPay(payment)
+        .then((transaction) => {
+          var id = transaction.id;
+          var links = transaction.links;
+          var counter = links.length;
+          while (counter--) {
+            if (links[counter].rel === 'approval_url') {     //  if ( links[counter].method == 'REDIRECT') {  
+              // redirect to paypal where user approves the transaction 
+              // res.json({paypalsuccess:true})  ///i added
+              console.log(links[counter].href);
+              // return res.redirect( links[counter].href ) 
+              transaction.pay = true
+              transaction.linkto = links[counter].href
+              transaction.orderId = orderId
+              console.log(payment)
+              userHelpers.changePaymentStatus(orderId).then(() => {
+                res.json(transaction)
+              })
+
+            }
+          }
+        })
         .catch((err) => {
           console.log(err);
           res.send('Error');
           // res.redirect('/place-order');
         });
-    } else {
+    }else if(req.body['paymentMethod'] == 'Wallet') {
+      res.json({ codSuccess: true })
+    }else {
       res.send('Error');
     }
   })
@@ -324,8 +346,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
 
 // Get Otp login Page
 router.get('/otp-page', (req, res) => {
-  req.session.otpSended=true;
-  res.render('user/otp-page',{otpSended:req.session.otpSended})
+  req.session.otpSended = true;
+  res.render('user/otp-page', { otpSended: req.session.otpSended })
 })
 
 //POST Send Otp To Twilio 
@@ -342,7 +364,7 @@ router.post('/sendotp', (req, res) => {
         .then(verification => {
           console.log(verification.status)
           //  req.session.preuser=response.user
-          req.session.user = response.user    
+          req.session.user = response.user
           res.render('user/otp-page', { otpSend: true })
         })
     } else {
@@ -377,7 +399,9 @@ router.post('/verifyotp', (req, res) => {
 router.get('/orders', verifyUserLogin, async (req, res) => {
   let orders = await userHelpers.getUserOrders(req.session.user._id)
   //userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
-  res.render('user/view-order', { user: req.session.user, orders ,cancelledPro:req.session.cancelledPro})
+  // res.render('user/view-order', { user: req.session.user, orders ,cancelledPro:req.session.cancelledPro})
+  res.render('user/view-order', { user: req.session.user, orders })
+
   // })
 })
 
@@ -393,7 +417,17 @@ router.get('/cancel-order/:id', (req, res) => {
 router.get('/profile', verifyUserLogin, async (req, res) => {
   userId = req.session.user._id
   let profile = await userHelpers.getUserProfile(userId)
-  res.render('user/profile', { user: req.session.user, profile })
+  let address = await userHelpers.getAllAddress(req.session.user._id)
+  let wallet = await userHelpers.getWallet(req.session.user._id)
+  res.render('user/profile', { user: req.session.user, profile, address, wallet })
+
+
+})
+
+router.post('/address-saved-profile', verifyUserLogin, async (req, res) => {
+  userHelpers.AddAddress(req.session.user._id, req.body).then(() => {
+    res.redirect('/profile')
+  })
 })
 
 router.post('/edit-profile/:id', (req, res) => {
@@ -406,7 +440,8 @@ router.post('/edit-profile/:id', (req, res) => {
 })
 
 router.get('/password', verifyUserLogin, (req, res) => {
-  res.render('user/change-pass', { user: req.session.user });
+  res.render('user/change-pass', { user: req.session.user, passError: req.session.passErr });
+  req.session.passErr = false;
 })
 
 router.post('/changed-pass', verifyUserLogin, (req, res) => {
@@ -417,7 +452,11 @@ router.post('/changed-pass', verifyUserLogin, (req, res) => {
       res.redirect('/home')
     }
     else {
-      res.send('In correct existing password')
+      //req.session.passErr= true;
+      console.log('ko');
+      req.session.passErr = "Enter the old password correctly";
+      console.log(req.session.passErr);
+      res.redirect('/password')
     }
   })
 
@@ -425,12 +464,38 @@ router.post('/changed-pass', verifyUserLogin, (req, res) => {
 
 router.get('/view-ordered-products/:id', async (req, res) => {
   let products = await userHelpers.getOrderProducts(req.params.id)
-  res.render('user/ordered-products', { user: req.session.user, products })
+  await userHelpers.orderStatus(req.params.id).then((order) => {
+    console.log('order');
+    console.log(order.status);
+    console.log(order.name);
+    console.log(order.date);
+    let orderStatus = order.status
+    if (orderStatus == 'placed') {
+      console.log(orderStatus, 'orderstatus')
+      console.log('placed called')
+      res.render('user/ordered-products', { user: req.session.user, products, Placed: true, order })
+    }
+    if (orderStatus == 'shipped') {
+      res.render('user/ordered-products', { user: req.session.user, products, Shipped: true, order })
+    }
+    if (orderStatus == 'cancelled') {
+      console.log('canceled called')
+      res.render('user/ordered-products', { user: req.session.user, products, Canceled: true, order })
+    }
+    if (orderStatus == 'out of delivered') {
+      res.render('user/ordered-products', { user: req.session.user, products, Delivered: true, order })
+
+    }
+    if (orderStatus == 'Return Requested') {
+      res.render('user/ordered-products', { user: req.session.user, products, Return: true, order })
+    }
+  })
 })
+
 
 router.post('/change-order-status-to-cancel', async (req, res) => {
   productHelpers.changeOrderStatustoCancel(req.body).then((response) => {
-    req.session.cancelledPro=true;
+    req.session.cancelledPro = true;
     res.json(response)
   })
 })
@@ -457,13 +522,25 @@ router.post('/verify-payment', (req, res) => {
 
 //=================================Delete saved Address======================//
 
-router.post('/delete-saved-address',(req,res)=>{
+router.post('/delete-saved-address', (req, res) => {
   console.log('check post');
   console.log(req.body);
-  userHelpers.deleteAddress(req.body).then((response)=>{
+  userHelpers.deleteAddress(req.body).then((response) => {
     console.log('reached');
     console.log(response);
     res.json(response)
+  })
+})
+
+//=================================Edit saved Address======================//
+
+router.post('/edit-address/:id', (req, res) => {
+  console.log('kkkkkk');
+  console.log(req.body);
+  console.log('params');
+  console.log(req.params.id);
+  userHelpers.updateAddress(req.params.id, req.body).then(() => {
+    res.redirect('/place-order')
   })
 })
 

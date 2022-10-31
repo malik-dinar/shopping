@@ -312,12 +312,12 @@ new Chart("myChart2", {
 
 <script>
 
-   var yValues = [{{status.placedNo}},{{status.pendingNo}},{{status.shippedNo}},{{status.cancelledNo}}];
+   var yValues = [{{status.placedNo}},{{status.deliveredNo}},{{status.shippedNo}},{{status.cancelledNo}}];
 
 new Chart("myChart3", {
   type: "bar",
         data: {
-            labels: ["placed", "pending", "shipped", "cancelled"],
+            labels: ["placed", "deliverd", "shipped", "cancelled"],
             datasets: [{
                     label: "status",
                     data: yValues,          
@@ -406,7 +406,7 @@ new Chart("myChart4", {
     
         // Setting the file name
         downloadLink.download = filename;
-        
+
         //triggering the function
         downloadLink.click();
     }
@@ -414,17 +414,15 @@ new Chart("myChart4", {
 </script>
 
 <script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
+{{!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script> --}}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script>
         function Export() {
             console.log('1')
             html2canvas(document.getElementById('tableData'), {
                 onrendered: function (canvas) {
-                                console.log('2')
-
+                        console.log('2')
                     var data = canvas.toDataURL();
-                                console.log('3')
-
                     var docDefinition = {
                         content: [{
                             image: data,
@@ -435,5 +433,5 @@ new Chart("myChart4", {
                 }
             });
         }
-</script>
+    </script>
 

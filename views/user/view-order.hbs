@@ -12,7 +12,7 @@
                     <th scope="col">Price</th>    
                     <th scope="col">status</th>
                     <th scope="col">orders</th>
-                    <th scope="col">cancel</th>
+                    {{!-- <th scope="col">cancel</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -28,14 +28,10 @@
                     {{!-- <br>Qty:{{this.quantity}} --}}
                     </td>
                     <td><p class="badge btn-danger text-capitalize" id="{{this._id}}">{{this.status}}</p> </td>                                   
-                    <td><a href="/view-ordered-products/{{this._id}}" class="btn" style="color: white;background-color: black;">View products</a></td>
+                    <td><a href="/view-ordered-products/{{this._id}}" class="btn" style="color: white;background-color: black;">Details</a></td>
                     {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="return confirm('Are you want to Cancel this order ')">Cancel Order</a></td> --}}
                     {{!-- <td><a href="/cancel-order/{{this._id}}" class="btn" style="color: red;" onclick="">Cancel Order</a></td> --}}
-                    {{#if cancelledPro}}
-                    <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Order</a></td>
-                    {{else}}
-                    <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Cancel Order</a></td>
-                    {{/if}}
+                    {{!-- <td><a class="btn" style="color: red;" onclick="changeStatusCancel('{{this._id}}')">Cancel Order</a></td> --}}
                 </tr>
                 {{/each}}
             </tbody>

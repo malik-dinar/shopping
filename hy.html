@@ -1,0 +1,22 @@
+<html>
+    <h1>Hiii</h1>
+</html>
+<script>
+    generateUID();
+    function generateUID() {
+    // I generate the UID from two parts here 
+    // to ensure the random number provide enough bits.
+    var firstPart = (Math.random() * 46656) | 0;
+    var secondPart = (Math.random() * 46656) | 0;
+    firstPart = ("000" + firstPart.toString(36)).slice(-3);
+    secondPart = ("000" + secondPart.toString(36)).slice(-3);
+    console.log(firstPart)
+    console.log(secondPart)
+    return firstPart + secondPart;
+}
+</script>
+
+
+
+
+<i class="fab fa-behance"></i>
