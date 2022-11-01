@@ -172,18 +172,37 @@ module.exports={
                 $set:{
                     status: details.stat
                 }
-            }).then((response)=>{
+            }).then(async(response)=>{
                 resolve(response);
+                // await db.get().collection.
             })
         })
     },
     changeOrderStatustoCancel:(details)=>{
         return new Promise(async(resolve,reject)=>{
+            let order=await db.get().collection(collection.ORDER_COLLECTION).find({_id:objectId(details.order)}).toArray()
+            let userId=order[0].userId;
+            let total=order[0].totalAmount
+            let date = new Date().toLocaleString('en-US')
+            db.get().collection(collection.WALLET_COLLECTION).updateOne({user:userId},{
+                $inc:{amount: total},
+                $push: {
+                    transactions: {
+                        transactiondescription: 'product cancelled',
+                        transactionAmount: total,
+                        type: 'Credited',
+                        transactionDate: date
+                    }
+                }
+            })
+
             await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(details.order)},{
                 $set:{
                     status:'cancelled',
                 }
             }).then((response)=>{
+                console.log('find user id');
+                console.log(response);
                 resolve(response)
             })
         })

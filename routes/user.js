@@ -10,6 +10,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const paypal = require('paypal-rest-sdk');
+const { route } = require('./admin');
 
 
 
@@ -72,6 +73,7 @@ router.get('/sign', (req, res) => {
 
 //POST 
 router.post('/signup', (req, res) => {
+  refered = req.body.referl
   userHelpers.doSignup(req.body).then((response) => {
     if (response.emailcheck) {
       req.session.emailErr = 'Email Already Exist'
@@ -82,15 +84,21 @@ router.post('/signup', (req, res) => {
       res.redirect('/sign')
     } else if (response.refcheck) {
       req.session.refErr = 'referal id doesnt exists'
-      console.log('loo');
       res.redirect('/sign')
-      console.log('phoine');
     }
     else {
-      console.log('lollo');
-      console.log('response');
-      // req.session.user=true
-      req.session.user = response
+      //req.session.user=response.user
+      // req.session.user = response
+      // console.log(req.session.user._id);
+      //req.session.user = true
+      console.log(response.user);
+      req.session.user = response.user
+      if (refered) {
+        userHelpers.refered300(refered)
+        userHelpers.refered150(req.session.user._id)
+      }
+      //  req.session.user=true
+      // req.session.user = response
       // let user=req.session.user
       res.redirect('/home')
     }
@@ -255,8 +263,16 @@ router.get('/place-order', verifyUserLogin, async (req, res) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)
   let totalOne = await userHelpers.getAmountOne(req.session.user._id)
   let address = await userHelpers.getAllAddress(req.session.user._id)
-  console.log(totalOne);
-  res.render('user/place-order', { user: req.session.user, total, products, totalOne, address });
+  let wallet = await userHelpers.getWallet(req.session.user._id)
+  console.log(wallet.amount);
+  if (wallet.amount > total) {
+    walletView = true
+  }
+  else {
+    walletView = false
+  }
+  console.log(walletView);
+  res.render('user/place-order', { user: req.session.user, total, products, totalOne, address, wallet, walletView });
 })
 
 router.get('/continue-shopping', verifyUserLogin, (req, res) => {
@@ -333,9 +349,10 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
           res.send('Error');
           // res.redirect('/place-order');
         });
-    }else if(req.body['paymentMethod'] == 'Wallet') {
+    } else if (req.body['paymentMethod'] == 'Wallet') {
+      userHelpers.useWallet(userId,totalPrice)
       res.json({ codSuccess: true })
-    }else {
+    } else {
       res.send('Error');
     }
   })
@@ -495,6 +512,7 @@ router.get('/view-ordered-products/:id', async (req, res) => {
 
 router.post('/change-order-status-to-cancel', async (req, res) => {
   productHelpers.changeOrderStatustoCancel(req.body).then((response) => {
+    console.log('cansssssssss');
     req.session.cancelledPro = true;
     res.json(response)
   })

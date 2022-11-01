@@ -27,10 +27,17 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let refId = userData.number
             let ref = userData.referl
+            let response={}
             // let NewPassword=userData.Password.toString()
             let userEmail = await db.get().collection(collection.USER_COLLECTIONS).findOne({ email: userData.email })
             let userMobile = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: userData.number })
-            let refClaimed = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: ref })
+            let refClaimed
+            if (userData.referl) {
+                refClaimed = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: ref })
+            } else {
+                refClaimed = true
+            }
+            console.log(refClaimed);
             if (userEmail) {
                 userEmail.emailcheck = true;
                 resolve(userEmail)
@@ -41,45 +48,19 @@ module.exports = {
                 refFailed.refcheck = true
                 resolve(refFailed)
             } else {
-                console.log(userData);
                 userData.password = await bcrypt.hash(userData.password, 10)
-                await db.get().collection(collection.USER_COLLECTIONS).insertOne(userData).then(async (userData) => {
-                    wall = userData.insertedId
+                await db.get().collection(collection.USER_COLLECTIONS).insertOne(userData).then(async (userDetails) => {
+                    wall = userDetails.insertedId
                     db.get().collection(collection.WALLET_COLLECTION).insertOne({
-                        user: userData.insertedId,
+                        user: userDetails.insertedId,
                         amount: 0,
                         referelId: refId,
                         transactions: []
                     })
-                    if (refClaimed) {
-                        let walletid = refClaimed._id
-                        let date = new Date().toLocaleString('en-US')
-                        db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: walletid },
-                            {
-                                $inc: {amount:300},
-                                $push: {
-                                    transactions: {
-                                        transactiondescription: 'referel claimed',
-                                        transactionAmount: 300,
-                                        type: 'Credited',
-                                        transactionDate: date
-                                    }
-                                }
-                            })
-                        db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: wall },
-                            {
-                                $inc: { amount: 150 },
-                                $push: {
-                                    transactions: {
-                                        transactiondescription: 'referel claimed',
-                                        transactionAmount: 150,
-                                        type: 'Credited',
-                                        transactionDate: date
-                                    }
-                                }
-                            })
-                    }
-                    resolve(userData)
+
+                
+                    response.user=userData
+                    resolve(response)
                 })
             }
         })
@@ -430,7 +411,7 @@ module.exports = {
                     }
                 ]).toArray()
             console.log(oneAddress);
-            let status = order.paymentMethod === 'COD' ? 'placed' : 'pending'
+            let status = order.paymentMethod === 'COD' ? 'placed' : 'placed'
             let orderObj = {
                 deliveryDetails: {
                     name: oneAddress[0].name,
@@ -1059,12 +1040,7 @@ module.exports = {
     getWallet: (userId) => {
         console.log(userId);
         return new Promise(async (resolve, reject) => {
-            let wallet = await db.get().collection(collection.WALLET_COLLECTION).aggregate([
-                {
-                    $match: { user: objectId(userId) }
-                }   
-            ]).toArray()
-            // console.log(cartItems[0].products);
+            let wallet = await db.get().collection(collection.WALLET_COLLECTION).findOne( { user: objectId(userId) })
             console.log('wallet');
             console.log(wallet);
             if (wallet.length === 0) {
@@ -1074,5 +1050,56 @@ module.exports = {
             }
         })
     },
+
+    refered300: (walletid) => {
+        console.log('this');
+        console.log(walletid);
+        let date = new Date().toLocaleString('en-US')
+        db.get().collection(collection.WALLET_COLLECTION).updateOne({ referelId : walletid },
+        {
+            $inc: { amount: 300 },
+            $push: {
+                transactions: {
+                    transactiondescription: 'referel claimed',
+                    transactionAmount: 300,
+                    type: 'Credited',
+                    transactionDate: date
+                }
+            }
+        })
+    },
+
+    refered150:(userId) =>{
+        let date = new Date().toLocaleString('en-US')
+        db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: userId },
+            {
+                $inc: { amount: 150 },
+                $push: {
+                    transactions: {
+                        transactiondescription: 'referel claimed',
+                        transactionAmount: 150,
+                        type: 'Credited',
+                        transactionDate: date
+                    }
+                }
+            })
+    },
+
+    useWallet:(userId,totalPrice)=>{
+            console.log(totalPrice);
+            console.log(userId);
+            let date = new Date().toLocaleString('en-US')
+            db.get().collection(collection.WALLET_COLLECTION).updateOne({user:objectId(userId)},{
+                $inc:{amount: -totalPrice},
+                $push: {
+                    transactions: {
+                        transactiondescription: 'product Ordered',
+                        transactionAmount: totalPrice,
+                        type: 'debited',
+                        transactionDate: date
+                    }
+                }
+            })
+    }
 }
 

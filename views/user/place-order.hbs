@@ -38,11 +38,13 @@
               <input class="form-check-input" type="radio" value="{{this.no}}" name="addressRadio"
                 id="flexRadioDefault2" checked>
               <div class="row p-2" id="enable-edit">
-                  <label class="form-check-label ms-2" for="flexRadioDefault2">
-                  <button class="btn float-right" onclick="sweetAlert('{{this._id}}','{{this.no}}')" title="delete"><i class="fa fa-trash"></i></button>
-                  
+                <label class="form-check-label ms-2" for="flexRadioDefault2">
+                  <button class="btn float-right" onclick="sweetAlert('{{this._id}}','{{this.no}}')" title="delete"><i
+                      class="fa fa-trash"></i></button>
 
-                  <a class="btn float-right" onclick='enableEdit("A1{{@index}}", "A2{{@index}}", "A3{{@index}}" , "A4{{@index}}" , "A5{{@index}}" , "A6{{@index}}" ,"enable-btn{{@index}}" )'
+
+                  <a class="btn float-right"
+                    onclick='enableEdit("A1{{@index}}", "A2{{@index}}", "A3{{@index}}" , "A4{{@index}}" , "A5{{@index}}" , "A6{{@index}}" ,"enable-btn{{@index}}" )'
                     title="edit"><i class="fa fa-edit"></i></a>
                   {{!-- <P name="name"> {{this.name}} <br></P> --}}
                   <input class="adds border-0 outline-0" type="text" id="A1{{@index}}" value="{{this.name}}"
@@ -57,7 +59,8 @@
                     readonly><br>
                   <input class="adds border-0 outline-0" type="text" id="A6{{@index}}" value="{{this.pincode}}"
                     readonly>
-                  <button class="btn btn-primary btn-sm float-right" type="submit" id="enable-btn{{@index}}" hidden>Save</button>
+                  <button class="btn btn-primary btn-sm float-right" type="submit" id="enable-btn{{@index}}"
+                    hidden>Save</button>
                   {{!--
                   <p name="email"> {{this.email}} <br></p>
                   <p name="mobile"> {{this.number}} <br></p>
@@ -191,7 +194,8 @@
                     {{/each}}
                     <tr>
                       <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                      <td class="text-black font-weight-bold" name="total"><strong class="format-price" >{{total}}</strong></td>
+                      <td class="text-black font-weight-bold" name="total"><strong
+                          class="format-price">{{total}}</strong></td>
                     </tr>
                   </tbody>
                 </table>
@@ -222,14 +226,34 @@
                   </h3>
                 </div>
 
-                <div class="border p-3 mb-3"> 
+                {{#if walletView}}
+                <div class="border p-3 mb-3">
                   <h3 class="h6 mb-0">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" id="flexCheckDefault" value="Wallet"
                         name="paymentMethod" />
-                      <label class="form-check-label" for="flexCheckDefault"> <i class="fas fa-wallet"></i>&nbsp; wallet</label>
+                      <label class="form-check-label" for="flexCheckDefault"> <i class="fas fa-wallet"></i>&nbsp; wallet
+                        &nbsp;({{wallet.amount}})</label>
                   </h3>
                 </div>
+                {{else}}
+
+                
+                <div class="border p-3 mb-3">
+                  <h3 class="h6 mb-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="flexCheckDefault" value="Wallet"
+                        name="paymentMethod" disabled />
+                      <label class="form-check-label text-danger" for="flexCheckDefault"> <i
+                          class="fas fa-wallet"></i>&nbsp; wallet &nbsp;({{wallet.amount}})</label> <br>
+                      <br>
+                      <span class="text-danger">insufficient balace to buy this product</span>
+                  </h3>
+                </div>
+                {{/if}}
+
+
+
 
                 <div class="form-group">
                   <button class="btn btn-primary btn-lg py-3 btn-block" type="submit" onclick="procedToPayment()">Place
@@ -415,13 +439,13 @@
   </script>
 
 
-{{!-- accepts price (using class name) and formats to thousands separator Indian Format --}}
-<script>
-  var price = document.getElementsByClassName("format-price")
-  console.log(price)
-  for (let i = 0; i < price.length; i++) {
-    var tempPrice = parseFloat(price[i].innerHTML)
-    tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
-    price[i].innerHTML = tempPrice
-  }
-</script>
+  {{!-- accepts price (using class name) and formats to thousands separator Indian Format --}}
+  <script>
+    var price = document.getElementsByClassName("format-price")
+    console.log(price)
+    for (let i = 0; i < price.length; i++) {
+      var tempPrice = parseFloat(price[i].innerHTML)
+      tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
+      price[i].innerHTML = tempPrice
+    }
+  </script>

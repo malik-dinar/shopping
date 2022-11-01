@@ -214,6 +214,8 @@ router.get('/orders-admin', verifyAdminLogin,(req,res)=>{
 
 router.post('/change-order-status',(req,res)=>{
   productHelpers.changeOrderStatus(req.body).then(()=>{
+    console.log('find wallet from this');
+    console.log(req.body);
     res.json(response)
     // res.redirect('/orders')
   })
@@ -257,6 +259,12 @@ router.get('/view-users-products/:id',async(req,res)=>{
   let users=await userHelpers.getOrderUser(req.params.id)
   let products=await userHelpers.getOrderProducts(req.params.id)
   res.render('admin/pro-and-users',{admin:true,users,products})
+})
+
+
+
+router.get('/coupon-page',(req,res)=>{
+  res.render('admin/coupon-page',{admin:true})
 })
 
 

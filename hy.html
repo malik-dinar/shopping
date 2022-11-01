@@ -17,6 +17,91 @@
 </script>
 
 
+<script>
+
+router.post('/usersignup',(req,res)=>{
+    referral=req.body.referral
+    userHelper.doSignup(req.body).then(async(response) => {
+      if(response.exist1){
+        req.session.emailErr='email already exist'
+        res.redirect('/usersignup')
+        console.log('email already exist');
+      }else if(response.exist2){
+        req.session.phoneErr='phone number already exist'
+        res.redirect('/usersignup')
+        console.log('phone already exist');
+      }else if(response.referralWrong){
+        req.session.referralErr="Invalid Referral Code"
+        res.redirect('/usersignup')
+      }else {
+        req.session.user=response.user
+        console.log("referral===");
+        console.log(referral);
+        if(referral){
+          console.log("req.body.referral ente ullil keri");
+          await userHelper.update100(referral,req.body.name)
+          await userHelper.update50(req.session.user._id)
+        }
+        res.redirect("/");
+      }
+    });
+})
 
 
-<i class="fab fa-behance"></i>
+
+
+
+
+
+
+
+
+
+
+
+doSignup:(user)=>{
+        user.addresses=[]
+        return new Promise(async(resolve,reject)=>{
+            let response={}
+            let referral=user.referral
+            let userData1=await db.get().collection(collection.USER_COLLECTION).findOne({email:user.email})
+            let userData2=await db.get().collection(collection.USER_COLLECTION).findOne({phone:user.phone})
+            let ref
+            if(user.referral){
+                 ref=await db.get().collection(collection.WALLET_COLLECTION ).findOne({referralCode:referral})
+            }else{
+                ref=true
+            }
+            if(userData1){
+                userData1.exist1=true
+                resolve(userData1)
+            }else if(userData2){
+                userData2.exist2=true
+                resolve(userData2)
+            }else if(ref===null){
+                response.referralWrong=true
+                resolve(response)
+            }else {
+                delete user.referral
+                user.password=await bcrypt.hash(user.password,10)
+                db.get().collection(collection.USER_COLLECTION).insertOne(user).then(async(userInserted)=>{
+                    let uId=userInserted.insertedId
+                    let uName=user.name
+                    let random=referralCodeGenerator.alphaNumeric('uppercase', 5, 1)
+                    let obj={
+                        userId:uId,
+                        userName:uName,
+                        referralCode:random,
+                        balance:0,
+                        transaction:[]
+                    }
+                    await db.get().collection(collection.WALLET_COLLECTION).insertOne(obj)
+                    response.user=user
+                    resolve(response)
+                    
+                })
+               
+            }
+        })
+    }
+</script>
