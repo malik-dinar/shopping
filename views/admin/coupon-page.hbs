@@ -1,38 +1,72 @@
 <section>
     <div class="container">
 
-        <form>
+        <form action="/admin/add-coupon" method="post">
             <!-- Name input -->
             <div class="form-outline mb-4 mt-5 col-4">
-                <input type="text" id="form4Example1" class="form-control" />
+                <input type="text" id="form4Example1" class="form-control" name="coupon"/>
                 <label class="form-label" for="form4Example1">Coupon</label>
             </div>
 
             <!-- Offer percentage -->
             <div class="form-outline mb-4 col-4">
-                <input type="text" id="form4Example1" class="form-control" />
+                <input type="text" id="form4Example1" class="form-control" name="offerpercent" />
                 <label class="form-label" for="form4Example1">Offer percentage</label>
             </div>
 
             <!-- minimum and maximum amount -->
             <div class="form-outline mb-4 col-4">
-                <input type="email" id="form4Example2" class="form-control" />
+                <input  type="text" id="form4Example2" class="form-control" name="minimum"/>
                 <label class="form-label" for="form4Example2"> minimum amount</label>
             </div>
 
             <div class="form-outline mb-4 col-4">
-                <input type="email" id="form4Example2" class="form-control" />
-                <label class="form-label" for="form4Example2"> maximum amount</label>
+                <input  type="text" id="form4Example2" class="form-control"  name="maximum"/>
+                <label class="form-label" for="form4Example2"> maximum amount Capital</label>
             </div>
 
             <!-- offer Description -->
             <div class="form-outline mb-4 col-4">
-                <textarea class="form-control" id="form4Example3" rows="4"></textarea>
+                <textarea class="form-control" id="form4Example3" rows="4" name="description"></textarea>
                 <label class="form-label" for="form4Example3">offer Description</label>
             </div>
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4 col-4">Add Coupon</button>
+            {{#if Err}}
+            <span class="text-danger">Coupon already Exists</span>
+            {{/if}}
         </form>
     </div>
 </section>
+
+
+
+<section  class="h-100 mt-4  ">
+      <h2 class="text-center">Coupon Details</h2>
+    
+      <div class="container  table-responsive">
+        <table class="table shadow text-center ">
+          <thead class="table-dark">
+            <tr>
+            <th ></th>
+              <th scope="col">coupon name</th>
+              <th scope="col">offer percentage</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody class="searchable "> 
+            {{#each coupon}}         
+            <tr >
+         <td class="product-thumbnail"></td>
+              <td class="p-5">{{this.coupon}}</td>
+              <td class="p-5">{{this.offerpercent}}%</td>
+              <td class="p-5">{{this.description}}</td>   
+              {{/each}}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+</section>
+
+

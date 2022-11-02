@@ -159,15 +159,20 @@
 
           <div class="row mb-5">
             <div class="col-md-12">
+              
               <h2 class="h3 mb-3 text-black">Coupon Code</h2>
               <div class="p-3 p-lg-5 border">
 
                 <label for="c_code" class="text-black mb-3">Enter your coupon code </label>
                 <div class="input-group w-75">
-                  <input type="text" class="form-control" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code"
-                    aria-describedby="button-addon2">
+                  <input type="text" class="form-control" id="couponApplied" placeholder="Coupon Code"
+                    aria-label="Coupon Code" aria-describedby="button-addon2">
                   <div class="input-group-append">
-                    <button class="btn btn-primary btn-sm" type="button" id="button-addon2">Apply</button>
+                    <button class="btn btn-primary btn-sm" type="submit" name="promo"
+                      onclick="couponApplied('{{total}}')">Apply</button>
+                    {{#if Err}}
+                    <span class="text-danger">{{Err}}</span>
+                    {{/if}}
                   </div>
                 </div>
 
@@ -193,10 +198,13 @@
                     </tr>
                     {{/each}}
                     <tr>
+                      <td class="text-black font-weight-bold"><strong>Discount Price</strong></td>
+                      <td class="text-black font-weight-bold" id="discountprice" name="total"><strong class="format-price">0.00</strong></td>
+                    </tr>  
+                    <tr>
                       <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                      <td class="text-black font-weight-bold" name="total"><strong
-                          class="format-price">{{total}}</strong></td>
-                    </tr>
+                      <td class="text-black font-weight-bold" id="orderprice" name="total"><strong class="format-price">{{total}}</strong></td>
+                    </tr>                   
                   </tbody>
                 </table>
                 <div class="border p-3 mb-3">
@@ -238,7 +246,7 @@
                 </div>
                 {{else}}
 
-                
+
                 <div class="border p-3 mb-3">
                   <h3 class="h6 mb-0">
                     <div class="form-check">
@@ -254,7 +262,7 @@
 
 
 
-
+                <input type="text" id="couponId" value="" hidden>
                 <div class="form-group">
                   <button class="btn btn-primary btn-lg py-3 btn-block" type="submit" onclick="procedToPayment()">Place
                     Order</button>
@@ -334,7 +342,6 @@
 
 
     function razorpayPayment(order) {
-      console.log('pleaesew1')
       var options = {
         "key": "rzp_test_6vEG39h3aWdPl9", // Enter the Key ID generated from the Dashboard
         "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -447,5 +454,32 @@
       var tempPrice = parseFloat(price[i].innerHTML)
       tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
       price[i].innerHTML = tempPrice
+    }
+
+    //were you stopped
+
+    function couponApplied(total) {
+      code = document.getElementById("couponApplied").value
+      $.ajax({
+        url: '/coupon-applied',
+        data: {
+          promo: code,
+          total
+        },
+        method: 'post',
+        success: (response) => {
+          if (response.price) {
+            console.log('1111111111111')
+            console.log(response)
+            console.log(response.discprice)
+            console.log(response.price)
+            console.log(response.coupon)
+            document.getElementById('discountprice').innerHTML = response.price
+            document.getElementById('orderprice').innerHTML = response.discprice
+            document.getElementById('couponId').value =response.coupon
+            // location.reload();
+          }
+        }
+      })
     }
   </script>

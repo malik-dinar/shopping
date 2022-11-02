@@ -263,10 +263,23 @@ router.get('/view-users-products/:id',async(req,res)=>{
 
 
 
-router.get('/coupon-page',(req,res)=>{
-  res.render('admin/coupon-page',{admin:true})
+router.get('/coupon-page',async(req,res)=>{
+  let coupon=await productHelpers.getCouponCode()
+  res.render('admin/coupon-page',{admin:true,coupon,Err:req.session.AlreadyExists})
+  req.session.AlreadyExists=false;
+
 })
 
+router.post('/add-coupon',(req,res)=>{
+  productHelpers.addCoupon(req.body).then((couponAlreadyexist)=>{
+    if(couponAlreadyexist){
+      req.session.AlreadyExists='Coupon already Exists'
+      res.redirect('/admin/coupon-page')
+    }else{
+      res.redirect('/admin/coupon-page')
+    }
+  })
+})
 
 module.exports = router;
 

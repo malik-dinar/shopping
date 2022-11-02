@@ -1,84 +1,84 @@
-var db=require('../config/connection')
-var collection=require('../config/collection')
+var db = require('../config/connection')
+var collection = require('../config/collection')
 const { response } = require('../app')
-var objectId=require('mongodb').ObjectId
+var objectId = require('mongodb').ObjectId
 
-module.exports={
+module.exports = {
 
-    addProduct:(product)=>{
-        return new Promise(async(resolve,reject)=>{
+    addProduct: (product) => {
+        return new Promise(async (resolve, reject) => {
             //user.password=await bcrypt.hash(user.password,10)
-            db.get().collection(collection.PRODUCT_COLLECTION).insertOne(product).then((data)=>{
+            db.get().collection(collection.PRODUCT_COLLECTION).insertOne(product).then((data) => {
                 console.log('add product done');
-            resolve(data.insertedId)
-           //console.log(data.insertedId);
+                resolve(data.insertedId)
+                //console.log(data.insertedId);
+            })
+
         })
-        
-       })
-    // addProduct:(user,callback)=>{
-    //        //console.log(user);
-    //         db.get().collection('user').insertOne(user).then((error,data)=>{
-    //             console.log(data);
-    //             callback(data)
-    //         })
+        // addProduct:(user,callback)=>{
+        //        //console.log(user);
+        //         db.get().collection('user').insertOne(user).then((error,data)=>{
+        //             console.log(data);
+        //             callback(data)
+        //         })
     },
-    getAllProducts:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let products=await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-            resolve(products.reverse())   
+    getAllProducts: () => {
+        return new Promise(async (resolve, reject) => {
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+            resolve(products.reverse())
         })
     },
-    deleteProduct:(proId)=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({_id:objectId(proId)}).then((response)=>{
+    deleteProduct: (proId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ _id: objectId(proId) }).then((response) => {
                 //console.log(response);
                 resolve(response)
             })
         })
     },
-    getProductDetails:(proId)=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)}).then((product)=>{
+    getProductDetails: (proId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) }).then((product) => {
                 resolve(product)
             })
         })
     },
-    getCategoryname:(proId)=>{
-        return new Promise(async(resolve,reject)=>{
+    getCategoryname: (proId) => {
+        return new Promise(async (resolve, reject) => {
             // console.log('error ivide2');
-             await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)}).then(async(product)=>{
-              let catInProduct=product.category;
-            //  console.log(catInProduct);
-            //  console.log('error ivide3');
-             await db.get().collection(collection.CATEGORY_COLLECTION).findOne({_id:objectId(catInProduct)}).then((category)=>{
-                console.log('error ivide4');
-                console.log(category);  //output null
-                console.log("category name get cheythu");
-                resolve(category)
-             })   
+            await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) }).then(async (product) => {
+                let catInProduct = product.category;
+                //  console.log(catInProduct);
+                //  console.log('error ivide3');
+                await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ _id: objectId(catInProduct) }).then((category) => {
+                    console.log('error ivide4');
+                    console.log(category);  //output null
+                    console.log("category name get cheythu");
+                    resolve(category)
+                })
             })
         })
     },
-    updateproduct:(productId,productDetails)=>{
-        return new Promise((resolve,reject)=>{
+    updateproduct: (productId, productDetails) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.PRODUCT_COLLECTION)
-            .updateOne({_id:objectId(productId)},{
+                .updateOne({ _id: objectId(productId) }, {
 
-                $set:{
-                    name:productDetails.name,
-                    Category:productDetails.Category,
-                    price:productDetails.price,
-                    description:productDetails.description,      
-                }
-            }).then((response)=>{
-                resolve()
-            })
+                    $set: {
+                        name: productDetails.name,
+                        Category: productDetails.Category,
+                        price: productDetails.price,
+                        description: productDetails.description,
+                    }
+                }).then((response) => {
+                    resolve()
+                })
         })
     },
-    getUser:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let user=await db.get().collection(collection.USER_COLLECTIONS).find().toArray()
-            resolve(user)   
+    getUser: () => {
+        return new Promise(async (resolve, reject) => {
+            let user = await db.get().collection(collection.USER_COLLECTIONS).find().toArray()
+            resolve(user)
         })
     },
     // getCategory:()=>{
@@ -89,103 +89,103 @@ module.exports={
     //     })
     // },
 
-    getCategory:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let datacategory=await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray() 
+    getCategory: () => {
+        return new Promise(async (resolve, reject) => {
+            let datacategory = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
             console.log(datacategory);
-            resolve(datacategory)   
+            resolve(datacategory)
         })
     },
-    getProductsInCategory:(Cate)=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.PRODUCT_COLLECTION).find({category:Cate}).toArray().then((product)=>{  //ask       
+    getProductsInCategory: (Cate) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: Cate }).toArray().then((product) => {  //ask       
                 console.log(Cate)
                 console.log(product)
                 resolve(product)
             })
         })
     },
-    addCategory:(cat)=>{
-        return new Promise(async(resolve,reject)=>{
-            let categoryData=await db.get().collection(collection.CATEGORY_COLLECTION).findOne({categories:cat.categories})
-            console.log(categoryData); 
-            if(categoryData){
-                categoryData.exist=true
+    addCategory: (cat) => {
+        return new Promise(async (resolve, reject) => {
+            let categoryData = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categories: cat.categories })
+            console.log(categoryData);
+            if (categoryData) {
+                categoryData.exist = true
                 resolve(categoryData)
-            }else{
-                db.get().collection(collection.CATEGORY_COLLECTION).insertOne(cat).then((data)=>{
-                resolve(data)
-                console.log(data);
-                })       
-            }    
-            
-       })
+            } else {
+                db.get().collection(collection.CATEGORY_COLLECTION).insertOne(cat).then((data) => {
+                    resolve(data)
+                    console.log(data);
+                })
+            }
+
+        })
     },
-    deleteCategory:(catId)=>{
-        return new Promise(async(resolve,reject)=>{
-            await db.get().collection(collection.CATEGORY_COLLECTION).findOne({categories:catId}).then(async()=>{
+    deleteCategory: (catId) => {
+        return new Promise(async (resolve, reject) => {
+            await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categories: catId }).then(async () => {
                 console.log(catId);
-                let CatDelete=await db.get().collection(collection.PRODUCT_COLLECTION).find({category:catId}).toArray()
-                let resolveObject={category:catId}
+                let CatDelete = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: catId }).toArray()
+                let resolveObject = { category: catId }
                 console.log(CatDelete);
-                if(CatDelete.length>0){
-                    resolveObject.DeleteStatus=false;
-                    resolve(resolveObject)     
-                }else{
-                    db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({categories:catId}).then((response)=>{
-                        resolveObject.DeleteStatus=true;
+                if (CatDelete.length > 0) {
+                    resolveObject.DeleteStatus = false;
+                    resolve(resolveObject)
+                } else {
+                    db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ categories: catId }).then((response) => {
+                        resolveObject.DeleteStatus = true;
                         resolve(resolveObject)
                     })
                 }
             })
         })
     },
-    getOneCatergory:(catOne)=>{
-        return new Promise((resolve,reject)=>{
+    getOneCatergory: (catOne) => {
+        return new Promise((resolve, reject) => {
             console.log(2);
-            db.get().collection(collection.CATEGORY_COLLECTION).findOne({categories:catOne}).then((catOne)=>{
+            db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categories: catOne }).then((catOne) => {
                 resolve(catOne)
             })
         })
     },
-    editCategory: (catname,cat)=>{
+    editCategory: (catname, cat) => {
         return new Promise(async (resolve, reject) => {
-            await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({ category: cat },{
+            await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({ category: cat }, {
                 $set: {
                     category: catname
                 }
-            }).then(()=>{
+            }).then(() => {
                 db.get().collection(collection.CATEGORY_COLLECTION).updateOne({ categories: cat }, {
                     $set: {
                         categories: catname
                     }
                 })
-              
-            }).then(()=>{
+
+            }).then(() => {
                 resolve()
             })
         })
     },
-    changeOrderStatus:(details)=>{
-        return new Promise(async(resolve,reject)=>{
-            await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(details.order)},{
-                $set:{
+    changeOrderStatus: (details) => {
+        return new Promise(async (resolve, reject) => {
+            await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(details.order) }, {
+                $set: {
                     status: details.stat
                 }
-            }).then(async(response)=>{
+            }).then(async (response) => {
                 resolve(response);
                 // await db.get().collection.
             })
         })
     },
-    changeOrderStatustoCancel:(details)=>{
-        return new Promise(async(resolve,reject)=>{
-            let order=await db.get().collection(collection.ORDER_COLLECTION).find({_id:objectId(details.order)}).toArray()
-            let userId=order[0].userId;
-            let total=order[0].totalAmount
+    changeOrderStatustoCancel: (details) => {
+        return new Promise(async (resolve, reject) => {
+            let order = await db.get().collection(collection.ORDER_COLLECTION).find({ _id: objectId(details.order) }).toArray()
+            let userId = order[0].userId;
+            let total = order[0].totalAmount
             let date = new Date().toLocaleString('en-US')
-            db.get().collection(collection.WALLET_COLLECTION).updateOne({user:userId},{
-                $inc:{amount: total},
+            db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: userId }, {
+                $inc: { amount: total },
                 $push: {
                     transactions: {
                         transactiondescription: 'product cancelled',
@@ -196,15 +196,43 @@ module.exports={
                 }
             })
 
-            await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(details.order)},{
-                $set:{
-                    status:'cancelled',
+            await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(details.order) }, {
+                $set: {
+                    status: 'cancelled',
                 }
-            }).then((response)=>{
+            }).then((response) => {
                 console.log('find user id');
                 console.log(response);
                 resolve(response)
             })
+        })
+    },
+
+    addCoupon: async (CouponDetails) => {
+        console.log('2');
+        console.log(CouponDetails.coupon);
+        return new Promise(async (resolve, reject) => {
+            const couponexist = await db.get().collection(collection.OFFER_COLLECTION).findOne({ coupon: CouponDetails.coupon })
+            couponAlreadyexist = false;
+            if (couponexist) {
+                couponAlreadyexist = true;
+                resolve(couponAlreadyexist)
+            }
+            else {
+                return new Promise((resolve, reject) => {
+                    db.get().collection(collection.OFFER_COLLECTION).insertOne(CouponDetails).then(() => {
+                        couponAlreadyexist = false;
+                        resolve(couponAlreadyexist)
+                    })
+                })
+            }
+        })
+    },
+
+    getCouponCode: () => {
+        return new Promise(async (resolve, reject) => {
+            let coupon = await db.get().collection(collection.OFFER_COLLECTION).find().toArray()
+            resolve(coupon)
         })
     }
 }

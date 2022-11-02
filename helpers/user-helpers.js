@@ -27,7 +27,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let refId = userData.number
             let ref = userData.referl
-            let response={}
+            let response = {}
             // let NewPassword=userData.Password.toString()
             let userEmail = await db.get().collection(collection.USER_COLLECTIONS).findOne({ email: userData.email })
             let userMobile = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: userData.number })
@@ -58,8 +58,8 @@ module.exports = {
                         transactions: []
                     })
 
-                
-                    response.user=userData
+
+                    response.user = userData
                     resolve(response)
                 })
             }
@@ -1040,9 +1040,7 @@ module.exports = {
     getWallet: (userId) => {
         console.log(userId);
         return new Promise(async (resolve, reject) => {
-            let wallet = await db.get().collection(collection.WALLET_COLLECTION).findOne( { user: objectId(userId) })
-            console.log('wallet');
-            console.log(wallet);
+            let wallet = await db.get().collection(collection.WALLET_COLLECTION).findOne({ user: objectId(userId) })
             if (wallet.length === 0) {
                 resolve()
             } else {
@@ -1054,22 +1052,25 @@ module.exports = {
     refered300: (walletid) => {
         console.log('this');
         console.log(walletid);
-        let date = new Date().toLocaleString('en-US')
-        db.get().collection(collection.WALLET_COLLECTION).updateOne({ referelId : walletid },
-        {
-            $inc: { amount: 300 },
-            $push: {
-                transactions: {
-                    transactiondescription: 'referel claimed',
-                    transactionAmount: 300,
-                    type: 'Credited',
-                    transactionDate: date
-                }
-            }
+        return new Promise((resolve, reject) => {
+            let date = new Date().toLocaleString('en-US')
+            db.get().collection(collection.WALLET_COLLECTION).updateOne({ referelId: walletid },
+                {
+                    $inc: { amount: 300 },
+                    $push: {
+                        transactions: {
+                            transactiondescription: 'referel claimed',
+                            transactionAmount: 300,
+                            type: 'Credited',
+                            transactionDate: date
+                        }
+                    }
+                })
         })
     },
 
-    refered150:(userId) =>{
+    refered150: (userId) => {
+       return new Promise((resolve,reject)=>{
         let date = new Date().toLocaleString('en-US')
         db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: userId },
             {
@@ -1083,14 +1084,16 @@ module.exports = {
                     }
                 }
             })
+       })
     },
 
-    useWallet:(userId,totalPrice)=>{
-            console.log(totalPrice);
-            console.log(userId);
+    useWallet: (userId, totalPrice) => {
+        console.log(totalPrice);
+        console.log(userId);
+        return new Promise((resolve,reject)=>{
             let date = new Date().toLocaleString('en-US')
-            db.get().collection(collection.WALLET_COLLECTION).updateOne({user:objectId(userId)},{
-                $inc:{amount: -totalPrice},
+            db.get().collection(collection.WALLET_COLLECTION).updateOne({ user: objectId(userId) }, {
+                $inc: { amount: -totalPrice },
                 $push: {
                     transactions: {
                         transactiondescription: 'product Ordered',
@@ -1100,6 +1103,43 @@ module.exports = {
                     }
                 }
             })
+        })
+    },
+
+
+    Promocode: (totalAndCode) => {
+        let response={}
+        return new Promise(async(resolve,reject)=>{
+            let CouponCheck=await db.get().collection(collection.OFFER_COLLECTION).findOne({coupon:totalAndCode.promo})
+            console.log('2');
+            //console.log(CouponCheck.offerpercent);
+            console.log(totalAndCode.total);
+            console.log(CouponCheck.coupon);
+            let check={}
+            if(CouponCheck){
+                console.log('1');
+                console.log(CouponCheck.minimum);
+                console.log(totalAndCode.total);
+                if(CouponCheck.minimum < totalAndCode.total){
+                    let price=parseInt((totalAndCode.total/100)*CouponCheck.offerpercent)
+                    let offerPrice=totalAndCode.total-price
+                    response.discprice=offerPrice;
+                    response.price=price;
+                    response.coupon=CouponCheck.coupon
+                    console.log('123');
+                    console.log(response);
+                    resolve(response)
+                }
+                else{
+                    console.log('2');
+                    check.couponErr=true;
+                    resolve(check)
+                }
+            }else{
+                check.couponErr=true;
+                resolve(check)
+            }
+        })
     }
 }
 

@@ -271,8 +271,8 @@ router.get('/place-order', verifyUserLogin, async (req, res) => {
   else {
     walletView = false
   }
-  console.log(walletView);
-  res.render('user/place-order', { user: req.session.user, total, products, totalOne, address, wallet, walletView });
+    res.render('user/place-order', { user:req.session.user, total, products, totalOne, address, wallet, walletView ,Err:req.session.CouponErr});
+    req.session.CouponErr= null
 })
 
 router.get('/continue-shopping', verifyUserLogin, (req, res) => {
@@ -512,7 +512,6 @@ router.get('/view-ordered-products/:id', async (req, res) => {
 
 router.post('/change-order-status-to-cancel', async (req, res) => {
   productHelpers.changeOrderStatustoCancel(req.body).then((response) => {
-    console.log('cansssssssss');
     req.session.cancelledPro = true;
     res.json(response)
   })
@@ -562,6 +561,18 @@ router.post('/edit-address/:id', (req, res) => {
   })
 })
 
+
+
+router.post('/coupon-applied',(req,res)=>{
+  console.log(req.body);
+  userHelpers.Promocode(req.body).then((response)=>{
+    if(response.couponErr==true)
+    {
+      req.session.CouponErr='Invalid coupon'
+    }
+    res.json(response)
+  })
+})
 
 
 module.exports = router;
