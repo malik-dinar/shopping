@@ -284,15 +284,18 @@ router.get('/order-placed', (req, res) => {
 })
 
 router.post('/place-order', verifyUserLogin, async (req, res) => {
-  console.log(req.body);
   let userId = req.session.user._id
-  // console.log(userId);
+  let totalPrice=0
   let products = await userHelpers.getCartProductList(userId)
-  let totalPrice = await userHelpers.getTotalAmount(userId)
-
+   totalPrice = await userHelpers.getTotalAmount(userId)
+  if(req.body.couponName){
+    totalPrice = await userHelpers.getTotalAmount(userId)
+    let discountAmount = await userHelpers.PromocodePlace(req.body.couponName,totalPrice)
+    totalPrice = totalPrice-discountAmount
+  }else{
+      totalPrice = await userHelpers.getTotalAmount(userId)
+  }
   userHelpers.placeOrder(req.body, products, totalPrice, userId).then(async (orderId) => {
-    console.log(req.body);
-    console.log(req.body['paymentMethod']);
     // res.redirect('/order-placed');
     if (req.body['paymentMethod'] == 'COD') {
       res.json({ codSuccess: true })

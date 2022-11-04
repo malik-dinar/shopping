@@ -281,5 +281,45 @@ router.post('/add-coupon',(req,res)=>{
   })
 })
 
+router.post('/delete-coupon',(req,res)=>{
+  console.log('hi');
+  const obj = JSON.parse(JSON.stringify(req.body));
+  console.log(obj);
+  productHelpers.deleteCoupon(obj).then((response)=>{
+   res.json(response)
+  })
+})
+
+
+
+router.get('/offer-cat',async(req,res)=>{
+  productHelpers.getCategory().then((datacategory)=>{
+    productHelpers.getCategoryOffer().then((alloffer)=>{
+      res.render('admin/offer-page',{admin:true,datacategory,alloffer,exists:req.session.Alreadyexist})
+      req.session.Alreadyexist=false;
+    })
+  }) 
+})
+
+
+router.post('/add-offer-category',(req,res)=>{
+  productHelpers.addCategoryOffer(req.body).then(()=>{
+    if(offerAlreadyexist){
+      req.session.Alreadyexist=true
+      res.redirect('/admin/offer-cat')
+    }else{
+      res.redirect('/admin/offer-cat')
+    }
+  })
+})
+
+
+router.post('/delete-offer',(req,res)=>{
+  console.log('hi');
+  productHelpers.deleteOffer(req.body).then((response)=>{
+   res.json(response)
+  })
+})
+
 module.exports = router;
 

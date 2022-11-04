@@ -196,6 +196,7 @@
 
 
 
+
         <!-- Back to Top -->
         {{!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> --}}
     </div>
@@ -203,6 +204,25 @@
 
     <!-- Template Javascript -->
 </body>
+
+
+
+
+
+{{!-- 
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script> --}}
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+{{!-- another pdf link --}}
+{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script> --}}
+
 <script>
     var divs = document.querySelectorAll('.create_index');
     for (var i = 0; i < divs.length; ++i) {
@@ -235,12 +255,12 @@
       
 
     {{#each getDays}}
-      day.unshift('{{this.day}}/'+num+'/'+num2)
+      day.push('{{this.day}}/'+num+'/'+num2)
     {{/each}}
     
     let priceDay=[]
     {{#each getDays}}
-    priceDay.unshift('{{this.totalSaleDay}}')
+    priceDay.push('{{this.totalSaleDay}}')
     {{/each}}
 
 
@@ -412,17 +432,14 @@ new Chart("myChart4", {
     }
 }
 </script>
-
-<script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
-{{!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script> --}}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    
     <script>
         function Export() {
-            console.log('1')
             html2canvas(document.getElementById('tableData'), {
                 onrendered: function (canvas) {
+                        console.log(canvas)
                         console.log('2')
-                    var data = canvas.toDataURL();
+                    var data = canvas.toDataURL("/admin/admin-dashboard");
                     var docDefinition = {
                         content: [{
                             image: data,
@@ -435,3 +452,43 @@ new Chart("myChart4", {
         }
     </script>
 
+    {{!-- <script>
+      function Export(){
+        console.log('1')
+             document.getElementById('tableData').addEventListener('click', function(){
+      var doc = new jsPDF('p', 'pt', 'letter');
+      var htmlstring = '';
+      var tempVarToCheckPageHeight = 0;
+      var pageHeight = 0;
+      pageHeight = doc.internal.pageSize.height;
+      specialElementHandlers = {
+          // element with id of "bypass" - jQuery style selector  
+          '#bypassme': function (element, renderer) {
+              // true = "handled elsewhere, bypass text extraction"  
+              return true
+          }
+      };
+      margins = {
+          top: 150,
+          bottom: 60,
+          left: 40,
+          right: 40,
+          width: 600
+      };
+      var y = 20;
+      doc.setLineWidth(2);
+      //doc.text(200, y = y + 30, "TOTAL MARKS OF STUDENTS");
+      doc.autoTable({
+          html: '#tableData',
+          startY: 70,
+          theme: 'grid',
+
+          styles: {
+              minCellHeight: 10
+          }
+      })
+      doc.save('file.pdf');
+  })
+      }
+    </script>
+ --}}

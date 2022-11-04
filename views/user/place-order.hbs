@@ -262,7 +262,7 @@
 
 
 
-                <input type="text" id="couponId" value="" hidden>
+                <input type="text" id="couponId" name="couponName" value="" hidden>
                 <div class="form-group">
                   <button class="btn btn-primary btn-lg py-3 btn-block" type="submit" onclick="procedToPayment()">Place
                     Order</button>
@@ -279,12 +279,29 @@
   </div>
 
 
+
+
+
+
+
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
     integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
+
+  
+
+
+
 
 
     $("input:checkbox").on('click', function () {
@@ -319,11 +336,13 @@
     function procedToPayment() {
       addressRadio = document.querySelector('input[name="addressRadio"]:checked').value
       paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value
+      couponName = document.getElementById('couponId').value
       $.ajax({
         url: '/place-order',
         data: {
           addressRadio: addressRadio,
-          paymentMethod: paymentMethod
+          paymentMethod: paymentMethod,
+          couponName: couponName
         },
         method: 'post',
         success: (response) => {
@@ -474,12 +493,18 @@
             console.log(response.discprice)
             console.log(response.price)
             console.log(response.coupon)
+            notify();
             document.getElementById('discountprice').innerHTML = response.price
             document.getElementById('orderprice').innerHTML = response.discprice
             document.getElementById('couponId').value =response.coupon
+            
             // location.reload();
           }
         }
       })
+    }
+    function notify(){
+       alertify.set('notifier','position', 'top-right');
+       alertify.success('Coupon applied Succesfully ');
     }
   </script>

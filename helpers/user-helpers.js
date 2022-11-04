@@ -1006,7 +1006,7 @@ module.exports = {
                     }
                 },
                 {
-                    $sort: { "_id.day": -1 }
+                    $sort: { "_id.day": 1 }
                 },
                 {
                     $limit: 5
@@ -1111,23 +1111,14 @@ module.exports = {
         let response={}
         return new Promise(async(resolve,reject)=>{
             let CouponCheck=await db.get().collection(collection.OFFER_COLLECTION).findOne({coupon:totalAndCode.promo})
-            console.log('2');
-            //console.log(CouponCheck.offerpercent);
-            console.log(totalAndCode.total);
-            console.log(CouponCheck.coupon);
             let check={}
             if(CouponCheck){
-                console.log('1');
-                console.log(CouponCheck.minimum);
-                console.log(totalAndCode.total);
                 if(CouponCheck.minimum < totalAndCode.total){
                     let price=parseInt((totalAndCode.total/100)*CouponCheck.offerpercent)
                     let offerPrice=totalAndCode.total-price
                     response.discprice=offerPrice;
                     response.price=price;
                     response.coupon=CouponCheck.coupon
-                    console.log('123');
-                    console.log(response);
                     resolve(response)
                 }
                 else{
@@ -1140,6 +1131,17 @@ module.exports = {
                 resolve(check)
             }
         })
-    }
+    },
+
+
+    PromocodePlace:async(couponName,total)=>{
+        return new Promise(async(resolve,reject)=>{
+            let CouponCheck=await db.get().collection(collection.OFFER_COLLECTION).findOne({coupon:couponName})
+            let price=parseInt((total/100)*CouponCheck.offerpercent)
+                resolve(price)
+        })
+    },
+
+
 }
 

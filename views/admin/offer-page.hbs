@@ -1,28 +1,17 @@
 <section>
     <div class="container">
 
-        <form action="/admin/add-coupon" method="post">
+        <form action="/admin/add-offer-category" method="post">
             <!-- Name input -->
             <div class="form-outline mb-4 mt-5 col-4">
-                <input type="text" id="form4Example1" class="form-control" name="coupon"/>
-                <label class="form-label" for="form4Example1">Coupon</label>
+                <input type="text" id="form4Example1" class="form-control" name="offerName" />
+                <label class="form-label" for="form4Example1">offer Name</label>
             </div>
 
             <!-- Offer percentage -->
             <div class="form-outline mb-4 col-4">
-                <input type="text" id="form4Example1" class="form-control" name="offerpercent" />
+                <input type="number" id="form4Example1" class="form-control" name="offerpercent" />
                 <label class="form-label" for="form4Example1">Offer percentage</label>
-            </div>
-
-            <!-- minimum and maximum amount -->
-            <div class="form-outline mb-4 col-4">
-                <input  type="text" id="form4Example2" class="form-control" name="minimum"/>
-                <label class="form-label" for="form4Example2"> minimum amount</label>
-            </div>
-
-            <div class="form-outline mb-4 col-4">
-                <input  type="text" id="form4Example2" class="form-control"  name="maximum"/>
-                <label class="form-label" for="form4Example2"> maximum amount Capital</label>
             </div>
 
             <!-- offer Description -->
@@ -31,39 +20,47 @@
                 <label class="form-label" for="form4Example3">offer Description</label>
             </div>
 
+            <input type="text" value="category" hidden>
+            <select class="form-select mb-4 col-4" name="category" aria-label="Default select example" required >
+                <label class="form-label" for="form4Example3">Select category</label>
+                <option></option>
+                {{#each datacategory}}
+                <option value="{{this.categories}}">{{this.categories}}</option>
+                {{/each}}
+            </select>
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4 col-4">Add Coupon</button>
-            {{#if Err}}
-            <span class="text-danger">Coupon already Exists</span>
+            {{#if exists}}
+            <span class="text-danger">There is already offer in this Category</span>
             {{/if}}
         </form>
     </div>
 </section>
 
-
-
 <section  class="h-100 mt-4  ">
-      <h2 class="text-center">Coupon Details</h2>
+      <h2 class="text-center">category offer Details</h2>
     
       <div class="container  table-responsive">
         <table class="table shadow text-center ">
           <thead class="table-dark">
             <tr>
-            <th ></th>
+            <th ></th>  
               <th scope="col">coupon name</th>
               <th scope="col">offer percentage</th>
               <th scope="col">Description</th>
+              <th scope="col">category</th>
               <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody class="searchable "> 
-            {{#each coupon}}         
+            {{#each alloffer}}         
             <tr >
          <td class="product-thumbnail"></td>
-              <td class="p-5">{{this.coupon}}</td>
-              <td class="p-5">{{this.offerpercent}}%</td>
+              <td class="p-5">{{this.offerName}}</td>
+              <td class="p-5">{{this.offerpercent}}</td>
               <td class="p-5">{{this.description}}</td> 
-              <td class="p-5"><button type="button" onclick="sweetAlert('{{this._id}}')"><i class="fa fa-trash"></i></button></td>  
+              <td class="p-5">{{this.category}}</td>
+              <td class="p-5"><button type="button" onclick="sweetAlert('{{this._id}}','{{this.category}}')"><i class="fa fa-trash"></i></button></td>  
               {{/each}}
             </tr>
           </tbody>
@@ -72,9 +69,9 @@
 </section>
 
 
+
 <script>
-  function sweetAlert(couponId) {
-      console.log('1')
+  function sweetAlert(offerId,category) {
       swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this Coupon",
@@ -84,7 +81,7 @@
       })
         .then((willDelete) => {
           if (willDelete) {
-            removeCoupon(couponId);
+            removeOffer(offerId,category);
             swal("Address deleted succesfully..", {
               icon: "success",
             });
@@ -94,19 +91,23 @@
         });
     }
 
-    function removeCoupon(couponId) {
+    function removeOffer(offerId,category) {
+        console.log(offerId)
+        console.log(category)
       $.ajax({
-        url: '/admin/delete-coupon',
+        url: '/admin/delete-offer',
         data: {
-          couponId
+          offerId,
+          category
         },
-        method:'post',
+        method: 'post',
         success: (response) => {
-          if (response.removeCoupon) {
+          if (response.removeOffer) {
             location.reload();
           }
         }
       })
     }
 
+   
 </script>

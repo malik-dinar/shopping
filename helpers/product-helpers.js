@@ -8,19 +8,13 @@ module.exports = {
     addProduct: (product) => {
         return new Promise(async (resolve, reject) => {
             //user.password=await bcrypt.hash(user.password,10)
+            product.offerprice=product.price
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(product).then((data) => {
                 console.log('add product done');
                 resolve(data.insertedId)
                 //console.log(data.insertedId);
             })
-
         })
-        // addProduct:(user,callback)=>{
-        //        //console.log(user);
-        //         db.get().collection('user').insertOne(user).then((error,data)=>{
-        //             console.log(data);
-        //             callback(data)
-        //         })
     },
     getAllProducts: () => {
         return new Promise(async (resolve, reject) => {
@@ -234,5 +228,58 @@ module.exports = {
             let coupon = await db.get().collection(collection.OFFER_COLLECTION).find().toArray()
             resolve(coupon)
         })
-    }
+    },
+
+    addCategoryOffer:(details) =>{
+        return new Promise(async(resolve,reject)=>{
+            console.log('1234556');
+            let unique=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).findOne({category:details.category})
+            console.log(unique);
+            if(unique){
+                offerAlreadyexist = true;
+                resolve(offerAlreadyexist)
+            }else{
+                offerAlreadyexist = false;
+                let offer=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).insertOne(details)
+                console.log('implemetn');
+               let percent=parseInt(details.offerpercent)
+
+                resolve(offer)
+                await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({category:details.category},[
+                    {
+                        $set:{offerprice:{$subtract:['$price',{$floor:{$multiply:[{$divide:[percent,100]},'$offerprice']}}]}}
+                    }
+                ])
+            }   
+        })
+    },
+
+    getCategoryOffer:()=>{
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).find().toArray().then((response)=>{
+                resolve(response)
+            })
+        })
+    },
+
+    deleteCoupon:(couponId)=>{
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.OFFER_COLLECTION).deleteOne({"_id":objectId(couponId.couponId)}).then(()=>{
+                resolve({ removeCoupon: true })
+            })
+        })
+    },
+
+    deleteOffer:(offerId)=>{
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).deleteOne({"_id":objectId(offerId.offerId)}).then(()=>{
+                resolve({ removeOffer: true })
+            })
+            await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({category:offerId.category},[
+                {
+                    $set:{offerprice:'$price'}
+                }
+            ])
+        })
+    },
 }

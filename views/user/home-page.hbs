@@ -45,7 +45,8 @@
         <img style="width: 16rem; height: 16rem;" src="/product-images/{{this._id}}.jpg" alt="">
         
         <div class="card-body">
-          <h6 class="card-subtitle mb-2 text-muted format-price">{{this.price}} </h6>
+          <h6><strike class="card-subtitle mb-2 text-muted format-price">{{this.price}}</strike></h6>
+          <h6 class="card-subtitle mb-2 text-muted format-price">{{this.offerprice}} </h6>
           <h5 class="card-title text-muted">{{this.name}}</h5>
           <p class="card-text text-muted">{{this.category}}</p>
           <p class="card-text text-muted">{{this.description}}</p>
