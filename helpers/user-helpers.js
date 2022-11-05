@@ -314,7 +314,7 @@ module.exports = {
                 {
                     $group: {
                         _id: null,
-                        total: { $sum: { $multiply: ['$quantity', '$product.price'] } }
+                        total: { $sum: { $multiply: ['$quantity', '$product.offerprice'] } }
                     }
                 }
             ]).toArray()
@@ -439,7 +439,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let orders = await db.get().collection(collection.ORDER_COLLECTION)
                 .find({ userId: objectId(userId) }).toArray()
-            resolve(orders)
+            resolve(orders.reverse())
         })
     },
     getOrderProducts: (orderId) => {

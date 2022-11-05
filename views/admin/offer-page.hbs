@@ -1,113 +1,274 @@
 <section>
-    <div class="container">
+  <div class="container">
 
-        <form action="/admin/add-offer-category" method="post">
-            <!-- Name input -->
-            <div class="form-outline mb-4 mt-5 col-4">
-                <input type="text" id="form4Example1" class="form-control" name="offerName" />
-                <label class="form-label" for="form4Example1">offer Name</label>
-            </div>
-
-            <!-- Offer percentage -->
-            <div class="form-outline mb-4 col-4">
-                <input type="number" id="form4Example1" class="form-control" name="offerpercent" />
-                <label class="form-label" for="form4Example1">Offer percentage</label>
-            </div>
-
-            <!-- offer Description -->
-            <div class="form-outline mb-4 col-4">
-                <textarea class="form-control" id="form4Example3" rows="4" name="description"></textarea>
-                <label class="form-label" for="form4Example3">offer Description</label>
-            </div>
-
-            <input type="text" value="category" hidden>
-            <select class="form-select mb-4 col-4" name="category" aria-label="Default select example" required >
-                <label class="form-label" for="form4Example3">Select category</label>
-                <option></option>
-                {{#each datacategory}}
-                <option value="{{this.categories}}">{{this.categories}}</option>
-                {{/each}}
-            </select>
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-block mb-4 col-4">Add Coupon</button>
-            {{#if exists}}
-            <span class="text-danger">There is already offer in this Category</span>
-            {{/if}}
-        </form>
-    </div>
-</section>
-
-<section  class="h-100 mt-4  ">
-      <h2 class="text-center">category offer Details</h2>
-    
-      <div class="container  table-responsive">
-        <table class="table shadow text-center ">
-          <thead class="table-dark">
-            <tr>
-            <th ></th>  
-              <th scope="col">coupon name</th>
-              <th scope="col">offer percentage</th>
-              <th scope="col">Description</th>
-              <th scope="col">category</th>
-              <th scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody class="searchable "> 
-            {{#each alloffer}}         
-            <tr >
-         <td class="product-thumbnail"></td>
-              <td class="p-5">{{this.offerName}}</td>
-              <td class="p-5">{{this.offerpercent}}</td>
-              <td class="p-5">{{this.description}}</td> 
-              <td class="p-5">{{this.category}}</td>
-              <td class="p-5"><button type="button" onclick="sweetAlert('{{this._id}}','{{this.category}}')"><i class="fa fa-trash"></i></button></td>  
-              {{/each}}
-            </tr>
-          </tbody>
-        </table>
+    <form action="/admin/add-offer-category" method="post">
+      <!-- Name input -->
+      <div class="form-outline mb-4 mt-5 col-4">
+        <input type="text" id="form4Example1" class="form-control" name="offerName" />
+        <label class="form-label" for="form4Example1">offer Name</label>
       </div>
+
+      <!-- Offer percentage -->
+      <div class="form-outline mb-4 col-4">
+        <input type="number" id="form4Example1" class="form-control" name="offerpercent" />
+        <label class="form-label" for="form4Example1">Offer percentage</label>
+      </div>
+
+      <!-- offer Description -->
+      <div class="form-outline mb-4 col-4">
+        <textarea class="form-control" id="form4Example3" rows="4" name="description"></textarea>
+        <label class="form-label" for="form4Example3">offer Description</label>
+      </div>
+
+      <input type="text" name="type" value="category" hidden>
+      <select class="form-select mb-4 col-4" name="category" aria-label="Default select example" required>
+        <label class="form-label" for="form4Example3">Select category</label>
+        <option></option>
+        {{#each datacategory}}
+        <option value="{{this.categories}}">{{this.categories}}</option>
+        {{/each}}
+      </select>
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4 col-4">Add Offer</button>
+      {{#if exists}}
+      <span class="text-danger">There is already offer in this Category</span>
+      {{/if}}
+    </form>
+  </div>
 </section>
+
+<section class="h-100 mt-4  ">
+  <h2 class="text-center">category offer Details</h2>
+
+  <div class="container  table-responsive">
+    <table class="table shadow text-center ">
+      <thead class="table-dark">
+        <tr>
+          <th></th>
+          <th scope="col">coupon name</th>
+          <th scope="col">offer percentage</th>
+          <th scope="col">Description</th>
+          <th scope="col">category</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody class="searchable ">
+        {{#each alloffer}}
+        <tr>
+          <td class="product-thumbnail"></td>
+          <td class="p-5">{{this.offerName}}</td>
+          <td class="p-5">{{this.offerpercent}}</td>
+          <td class="p-5">{{this.description}}</td>
+          <td class="p-5">{{this.category}}</td>
+          <td class="p-5"><button type="button" onclick="sweetAlert('{{this._id}}','{{this.category}}')"><i
+                class="fa fa-trash"></i></button></td>
+          {{/each}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+
+
+<section>
+  <div class="container">
+    <h3 class="mt-5">Product Offer</h3>
+    <form action="/admin/add-offer-product" method="post">
+      <!-- Name input -->
+      <div class="form-outline mb-4 mt-5 col-4">
+        <input type="text" id="form4Example1" class="form-control" name="offerName" />
+        <label class="form-label" for="form4Example1">offer Name</label>
+      </div>
+
+
+      <!-- Offer percentage -->
+      <div class="form-outline mb-4 col-4">
+        <input type="number" id="form4Example1" class="form-control" name="offerpercent" />
+        <label class="form-label" for="form4Example1">Offer percentage</label>
+      </div>
+
+      <input type="text" name="type" value="product" hidden>
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4 col-4">Add Offer</button>
+      {{!-- {{#if exists}}
+      <span class="text-danger">There is already offer in this Category</span>
+      {{/if}} --}}
+    </form>
+  </div>
+</section>
+
+<section class="h-100 mt-4  ">
+  <h2 class="text-center">product offer Details</h2>
+
+  <div class="container  table-responsive">
+    <table class="table shadow text-center ">
+      <thead class="table-dark">
+        <tr>
+          <th></th>
+          <th scope="col">offer name</th>
+          <th scope="col">offer percentage</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody class="searchable ">
+        {{#each proffer}}
+        <tr>
+          <td class="product-thumbnail"></td>
+          <td class="p-5">{{this.offerName}}</td>
+          <td class="p-5">{{this.offerpercent}}</td>
+          <td class="p-5"><button type="button" onclick="sweetAlert2('{{this._id}}','{{this.offerName}}')"><i
+                class="fa fa-trash"></i></button></td>
+          {{/each}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="h-100 mt-4  ">
+  <h2 class="text-center">product offer</h2>
+
+  <div class="container  table-responsive">
+    <table class="table shadow text-center ">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">product name</th>
+          <th scope="col">price</th>
+          <th scope="col">offer price</th>
+
+          <th scope="col">offer</th>
+          <th scope="col">Applied offer</th>
+        </tr>
+      </thead>
+      <tbody class="searchable ">
+        {{#each products}}
+        <tr>
+          <td class="p-5">
+            <img src="/product-images/{{this._id}}.jpg" alt="Image" style="width: auto;height: 8rem;" class="img-fluid">
+          </td>
+          <td class="p-5">{{this.name}}</td>
+          <td class="p-5">{{this.price}}</td>
+          <td class="p-5">{{this.offerprice}}</td>
+          <td class="p-5">
+            <select class="form-select" name="off" id="{{this._id}}" onchange="offerApplied('{{this._id}}')">
+              <option value="" selected></option>
+              {{#each ../proffer}}
+                    <option id="offerName">{{this.offerName}}</option>
+              {{/each}}
+            </select>
+          </td>
+          <td>{{#if this.offerName}} {{this.offerName}} Offer Applied {{/if}}</td>
+          {{/each}}
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+</section>
+
 
 
 
 <script>
-  function sweetAlert(offerId,category) {
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this Coupon",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-        .then((willDelete) => {
-          if (willDelete) {
-            removeOffer(offerId,category);
-            swal("Address deleted succesfully..", {
-              icon: "success",
-            });
-          } else {
-            swal("Address is safe");
-          }
-        });
-    }
-
-    function removeOffer(offerId,category) {
-        console.log(offerId)
-        console.log(category)
-      $.ajax({
-        url: '/admin/delete-offer',
-        data: {
-          offerId,
-          category
-        },
-        method: 'post',
-        success: (response) => {
-          if (response.removeOffer) {
-            location.reload();
-          }
+  function sweetAlert(offerId, category) {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this offer",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          removeOffer(offerId, category);
+          swal("category offer deleted succesfully..", {
+            icon: "success",
+          });
+        } else {
+          swal("offer is safe");
         }
-      })
-    }
+      });
+  }
 
-   
+  function removeOffer(offerId, category) {
+    console.log(offerId)
+    console.log(category)
+    $.ajax({
+      url: '/admin/delete-offer',
+      data: {
+        offerId,
+        category
+      },
+      method: 'post',
+      success: (response) => {
+        location.reload();
+      }
+    })
+  }
+
+  function offerApplied(proId){
+    let st=document.getElementById(proId)
+    console.log(st)
+    let offerId = st.options[st.selectedIndex].text
+    console.log(offerId)
+      $.ajax({
+            url: '/admin/offer-applied',
+            data: {
+              proId,
+              offerId
+            },
+            method: 'post',
+            success: (response) => {
+              if (response.removeOffer) {
+                location.reload();
+              }
+            }
+          })
+      
+      }
+
+
+
+    function sweetAlert2(offerId, name) {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this product offer",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          removeOffer2(offerId, name);
+          swal("offer deleted succesfully..", {
+            icon: "success",
+          });
+        } else {
+          swal("offer is safe");
+        }
+      });
+  }
+
+  function removeOffer2(offerId, name) {
+    console.log(offerId)
+    console.log(name)
+    $.ajax({
+      url: '/admin/delete-offer-product',
+      data: {
+        offerId,
+        name
+      },
+      method: 'post',
+      success: (response) => {
+        location.reload();
+      }
+    })
+  }
+
+
+
 </script>

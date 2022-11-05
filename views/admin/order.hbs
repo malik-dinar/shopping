@@ -30,13 +30,6 @@
                     <td >
                      <select class="form-select" name="status" id="{{this._id}}" onchange="changeStatus('{{this._id}}')" >
                         <option value={{this.status}}  selected>{{this.status}}</option>
-                        {{!-- {{#if this.status =='placed'}}
-                            <option value="" checked>placed</option>
-                        {{/if}}
-                         <option value=""{{#if this.status =='shipped'}}checked {{/if}}>shipped</option>
-                        <option value=""{{#if this.status =='out of delivered'}}checked {{/if}}>out of delivered</option>
-                        <option value=""{{#if this.status =='cancelled'}}checked {{/if}}>cancelled</option> --}}
-                       
                         <option value="">placed</option>
                         <option value="">shipped</option>
                         <option value="">out of delivered</option> 

@@ -1,6 +1,7 @@
 var db = require('../config/connection')
 var collection = require('../config/collection')
 const { response } = require('../app')
+const { ObjectID } = require('bson')
 var objectId = require('mongodb').ObjectId
 
 module.exports = {
@@ -256,7 +257,7 @@ module.exports = {
 
     getCategoryOffer:()=>{
         return new Promise(async(resolve,reject)=>{
-            await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).find().toArray().then((response)=>{
+            await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).find({type:"category"}).toArray().then((response)=>{
                 resolve(response)
             })
         })
@@ -282,4 +283,58 @@ module.exports = {
             ])
         })
     },
+
+    addProductOffer:(details)=>{
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).insertOne(details)
+            resolve(details)
+        })
+    },
+
+    getAllproductOffer:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let proOffer=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).find({type:"product"}).toArray()
+            console.log(proOffer);
+            resolve(proOffer)
+        })
+    },
+
+    productOfferApplied:(details)=>{
+        return new Promise(async(resolve,reject)=>{
+            let appliedOffer=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).findOne({offerName:details.offerId})
+            let percentage=parseInt(appliedOffer.offerpercent)
+            let name=appliedOffer.offerName
+            await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({_id:objectId(details.proId)},
+            [
+                {
+                  $set: { 
+                        offerprice: {$subtract: ["$price",{$floor: {$multiply: [{$divide:[percentage,100]},"$price"]}}]},
+                        offerName:name
+                    }
+                }
+            ])
+            console.log('done');
+            resolve(response)
+        })
+    },
+
+    deleteProductOffer:(details)=>{
+        console.log('222');
+        console.log(details);
+        console.log(details.name);
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.PRODUCT_COLLECTION).updateMany({offerName:details.name},[
+                {
+                    $set:{offerprice:'$price'}
+                },
+                {
+                    $unset:['offerName']
+                }
+            ])
+
+            db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).deleteOne({_id:objectId(details.offerId)}).then(()=>{
+                resolve({status:true})
+            })
+        })
+    }
 }

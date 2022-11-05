@@ -295,8 +295,12 @@ router.post('/delete-coupon',(req,res)=>{
 router.get('/offer-cat',async(req,res)=>{
   productHelpers.getCategory().then((datacategory)=>{
     productHelpers.getCategoryOffer().then((alloffer)=>{
-      res.render('admin/offer-page',{admin:true,datacategory,alloffer,exists:req.session.Alreadyexist})
-      req.session.Alreadyexist=false;
+      productHelpers.getAllProducts().then((products)=>{
+        productHelpers.getAllproductOffer().then((proffer)=>{
+          res.render('admin/offer-page',{admin:true,datacategory,alloffer,exists:req.session.Alreadyexist,products,proffer})
+          req.session.Alreadyexist=false;
+        })
+      })      
     })
   }) 
 })
@@ -315,9 +319,28 @@ router.post('/add-offer-category',(req,res)=>{
 
 
 router.post('/delete-offer',(req,res)=>{
-  console.log('hi');
   productHelpers.deleteOffer(req.body).then((response)=>{
    res.json(response)
+  })
+})
+
+router.post('/add-offer-product',(req,res)=>{
+  productHelpers.addProductOffer(req.body).then(()=>{
+    res.redirect('/admin/offer-cat')
+  })
+})
+
+router.post('/offer-applied',(req,res)=>{
+  console.log(req.body);
+  productHelpers.productOfferApplied(req.body).then(()=>{
+    res.redirect('/admin/offer-cat')
+  })
+})
+
+router.post('/delete-offer-product',(req,res)=>{
+  console.log('1');
+  productHelpers.deleteProductOffer(req.body).then((response)=>{
+    res.json(response)
   })
 })
 
