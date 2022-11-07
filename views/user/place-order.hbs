@@ -41,34 +41,30 @@
                 <label class="form-check-label ms-2" for="flexRadioDefault2">
                   <button class="btn float-right" onclick="sweetAlert('{{this._id}}','{{this.no}}')" title="delete"><i
                       class="fa fa-trash"></i></button>
-
-
+                  <form action="/edit-address" method="post"> 
+                
                   <a class="btn float-right"
                     onclick='enableEdit("A1{{@index}}", "A2{{@index}}", "A3{{@index}}" , "A4{{@index}}" , "A5{{@index}}" , "A6{{@index}}" ,"enable-btn{{@index}}" )'
                     title="edit"><i class="fa fa-edit"></i></a>
-                  {{!-- <P name="name"> {{this.name}} <br></P> --}}
-                  <input class="adds border-0 outline-0" type="text" id="A1{{@index}}" value="{{this.name}}"
+                   <input class="adds border-0 outline-0" type="text" name="name" id="A1{{@index}}" value="{{this.name}}"
                     readonly><br>
-                  <input class="adds border-0 outline-0" type="text" id="A2{{@index}}" value="{{this.email}}" readonly>
+                    <input type="text" name="userId" value="{{this._id}}" hidden>
+                    <input type="text" name="addressId" value="{{this.no}}" hidden>
+
+                  <input class="adds border-0 outline-0" type="text" name="email" id="A2{{@index}}" value="{{this.email}}" readonly>
                   <br>
-                  <input class="adds border-0 outline-0" type="text" id="A3{{@index}}" value=" {{this.number}}"
+                  <input class="adds border-0 outline-0" type="text" name="number" id="A3{{@index}}" value=" {{this.number}}"
                     readonly><br>
-                  <input class="adds border-0 outline-0" type="text" id="A4{{@index}}" value="{{this.address}}"
+                  <input class="adds border-0 outline-0" type="text" name="address" id="A4{{@index}}" value="{{this.address}}"
                     readonly><br>
-                  <input class="adds border-0 outline-0" type="text" id="A5{{@index}}" value="{{this.state}}"
+                  <input class="adds border-0 outline-0" type="text" name="state" id="A5{{@index}}" value="{{this.state}}"
                     readonly><br>
-                  <input class="adds border-0 outline-0" type="text" id="A6{{@index}}" value="{{this.pincode}}"
+                  <input class="adds border-0 outline-0" type="text" name="pincode" id="A6{{@index}}" value="{{this.pincode}}"
                     readonly>
                   <button class="btn btn-primary btn-sm float-right" type="submit" id="enable-btn{{@index}}"
                     hidden>Save</button>
-                  {{!--
-                  <p name="email"> {{this.email}} <br></p>
-                  <p name="mobile"> {{this.number}} <br></p>
-                  <p name="address"> {{this.address}} <br></p>
-                  <p name="state"> {{this.state}} <br></p>
-                  <p name="pincode"> {{this.pincode}}</p> --}}
+                  </form>     
                 </label>
-
               </div>
 
 
@@ -426,7 +422,6 @@
 
 
     function sweetAlert(addressId, addressno) {
-      console.log('1')
       swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this Address",
@@ -488,17 +483,14 @@
         method: 'post',
         success: (response) => {
           if (response.price) {
-            console.log('1111111111111')
-            console.log(response)
-            console.log(response.discprice)
-            console.log(response.price)
-            console.log(response.coupon)
             notify();
             document.getElementById('discountprice').innerHTML = response.price
             document.getElementById('orderprice').innerHTML = response.discprice
-            document.getElementById('couponId').value =response.coupon
-            
-            // location.reload();
+            document.getElementById('couponId').value =response.coupon  
+            //location.reload();
+          }else{
+            console.log('failed')
+            location.reload();
           }
         }
       })
@@ -506,5 +498,37 @@
     function notify(){
        alertify.set('notifier','position', 'top-right');
        alertify.success('Coupon applied Succesfully ');
+    }
+
+
+    function editAddress(userId,addressId){
+      console.log('save clicked')
+      name = document.getElementById('A1').value
+   //   email = document.getElementById('A2').value
+   //   number = document.getElementById('A3').value
+   //   address = document.getElementById('A4').value
+   //   state = document.getElementById('A5').value
+   //   pincode = document.getElementById('A6').value
+
+   //   console.log(userId)
+   //   console.log(email)
+      console.log(name)
+      $.ajax({
+        url: '/edit-address',
+        data: {
+          userId,
+          addressId,
+          name,
+          email,
+          number,
+          address,
+          state,
+          pincode
+        },
+        method: 'post',
+        success: (response) => {
+            notify();
+        }
+      })
     }
   </script>

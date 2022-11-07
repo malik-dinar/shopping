@@ -204,7 +204,6 @@ module.exports = {
     },
 
     addCoupon: async (CouponDetails) => {
-        console.log('2');
         console.log(CouponDetails.coupon);
         return new Promise(async (resolve, reject) => {
             const couponexist = await db.get().collection(collection.OFFER_COLLECTION).findOne({ coupon: CouponDetails.coupon })
@@ -214,11 +213,14 @@ module.exports = {
                 resolve(couponAlreadyexist)
             }
             else {
-                return new Promise((resolve, reject) => {
-                    db.get().collection(collection.OFFER_COLLECTION).insertOne(CouponDetails).then(() => {
-                        couponAlreadyexist = false;
-                        resolve(couponAlreadyexist)
+                return new Promise(async(resolve, reject) => {
+                    await db.get().collection(collection.OFFER_COLLECTION).insertOne(CouponDetails).then(() => {
+                        console.log('2');
+                        resolve()
                     })
+                    couponAlreadyexist = false;
+                    console.log(couponAlreadyexist);
+                    resolve(couponAlreadyexist)
                 })
             }
         })

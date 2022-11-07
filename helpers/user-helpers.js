@@ -265,8 +265,8 @@ module.exports = {
                             $inc: { 'products.$.quantity': details.count }
                         }
                     ).then((response) => {
-                        resolve({ status: true })
-                    })
+                     resolve({ status: true })
+                })
             }
 
         })
@@ -681,7 +681,6 @@ module.exports = {
             } else {
                 reject()
             }
-
         })
     },
     changePaymentStatus: (orderId) => {
@@ -716,9 +715,6 @@ module.exports = {
     //=============================Delete saved address===============
 
     deleteAddress: (details) => {
-        console.log('push');
-        console.log(details.addressId);
-        console.log(objectId(details.addressId));
         return new Promise(async (resolve, reject) => {
             await db.get().collection(collection.USER_COLLECTIONS)
                 .updateOne({ _id: objectId(details.addressId) },
@@ -1026,14 +1022,58 @@ module.exports = {
 
 
 
-    updateAddress: (userId, userDetails) => {
-        console.log('don ');
-        console.log(userId);
-        console.log(userDetails);
-        return new Promise((resolve, reject) => {
+    updateAddress: (details) => {
+        return new Promise(async(resolve, reject) => {
+            let modifiedAddress=await db.get().collection(collection.USER_COLLECTIONS).aggregate([
+                {
+                    $match:{
+                        _id:objectId(details.userId)
+                    }
+                },
+                {
+                    $unwind: '$UserAddress'
+                },
+                {
+                    $project: {
+                        // _id:0,address:'$UserAddress'
+                        no: '$UserAddress.no',
+                        name: '$UserAddress.name',
+                        address: '$UserAddress.address',
+                        pincode: '$UserAddress.pincode',
+                        state: '$UserAddress.state',
+                        email: '$UserAddress.email',
+                        number: '$UserAddress.number'
+                    }
+                },
+                {
+                    $match:{no:details.addressId}
+                },
+                {
+                    $set:{
+                        name:details.name,
+                        address:details.address,
+                        pincode:details.pincode,
+                        state:details.state,
+                        email:details.email,
+                        number:details.number
+                    }
+                }
+            ]).toArray()
+            console.log('new address');
+            console.log(modifiedAddress[0]);
+            console.log(details.addressId);
+            let address=modifiedAddress[0]
 
-            db.get().collection(collection.USER_COLLECTIONS)
+            db.get().collection(collection.USER_COLLECTIONS).updateOne({_id:objectId(details.userId)},{
+                $pull:{UserAddress:{no:details.addressId}}
+            })
 
+            db.get().collection(collection.USER_COLLECTIONS).updateOne({_id:objectId(details.userId)},{
+                $push: {
+                    UserAddress:address
+                }
+            })
+            resolve()
         })
     },
 
@@ -1114,7 +1154,8 @@ module.exports = {
             let check={}
             if(CouponCheck){
                 if(CouponCheck.minimum < totalAndCode.total){
-                    let price=parseInt((totalAndCode.total/100)*CouponCheck.offerpercent)
+                    let coupon=parseInt(CouponCheck.offerpercent)
+                    let price=parseInt((totalAndCode.total/100)*coupon)
                     let offerPrice=totalAndCode.total-price
                     response.discprice=offerPrice;
                     response.price=price;
@@ -1122,7 +1163,6 @@ module.exports = {
                     resolve(response)
                 }
                 else{
-                    console.log('2');
                     check.couponErr=true;
                     resolve(check)
                 }
@@ -1141,7 +1181,5 @@ module.exports = {
                 resolve(price)
         })
     },
-
-
 }
 

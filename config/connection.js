@@ -3,8 +3,7 @@ const state={
     db:null
 }
 
-
-module.exports.connect=function(done){
+module.exports.connect=function(done){                    //arrow function
     const url = 'mongodb://localhost:27017';
     const dbname = 'shopping';
 
@@ -16,7 +15,6 @@ module.exports.connect=function(done){
           done()
 
       });
-
 }
 
 module.exports.get=function(){

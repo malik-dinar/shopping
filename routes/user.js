@@ -158,7 +158,6 @@ router.get('/logout', (req, res) => {
 
 
 router.get('/loginn', (req, res) => {
-
   res.redirect('/login')
 })
 
@@ -191,17 +190,12 @@ router.get('/product-view/:id', async (req, res) => {
 
 router.get('/category/:cat', (req, res) => {
   productHelpers.getCategory().then((datacategory) => {
-
     if (req.session.user) {
       productHelpers.getProductsInCategory(req.params.cat).then((products) => {
-        console.log("this is")
-        console.log(datacategory);
-        console.log(products);
         res.render('user/home-page2', { products, datacategory })
       })
     } else {
       productHelpers.getProductsInCategory(req.params.cat).then((products) => {
-        console.log('category pagae with out session');
         res.render('user/home-page2', { products, datacategory })
       })
     }
@@ -543,10 +537,7 @@ router.post('/verify-payment', (req, res) => {
 //=================================Delete saved Address======================//
 
 router.post('/delete-saved-address', (req, res) => {
-  console.log('check post');
-  console.log(req.body);
   userHelpers.deleteAddress(req.body).then((response) => {
-    console.log('reached');
     console.log(response);
     res.json(response)
   })
@@ -554,12 +545,10 @@ router.post('/delete-saved-address', (req, res) => {
 
 //=================================Edit saved Address======================//
 
-router.post('/edit-address/:id', (req, res) => {
-  console.log('kkkkkk');
+router.post('/edit-address', (req, res) => {
+  console.log('look at this');
   console.log(req.body);
-  console.log('params');
-  console.log(req.params.id);
-  userHelpers.updateAddress(req.params.id, req.body).then(() => {
+  userHelpers.updateAddress(req.body).then(() => {
     res.redirect('/place-order')
   })
 })

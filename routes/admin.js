@@ -103,13 +103,11 @@ router.get('/edit-product/:id',async(req,res)=>{
 router.post('/edit-product/:id',(req,res)=>{
   let id=req.params.id
   req.body.price=parseInt(req.body.price) 
-   productHelpers.updateproduct(req.params.id,req.body).then(()=>{
-     
-      
-      // if(req.files.image){
-      //   let image=req.files.image
-      //   image.mv('./public/product-images/'+id+'.jpg')
-      //   }
+   productHelpers.updateproduct(req.params.id,req.body).then(()=>{ 
+      if(req.files.image){
+        let image=req.files.image
+        image.mv('./public/product-images/'+id+'.jpg')
+        }
         res.redirect('/admin/admin-panel')
     })
 })
@@ -163,7 +161,7 @@ router.post('/add-category',(req,res)=>{
     }else{
       res.redirect('/admin/category-admin');
     }
-    
+
   })
 })
 
@@ -252,7 +250,6 @@ router.get('/admin-dashboard',async(req,res)=>{
   userHelpers.getOrders().then((order)=>{
     res.render('admin/admin-dashboard',{admin:true,total,status,totalUsers,totalOrders,orders,monthlySale,getmonths,getYears,getDays,order});
   })
- 
 })
 
 router.get('/view-users-products/:id',async(req,res)=>{
@@ -276,6 +273,7 @@ router.post('/add-coupon',(req,res)=>{
       req.session.AlreadyExists='Coupon already Exists'
       res.redirect('/admin/coupon-page')
     }else{
+      console.log('coupon added');
       res.redirect('/admin/coupon-page')
     }
   })
@@ -331,14 +329,12 @@ router.post('/add-offer-product',(req,res)=>{
 })
 
 router.post('/offer-applied',(req,res)=>{
-  console.log(req.body);
   productHelpers.productOfferApplied(req.body).then(()=>{
     res.redirect('/admin/offer-cat')
   })
 })
 
 router.post('/delete-offer-product',(req,res)=>{
-  console.log('1');
   productHelpers.deleteProductOffer(req.body).then((response)=>{
     res.json(response)
   })
