@@ -11,6 +11,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const paypal = require('paypal-rest-sdk');
 const { route } = require('./admin');
+const flash = require('connect-flash');
 
 
 
@@ -86,7 +87,10 @@ router.post('/signup', (req, res) => {
       req.session.refErr = 'referal id doesnt exists'
       res.redirect('/sign')
     }
-    else {
+    else if (response.mismatch){
+      req.session.redErr = 'password Mismatched'
+      res.redirect('/sign')
+    }else{
       //req.session.user=response.user
       // req.session.user = response
       // console.log(req.session.user._id);
@@ -358,10 +362,14 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
 
 
 
+
 // Get Otp login Page
 router.get('/otp-page', (req, res) => {
-  req.session.otpSended = true;
-  res.render('user/otp-page', { otpSended: req.session.otpSended })
+  console.log('22');
+  res.render('user/otp-page', { otpSended: req.session.otpSended ,  otp: req.session.otpSend ,  noaccount: req.session.noaccount })
+  req.session.otpSended = false;
+  req.session.noaccount=false;
+  // req.session.otpErr=false;
 })
 
 //POST Send Otp To Twilio 
@@ -372,23 +380,30 @@ router.post('/sendotp', (req, res) => {
     if (response.user) {
       let ph_no = (`+91${req.body.number}`)
       req.session.number = ph_no;
+      console.log('final');
       client.verify.v2.services('VA4c79484d8c15cb91629c185adacb4c30')
         .verifications
         .create({ to: ph_no, channel: 'sms' })
         .then(verification => {
+          console.log('pending');
           console.log(verification.status)
           //  req.session.preuser=response.user
           req.session.user = response.user
-          res.render('user/otp-page', { otpSend: true })
+          req.session.otpSended = true;
+          req.session.otpSend=true;
+          res.redirect('/otp-page')
         })
     } else {
-      res.render('user/otp-page', { noaccount: true })
+      console.log('number is not in db');
+      req.session.noaccount= true;
+      res.redirect('/otp-page')
     }
   })
 })
 
+
 router.post('/verifyotp', (req, res) => {
-  // console.log(`session phone number is ${req.session.phonenumber} and otp is ${req.body}`);
+   //console.log(`session phone number is ${req.session.phonenumber} and otp is ${req.body}`);
   console.log(req.session.number);
   let ph_no = req.session.number
   let otp = req.body.otp
@@ -400,11 +415,13 @@ router.post('/verifyotp', (req, res) => {
       if (verification_check.status == 'approved') {
         // user=req.session.user
         // console.log('lo');
-        // req.session.user=req.session.preuser
-
+        // req.session.user=req.session.preuserx
+        console.log('ok');
         res.redirect('/home')
       } else {
-        res.render('user/otp-page', { otpErr: true })
+        console.log('entered wrong otp');
+        req.session.otpErr=true;
+        res.redirect('/otp-page')
       }
     });
 
@@ -478,11 +495,7 @@ router.post('/changed-pass', verifyUserLogin, (req, res) => {
 
 router.get('/view-ordered-products/:id', async (req, res) => {
   let products = await userHelpers.getOrderProducts(req.params.id)
-  await userHelpers.orderStatus(req.params.id).then((order) => {
-    console.log('order');
-    console.log(order.status);
-    console.log(order.name);
-    console.log(order.date);
+  await userHelpers.orderStatus(req.params.id).then((order) => {    
     let orderStatus = order.status
     if (orderStatus == 'placed') {
       console.log(orderStatus, 'orderstatus')

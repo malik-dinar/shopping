@@ -47,7 +47,10 @@ module.exports = {
             } else if (refClaimed == null) {
                 refFailed.refcheck = true
                 resolve(refFailed)
-            } else {
+            } else if(userData.password == userData.repeatpass){
+                passMissMatch.mismatch = true
+                resolve(mismatch)
+            }else{
                 userData.password = await bcrypt.hash(userData.password, 10)
                 await db.get().collection(collection.USER_COLLECTIONS).insertOne(userData).then(async (userDetails) => {
                     wall = userDetails.insertedId
@@ -381,9 +384,6 @@ module.exports = {
     //====================Place Order====================
     placeOrder: (order, products, total, userId) => {
         return new Promise(async (resolve, reject) => {
-            console.log(order, products, total);
-            console.log(order.address);
-            console.log('111');
             addressid = order.addressRadio
             console.log(addressid);
             console.log(userId);
@@ -429,10 +429,25 @@ module.exports = {
                 date: moment().format('Do MMMM YY, hh:mm')
             }
 
+                        
+            let prod=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)},{
+                projection:{'products.item':true,'products.quantity':true}
+            })  
+            let prodArr=prod.products
+            prodArr.forEach(async(element)=>{
+                let quan=element.quantity
+                await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(element.item)},[
+                    {
+                        $set:{stock:{$subtract:['$stock',quan]}}
+                    }
+                ])
+            })
+
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
                 db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(userId) })
                 resolve(response.insertedId)
             })
+            
         })
     },
     getUserOrders: (userId) => {

@@ -43,6 +43,8 @@
                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xl" name="shop-sizes"></span> <span class="d-inline-block text-black"> Extra Large</span>
               </label>
             </div> --}}
+            <p id="zero" class="text-danger">Only {{product.stock}} stocks left</p>   
+            <p id="out" hidden >Out of stock</p>       
             <div class="mb-5">
               <div class="input-group mb-3" >
               <div class="input-group-prepend">
@@ -53,10 +55,10 @@
                     {{!-- <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button> --}}
               </div>
             </div>
-
             </div>
-            <p style="float: left;"><a href="/add-to-cart/{{product._id}}" class="buy-now btn btn-sm btn-primary">Add To Cart</a></p>
-            <p ><a href="" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</a></p>
+            <p style="float: left;"><a href="/add-to-cart/{{product._id}}" id="add" class="buy-now btn btn-sm btn-primary">Add To Cart</a></p>
+            <p ><a href="" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</a></p>
+            {{!-- <p ><input type="button" onclick="window.location.replace('jskhdcsbj')" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</input></p> --}}
 
           </div>
         </div>
@@ -197,4 +199,14 @@
   })
 
   //$('.xzoom, .xzoom-gallery').xzoom({position: 'lens', lensShape: 'circle', bg:true, sourceClass: 'xzoom-hidden'});
+
+  let outOfStock={{product.stock}}
+  console.log(outOfStock)
+  if(outOfStock<=0){
+    console.log('its zero')
+    document.getElementById("out").hidden = false;
+    document.getElementById("zero").hidden =true;
+    document.getElementById("buy").hidden =true;
+    document.getElementById("add").hidden =true;
+  }
 </script>

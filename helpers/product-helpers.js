@@ -40,15 +40,9 @@ module.exports = {
     },
     getCategoryname: (proId) => {
         return new Promise(async (resolve, reject) => {
-            // console.log('error ivide2');
             await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) }).then(async (product) => {
                 let catInProduct = product.category;
-                //  console.log(catInProduct);
-                //  console.log('error ivide3');
                 await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ _id: objectId(catInProduct) }).then((category) => {
-                    console.log('error ivide4');
-                    console.log(category);  //output null
-                    console.log("category name get cheythu");
                     resolve(category)
                 })
             })
@@ -200,6 +194,24 @@ module.exports = {
                 console.log(response);
                 resolve(response)
             })
+
+
+            console.log('cancell parupadi');
+            console.log(userId);
+            let prod=await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:objectId(details.order)},{
+                projection:{'products.item':true,'products.quantity':true}
+            })
+            console.log("----item and quantity----")
+            console.log(prod.products);
+            let prodArr=prod.products
+            prodArr.forEach(async(element)=>{
+                let quan=element.quantity
+                await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(element.item)},[
+                    {
+                    $set:{stock:{$add:['$stock',quan]}}
+                    }
+                ])
+            })
         })
     },
 
@@ -338,5 +350,5 @@ module.exports = {
                 resolve({status:true})
             })
         })
-    }
+    },
 }

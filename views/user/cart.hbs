@@ -47,7 +47,7 @@
                                 {{!--<td><strong class="text-black" id="{{this.product._id}}">Rs.{{totalOne.totalOne}}</strong></td> --}}
                           
                                 <td><button class="btn btn-primary btn-sm"
-                                        onclick="removeProduct('{{this._id}}','{{this.product._id}}')">X</button></td>
+                                        onclick="sweetAlertCart('{{this._id}}','{{this.product._id}}')">X</button></td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -286,6 +286,7 @@
 
 
     function removeProduct(cartId, proId) {
+      console.log('1')
         $.ajax({
             url: '/remove-product',
             data: {
@@ -295,11 +296,32 @@
             method: 'post',
             success: (response) => {
                 if (response.removeProduct) {
-                    confirm("('Are you want to delete this cart')")
                     location.reload()
                 }
             }
         })
+    }
+
+
+
+    function sweetAlertCart(cartId, proId) {
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this Address",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            removeProduct(cartId, proId);
+            swal("product deleted succesfully..", {
+              icon: "success",
+            });
+          } else {
+            swal("product is safe");
+          }
+        });
     }
 </script>
 

@@ -35,28 +35,8 @@ form input{
 
 {{#if otpSended}}
             <!-- Pills content -->
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                    <form action="/sendotp" method="post">
-                        <!-- Email input -->
-                        <div class="form-outline mb-4">
-                            <input type="text" id="" name="number" class="form-control" />
-                            <label class="form-label" for="">Mobile number</label>
-                        </div>
-                        {{#if noaccount}}
-                        <p class="text-danger">number is not verified</p>
-                        {{/if}}
-                        <button type="submit" class="btn btn-primary btn-block mb-4">Get OTP</button>
 
-
-                    </form>
-
-
-                    {{#if otpSend}}
-                    <p class="text-success">otp successfully sent</p>
-                    {{/if}}
-{{else}}
-
+            
                     <form action="/verifyotp" class="digit-group" data-group-name="digits" data-autosubmit="false"autocomplete="off" method="post">
                         <!--otp input -->
                         <div class="form-outline mb-4 " style="text-align: center;">
@@ -77,6 +57,29 @@ form input{
                         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
 
                     </form>
+{{else}}
+                       <div class="tab-content">
+                <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+                    <form action="/sendotp" method="post">
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="" name="number" class="form-control" />
+                            <label class="form-label" for="">Mobile number</label>
+                        </div>
+                        {{#if noaccount}}
+                        <p class="text-danger">number is not verified</p>
+                        {{/if}}
+                        <button type="submit" class="btn btn-primary btn-block mb-4">Get OTP</button>
+
+
+                    </form>
+
+                    {{#if otpErr}}
+                        <p class="text-danger">You entered wrong otp</p>
+                    {{/if}}
+                    {{#if otpSend}}
+                    <p class="text-success">otp successfully sent</p>
+                    {{/if}}
 {{/if}}
 
                     <!-- Register buttons -->

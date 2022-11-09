@@ -66,6 +66,7 @@ router.get('/add-product',(req,res)=>{
 
 router.post('/add-product',(req,res)=>{   
   req.body.price=parseInt(req.body.price) 
+  req.body.stock=parseInt(req.body.stock)
   productHelpers.addProduct(req.body).then((id)=>{ 
     let image=req.files.image
     image.mv('./public/product-images/'+id+'.jpg',(err,done)=>{

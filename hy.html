@@ -1,218 +1,71 @@
-<section class="admin-section bg-white ">
-    <div class="container ">
-    <div class="row bg-white pb-5">
-        <div class="col-xs-12 col-sm-12 col-md-12 shadow-lg bg-white">
-
-            {{!-- ****  Category offer form  **** --}}
-
-            <form id="createCategoryOffer" >
-            <h4 class="text-center mb-4 mt-2">Category Offer</h4>
-            <div class="row d-flex justify-content-around">
-                <div class="col-2 mb-1">
-                    <div class="form-group ">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="" required>
-                        <p class="text-danger fs-bold" id="categoryOfferNameErr"></p>
-                    </div>
-                </div>
-                <div class="col-2 mb-1">
-                    <div class="form-group">
-                        <label for="rate">Rate</label>
-                        <select class="form-select" name="percentage" id="rate" aria-label="Default select example" required>
-                            <option selected></option>
-                            <option value="5">5% discount</option>
-                            <option value="10">10% discount</option>
-                            <option value="15">15% discount</option>
-                            <option value="30">30% discount</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-2 mb-1">
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select class="form-select" name="category" aria-label="Default select example" required>
-                            <option selected></option>
-                        
-                            {{#each AllCategory}}
-                                <option value="{{this.category}}">{{this.category}}</option>
-                            {{/each}}
-                        </select>
-                        <p class="text-danger fs-bold" id="categoryOfferErr"></p>
-                    </div>
-                </div>
-                <div class="col-2 mb-1">
-                <div class="col-12 d-flex justify-content-center mt-3 mb-1 ">
-                    <button type="submit" class="btn btn-funky-moon mt-2 col-md-12 w-50 mb-4" id="addbtn">Add</button>
-                </div>        
-            </div>
-                <div class="col-2 mb-1">
-                    <div class="form-group ">
-                        <input type="text" class="form-control" name="type" placeholder="Type" value="category" hidden required>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-
-
-    {{!-- ***  Category offer table  *** --}}
-
-    <div class="col-xs-12 col-sm-12 col-md-12 justify-content-between shadow-lg bg-white">
-        <div class="table-responsive">
-            <table class="table bg-white shadow-lg" id="categoryOfferList"> 
-                <thead>
-                    <tr>
-                    <th class="col-1">S.no</th>
-                    <th scope="col" class="col-1">Name</th>
-                    <th scope="col" class="col-1">Discount(%)</th>
-                    <th scope="col" class="col-1">Category</th>
-                    <th scope="col" class="col-1"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each categoryOffer}}
-                    <tr>
-                    <td id="slNo1"></td>
-                    <td>{{this.name}}</td>
-                    <td>{{this.percentage}}</td>
-                    <td>{{this.category}} </td>
-                    <td ><button class="btn" onclick="removeCategoryOffer('{{this._id}}','{{this.name}}','{{this.category}}')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-{{!-- ****  Product offer form  **** --}}
-
-    <div class="col-xs-12 col-sm-12 col-md-12 shadow-lg bg-white mt-1">
-        <form id="createProductOffer" >
-            <h4 class="text-center mb-4 mt-2">Product Offer</h4>
-            <div class="row d-flex justify-content-around">
-            <div class="col-2 mb-1">
-                <div class="form-group ">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="" required>
-                    <p class="text-danger fs-bold" id="productOfferErr"></p>
-                </div>
-            </div>
-            <div class="col-2 mb-1">
-                <div class="form-group">
-                    <label for="brand_name">Percentage</label>
-                    <select class="form-select" name="percentage" id="percentage" aria-label="Default select example" required>
-                        <option selected></option>
-                        <option value="5">5% discount</option>
-                        <option value="10">10% discount</option>
-                        <option value="15">15% discount</option>
-                        <option value="30">30% discount</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-2 mb-1">
-                <div class="col-12 d-flex mt-3 mb-1 ">
-                    <button type="submit" class="btn btn-funky-moon mt-2 ms-1 col-md-12 w-50 mb-4" id="addbtn">Add</button>
-                </div>   
-            </div>
-            <div class="col-2 mb-1">
-                <div class="form-group ">
-                    <input type="text" class="form-control" name="type" placeholder="Type" value="product" hidden required>
-                </div>
-            </div>
-
-            </div>
-            </form>
-        </div> 
-
-{{!-- ***  Product offer table  *** --}}
-
-<div class="col-xs-12 col-sm-12 col-md-12 justify-content-between shadow-lg bg-white">
-    <div class="table-responsive">
-        <table class="table bg-white shadow-lg" id="productOfferList"> 
-            <thead>
-                <tr>
-                    <th class="">S.no</th>
-                    <th scope="col" class="">Name</th>
-                    <th scope="col" class="">Discount(%)</th>
-                    <th scope="col" class=""></th>
-                </tr>
-            </thead>
-            <tbody>
-            {{#each productOffer}}
-                <tr>
-                    <td id="slNo2"></td>
-                    <td>{{this.name}}</td>
-                    <td>{{this.percentage}}</td>
-                    <td ><button class="btn" onclick="removeProductOffer('{{this._id}}','{{this.name}}')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
-                </tr>
-            {{/each}}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{{!-- **** product table to apply the offer ***** --}}
-
-<div class="col-xs-12 col-sm-12 col-md-12 justify-content-between shadow-lg mt-5 bg-white">
-    <div class="table-responsive">
-        <table class="table bg-white shadow-lg" id="productList"> 
-            <thead>
-                <tr>
-                <th scope="col" class=""></th>
-                <th scope="col" class="">Image</th>
-                <th scope="col" class="">Model No.</th>
-                {{!-- <th scope="col" class="">Brand</th> --}}
-                <th scope="col" class="">Mrp</th>
-                <th scope="col" class="">Price</th>
-                <th scope="col" class="">Category</th>
-                <th scope="col" class="col-2">Offers</th>
-                <th scope="col" class=""></th>
-                 <th scope="col" class="col-2">Applied offer </th>
-
-               
-                </tr>
-            </thead>
-            <tbody>
-                 {{#each products}}
-                <tr>
-                    <td id="slNo3"></td>
-                    <td><img src="/product-images/{{this.image1}}"  style="width: 4rem; height:4rem;" alt=""> </td>
-                    <td>{{this.model}}</td>
-                    {{!-- <td>{{this.brand}}</td> --}}
-                    <td>{{this.mrp}}</td>
-                    <td>{{this.price}} </td>
-                    <td>{{this.category}}</td>
-                    <td>
-                       
-                        <select class="form-select w-75" name="category" id="{{this._id}}" aria-label="Default select example" required>
-                            <option selected></option>
-                            {{#each ../productOffer}}
-                                <option value="">{{this.name}}</option>
-                            {{/each}}
-                        </select>
-
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" onclick="applyProductOffer('{{this._id}}')">Save</button>
-                    </td>
-                    <td>{{#if this.offerName}}"{{this.offerName}}" - {{this.offerType}} offer {{/if}}</td>
-            
-           
-                    
-                </tr>
-                 {{/each}}
-
-            </tbody>
-        </table>
-        
-
-
-    </div>
-</div>
-
- </div>
-</div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+		<div class="card">
+			<div class="container-fliud">
+				<div class="wrapper row">
+					<div class="preview col-md-6">
+						
+						<div class="preview-pic tab-content">
+						  <div class="tab-pane active" id="pic-1"><img src="http://placekitten.com/400/252" /></div>
+						  <div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>
+						  <div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>
+						  <div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>
+						  <div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>
+						</div>
+						<ul class="preview-thumbnail nav nav-tabs">
+						  <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
+						  <li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
+						  <li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
+						  <li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
+						  <li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
+						</ul>
+						
+					</div>
+					<div class="details col-md-6">
+						<h3 class="product-title">men's shoes fashion</h3>
+						<div class="rating">
+							<div class="stars">
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star"></span>
+								<span class="fa fa-star"></span>
+							</div>
+							<span class="review-no">41 reviews</span>
+						</div>
+						<p class="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
+						<h4 class="price">current price: <span>$180</span></h4>
+						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
+						<h5 class="sizes">sizes:
+							<span class="size" data-toggle="tooltip" title="small">s</span>
+							<span class="size" data-toggle="tooltip" title="medium">m</span>
+							<span class="size" data-toggle="tooltip" title="large">l</span>
+							<span class="size" data-toggle="tooltip" title="xtra large">xl</span>
+						</h5>
+						<h5 class="colors">colors:
+							<span class="color orange not-available" data-toggle="tooltip" title="Not In store"></span>
+							<span class="color green"></span>
+							<span class="color blue"></span>
+						</h5>
+						<div class="action">
+							<button class="add-to-cart btn btn-default" type="button">add to cart</button>
+							<button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
 
 <script>
   var divs = document.querySelectorAll('#slNo1');

@@ -49,10 +49,10 @@
           <h6 class="card-subtitle mb-2 text-muted format-price">{{this.offerprice}} </h6>
           <h5 class="card-title text-muted">{{this.name}}</h5>
           <p class="card-text text-muted">{{this.category}}</p>
-          <p class="card-text text-muted">{{this.description}}</p>
-          <a href="/add-to-cart/{{this._id}}" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;"></i>Add to Cart</a>
+          <a href="/add-to-cart/{{this._id}}" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="add"></i>Add to Cart</a>
           {{!-- <button class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" onclick="addToCart({{'this._id'}})">Add to Cart</button> --}}
-          <a href="" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;"></i>Buy Now</a>
+          <a href="" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="buy"></i>Buy Now</a>
+          <input type="text" id="stock" value="{{this.stock}}{{@index}}" hidden>
         </div>
       </div>
       </a> 
@@ -197,4 +197,19 @@
     tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
     price[i].innerHTML = tempPrice
   }
+
+
+
+
+ // let outOfStock=document.getElementById('#stock').value
+ // console.log(outOfStock)
+ // if(outOfStock<=0){
+ //   console.log('its zero')
+ //   document.getElementById("buy").hidden =true;
+ //   document.getElementById("add").hidden =true;
+ // }
+
+
+  
 </script>
+
