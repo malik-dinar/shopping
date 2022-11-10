@@ -12,6 +12,7 @@ const client = require('twilio')(accountSid, authToken);
 const paypal = require('paypal-rest-sdk');
 const { route } = require('./admin');
 const flash = require('connect-flash');
+const Handlebars = require('handlebars');
 
 
 
@@ -28,7 +29,6 @@ const verifyUserLogin = (req, res, next) => {
     next()
   }
   else {
-
     //res.redirect('/')
     res.redirect('/login-page')
 
@@ -43,16 +43,44 @@ router.get('/', function (req, res, next) {
 
 //Get Homepage For Guest and Users 
 router.get('/home', async function (req, res) {
+  const perPage = 9;
+  let pageNum;
+  let skip;
+  let productCount;
+  let pages;
+  console.log('hi');
+  console.log(parseInt(req.query.page));
+  pageNum = parseInt(req.query.page);
+  console.log(typeof (pageNum))
+  skip = (pageNum - 1) * perPage
+  await productHelpers.getProductCount().then((count) => {
+    productCount = count;
+  })
+  pages = Math.ceil(productCount / perPage)
+
+  Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+    if (v1 === v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
+  Handlebars.registerHelper('for', function (from, to, incr, block) {
+    var accum = '';
+    for (var i = from; i <= to; i += incr)
+      accum += block.fn(i);
+    return accum;
+  });
+  
   productHelpers.getCategory().then((datacategory) => {
     // let user=req.session.user
-    productHelpers.getAllProducts().then(async (products) => {
+    productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
       let cartCount = null;
       if (req.session.user) {
         cartCount = await userHelpers.getCartCount(req.session.user._id)
         let user = req.session.user
-        res.render('user/home-page', { products, admin: false, user, datacategory, cartCount });
+        res.render('user/home-page', { products, admin: false, user, datacategory, cartCount ,totalDoc: productCount, currentPage: pageNum, pages: pages});
       } else {
-        res.render('user/home-page', { products, admin: false, datacategory });
+        res.render('user/home-page', { products, admin: false, datacategory ,totalDoc: productCount, currentPage: pageNum, pages: pages });
       }
     })
   })
@@ -65,10 +93,11 @@ router.get('/login-page', function (req, res) {
 
 router.get('/sign', (req, res) => {
   console.log('something goes wrong');
-  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr })
+  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr, redErr: req.session.redErr})
   req.session.emailErr = null;
   req.session.numErr = null;
   req.session.refErr = null;
+  req.session.redErr = null;
 });
 
 
@@ -88,6 +117,7 @@ router.post('/signup', (req, res) => {
       res.redirect('/sign')
     }
     else if (response.mismatch){
+      console.log('mismatched');
       req.session.redErr = 'password Mismatched'
       res.redirect('/sign')
     }else{
@@ -240,14 +270,25 @@ router.get('/add-to-cart/:id', async (req, res) => {
   }
 })
 
-router.post('/change-product-quantity', (req, res) => {
-  console.log(req.body);
-  userHelpers.changeProductQuantity(req.body).then(async (response) => {
-    response.total = await userHelpers.getTotalAmount(req.body.user)
-    //response.total=await userHelpers.getTotalAmount(req.body.user._id)
-
-    res.json(response)
+router.post('/change-product-quantity',async(req, res) => {
+  let availableQty;
+  await productHelpers.getProductStock(req.body).then((stock)=>{
+    console.log(stock,'qty,',req.body.quantity)
+    availableQty=stock;
   })
+    userHelpers.changeProductQuantity(req.body).then(async (response) => {
+      if(parseInt(req.body.quantity)<parseInt(availableQty))
+      {
+        response.total = await userHelpers.getTotalAmount(req.body.user)
+        //response.total=await userHelpers.getTotalAmount(req.body.user._id)
+        res.json(response)
+      }else{
+        let responseObj={}
+        responseObj.availableQty=availableQty
+        responseObj.status=false
+        res.json(responseObj)
+      } 
+    })
 })
 
 router.post('/remove-product', (req, res) => {
@@ -366,21 +407,18 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
 // Get Otp login Page
 router.get('/otp-page', (req, res) => {
   console.log('22');
-  res.render('user/otp-page', { otpSended: req.session.otpSended ,  otp: req.session.otpSend ,  noaccount: req.session.noaccount })
+  res.render('user/otp-page', { otpSended: req.session.otpSended ,  otp: req.session.otpSend ,  noaccount: req.session.noaccount , otpErr:req.session.otpErr})
   req.session.otpSended = false;
   req.session.noaccount=false;
-  // req.session.otpErr=false;
+   req.session.otpErr=false;
 })
 
 //POST Send Otp To Twilio 
 router.post('/sendotp', (req, res) => {
-  console.log(req.body);
   userHelpers.checkUser(req.body).then((response) => {
-    console.log(response);
     if (response.user) {
       let ph_no = (`+91${req.body.number}`)
       req.session.number = ph_no;
-      console.log('final');
       client.verify.v2.services('VA4c79484d8c15cb91629c185adacb4c30')
         .verifications
         .create({ to: ph_no, channel: 'sms' })
@@ -399,6 +437,21 @@ router.post('/sendotp', (req, res) => {
       res.redirect('/otp-page')
     }
   })
+})
+
+router.get('/sendotp2', (req, res) => {
+  let mobileNumber = req.session.number
+  client.verify.v2.services('VA4c79484d8c15cb91629c185adacb4c30')
+    .verifications
+    .create({ to: mobileNumber, channel: 'sms' })
+    .then((verification) => {
+      console.log(verification.status);
+      req.session.otpSended = true
+      res.redirect('/otp-page')
+    }).catch((err)=>{
+      console.log('errrorrooro')
+      console.log(err,'err')
+    })
 })
 
 

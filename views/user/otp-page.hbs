@@ -56,6 +56,14 @@ form input{
                         <!-- Submit button -->
                         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
 
+                    <div class="card-2">
+				    	<div class="content d-flex justify-content-center align-items-center">
+				    		<span>Didn't
+				    			get the code?</span> <button id="myBtn" onclick="resendOTP();"
+				    			class="btn u btn-light ml-3" disabled>Resend OTP in</button>
+				    		<p class="btn btn-link mt-3" id="myTimer"></p>
+				    	</div>
+				    </div>
                     </form>
 {{else}}
                        <div class="tab-content">
@@ -70,16 +78,15 @@ form input{
                         <p class="text-danger">number is not verified</p>
                         {{/if}}
                         <button type="submit" class="btn btn-primary btn-block mb-4">Get OTP</button>
-
-
                     </form>
 
+                    
                     {{#if otpErr}}
                         <p class="text-danger">You entered wrong otp</p>
                     {{/if}}
                     {{#if otpSend}}
                     <p class="text-success">otp successfully sent</p>
-                    {{/if}}
+                    {{/if}}                    
 {{/if}}
 
                     <!-- Register buttons -->
@@ -97,31 +104,79 @@ form input{
         <button type="submit">ok</button>
     </form> --}}
     <script>
-        $('.digit-group').find('input').each(function () {
-            $(this).attr('maxlength', 1);
-            $(this).on('keyup', function (e) {
-                var parent = $($(this).parent());
+        
+	function resendOTP() {
+	//	console.log('functioncalled')
+    //    number=document.getElementById('num').value
+       
+		$.ajax({
+			url: "/sendotp2",
+			method: 'get'
+		})
+	}
 
-                if (e.keyCode === 8 || e.keyCode === 37) {
-                    var prev = parent.find('input#' + $(this).data('previous'));
 
-                    if (prev.length) {
-                        $(prev).select();
-                    }
-                } else if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
-                    var next = parent.find('input#' + $(this).data('next'));
 
-                    if (next.length) {
-                        $(next).select();
-                    } else {
-                        if (parent.data('autosubmit')) {
-                            parent.submit();
-                        }
-                    }
-                }
-            });
-        });
+	var sec = 30;
+	var myTimer = document.getElementById('myTimer');
+	var myBtn = document.getElementById('myBtn');
+	window.onload = countDown;
 
-    </script>
+	function countDown() {
+		if (sec < 10) {
+			myTimer.innerHTML = "0	" + sec;
+		} else {
+			myTimer.innerHTML = sec;
+		}
+		if (sec <= 1) {
+			$("#myBtn").removeAttr("disabled");
+			$("#myBtn").removeClass().addClass("ml-2 btn btn-link btn-light");
+			$("#myTimer").fadeTo(500, 0);
+			myBtn.innerHTML = "RESEND";
+			return;
+		}
+		sec -= 1;
+		window.setTimeout(countDown, 1000);
+	}
 
+
+
+
+
+
+
+
+
+
+
+    //    $('.digit-group').find('input').each(function () {
+    //        $(this).attr('maxlength', 1);
+    //        $(this).on('keyup', function (e) {
+    //            var parent = $($(this).parent());
+//
+    //            if (e.keyCode === 8 || e.keyCode === 37) {
+    //                var prev = parent.find('input#' + $(this).data('previous'));
+//
+    //                if (prev.length) {
+    //                    $(prev).select();
+    //                }
+    //            } else if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
+    //                var next = parent.find('input#' + $(this).data('next'));
+//
+    //                if (next.length) {
+    //                    $(next).select();
+    //                } else {
+    //                    if (parent.data('autosubmit')) {
+    //                        parent.submit();
+    //                    }
+    //                }
+    //            }
+    //        });
+    //    });
+//
+//
+    //    console.log(otpErr)
+//
+    
   
+</script>

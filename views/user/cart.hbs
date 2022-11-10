@@ -276,7 +276,14 @@
                 if (response.removeProduct) {
                     alert("Product Removed from cart")
                     location.reload()
-                } else {
+                }else if(response.status == false)
+                {
+                  console.log('out of stock')
+                    swal("oops!", `Only ${response.availableQty} stocks left`, "error").then((success)=>{
+                      location.reload();
+                    })
+                }else {
+                  console.log('incremnet')
                     document.getElementById(proId).innerHTML = quantity + count
                     document.getElementById('total').innerHTML = response.total
                 }

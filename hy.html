@@ -1,189 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container">
-		<div class="card">
-			<div class="container-fliud">
-				<div class="wrapper row">
-					<div class="preview col-md-6">
-						
-						<div class="preview-pic tab-content">
-						  <div class="tab-pane active" id="pic-1"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>
-						</div>
-						<ul class="preview-thumbnail nav nav-tabs">
-						  <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						</ul>
-						
-					</div>
-					<div class="details col-md-6">
-						<h3 class="product-title">men's shoes fashion</h3>
-						<div class="rating">
-							<div class="stars">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>
-								<span class="fa fa-star"></span>
-							</div>
-							<span class="review-no">41 reviews</span>
-						</div>
-						<p class="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
-						<h4 class="price">current price: <span>$180</span></h4>
-						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
-						<h5 class="sizes">sizes:
-							<span class="size" data-toggle="tooltip" title="small">s</span>
-							<span class="size" data-toggle="tooltip" title="medium">m</span>
-							<span class="size" data-toggle="tooltip" title="large">l</span>
-							<span class="size" data-toggle="tooltip" title="xtra large">xl</span>
-						</h5>
-						<h5 class="colors">colors:
-							<span class="color orange not-available" data-toggle="tooltip" title="Not In store"></span>
-							<span class="color green"></span>
-							<span class="color blue"></span>
-						</h5>
-						<div class="action">
-							<button class="add-to-cart btn btn-default" type="button">add to cart</button>
-							<button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
+<script>
+	var divs = document.querySelectorAll('#slNo1');
+	for (var i = 0; i < divs.length; ++i) {
+		divs[i].innerHTML = i + 1;
+	}
+	var divs = document.querySelectorAll('#slNo2');
+	for (var i = 0; i < divs.length; ++i) {
+		divs[i].innerHTML = i + 1;
+	}
+	var divs = document.querySelectorAll('#slNo3');
+	for (var i = 0; i < divs.length; ++i) {
+		divs[i].innerHTML = i + 1;
+	}
+	$(document).ready(function () {
+		$('#categoryOfferList').DataTable();
+		$('#productOfferList').DataTable();
+		$('#productList').DataTable();
+	});
+
+
+
+	$("#createCategoryOffer").submit((e) => {
+		e.preventDefault()
+		$.ajax({
+			url: '/admin/category-offer',
+			data: $('#createCategoryOffer').serialize(),
+			method: 'post',
+			success: async (response) => {
+				if (response.offerNameExist) {
+					document.getElementById("categoryOfferNameErr").innerHTML = "Offer already exist!"
+				} else if (response.categoryOfferExist) {
+					document.getElementById("categoryOfferErr").innerHTML = "Category Offer already exist!"
+				} else {
+					await Swal.fire({
+						position: 'inherit',
+						icon: 'success',
+						title: 'New Category Offer created and applied successfully',
+						showConfirmButton: false,
+						timer: 2000
+					})
+					location.reload()
+				}
+
+			}
+		})
+	})
+
+	$("#createProductOffer").submit((e) => {
+		e.preventDefault()
+		$.ajax({
+			url: '/admin/product-offer',
+			data: $('#createProductOffer').serialize(),
+			method: 'post',
+			success: async (response) => {
+				if (response.productOfferExist) {
+					document.getElementById("productOfferErr").innerHTML = "Offer already exist!"
+				} else {
+					await Swal.fire({
+						position: 'inherit',
+						icon: 'success',
+						title: 'New Offer has been created',
+						showConfirmButton: false,
+						timer: 1500
+					})
+					location.reload()
+				}
+
+			}
+		})
+	})
+
+	function applyProductOffer(productId) {
+		let st = document.getElementById(productId)
+		let offer = st.options[st.selectedIndex].text
+
+		$.ajax({
+			url: '/admin/apply-product-offer',
+			data: {
+				proId: productId,
+				offerName: offer
+			},
+			method: 'post',
+			success: (response) => {
+				console.log("Success ayi")
+				custom = offer
+				location.reload()
+			}
+		})
+	}
+
+	function removeCategoryOffer(offerId, offerName, offCategory) {
+		Swal.fire({
+			title: 'Are you want to delete ' + offerName,
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: '/admin/remove-category-offer',
+					data: {
+						offerId: offerId,
+						offCategory: offCategory
+					},
+					method: 'post',
+					success: (response) => {
+						location.reload()
+					}
+				})
+			} else {
+
+			}
+		})
+
+
+
+	}
+</script>
 
 <script>
-  var divs = document.querySelectorAll('#slNo1');
-  for (var i = 0; i < divs.length; ++i) {
-      divs[i].innerHTML = i + 1;
-  }
-  var divs = document.querySelectorAll('#slNo2');
-  for (var i = 0; i < divs.length; ++i) {
-      divs[i].innerHTML = i + 1;
-  }
-  var divs = document.querySelectorAll('#slNo3');
-  for (var i = 0; i < divs.length; ++i) {
-      divs[i].innerHTML = i + 1;
-  }
-   $(document).ready( function () {
-  $('#categoryOfferList').DataTable();
-  $('#productOfferList').DataTable();
-  $('#productList').DataTable();
-  } );
+	router.get('/', async function (req, res, next) {
+		let banner;
+		const perPage = 16;
+		let pageNum;
+		let skip;
+		let productCount;
+		let pages;
+		pageNum = parseInt(req.query.page);
+		console.log(typeof (pageNum))
+		skip = (pageNum - 1) * perPage
+		await productHelpers.getProductCount().then((count) => {
+			productCount = count;
+		})
+		pages = Math.ceil(productCount / perPage)
 
-  
+		Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+			if (v1 === v2) {
+				return options.fn(this);
+			}
+			return options.inverse(this);
+		});
+		Handlebars.registerHelper('for', function (from, to, incr, block) {
+			var accum = '';
+			for (var i = from; i <= to; i += incr)
+				accum += block.fn(i);
+			return accum;
+		});
 
-    $("#createCategoryOffer").submit((e)=>{
-        e.preventDefault()
-         $.ajax({
-          url:'/admin/category-offer',
-          data:$('#createCategoryOffer').serialize(),
-          method:'post',
-          success:async(response)=>{
-            if(response.offerNameExist){
-                document.getElementById("categoryOfferNameErr").innerHTML="Offer already exist!"
-            }else if(response.categoryOfferExist){
-                document.getElementById("categoryOfferErr").innerHTML="Category Offer already exist!"
-            }else{
-                await Swal.fire({
-                    position: 'inherit',
-                    icon: 'success',
-                    title: 'New Category Offer created and applied successfully',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
-                location.reload()
-            }
-            
-          }
-        })
-    })
 
-    $("#createProductOffer").submit((e)=>{
-        e.preventDefault()
-         $.ajax({
-          url:'/admin/product-offer',
-          data:$('#createProductOffer').serialize(),
-          method:'post',
-          success:async(response)=>{
-            if(response.productOfferExist){
-                document.getElementById("productOfferErr").innerHTML="Offer already exist!"
-            }else{
-                await Swal.fire({
-                    position: 'inherit',
-                    icon: 'success',
-                    title: 'New Offer has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                location.reload()
-            }
-            
-          }
-        })
-    })
 
-    function applyProductOffer(productId){
-        let st=document.getElementById(productId)    
-        let offer = st.options[st.selectedIndex].text
+		await productHelpers.getActiveBanner().then((activeBanner) => {
+			banner = activeBanner;
+		})
+		console.log(banner, 'banner')
+		await productHelpers.getAllCategories().then(async (categories) => {
 
-         $.ajax({
-          url:'/admin/apply-product-offer',
-          data:{
-            proId:productId,
-            offerName:offer
-          },
-          method:'post',
-          success:(response)=>{
-            console.log("Success ayi")
-            custom=offer
-            location.reload()
-          }
-        })
-    }
+			await productHelpers.getPaginatedProducts(skip, perPage).then((products) => {
 
-    function removeCategoryOffer(offerId,offerName,offCategory){
-      Swal.fire({
-        title: 'Are you want to delete '+offerName,
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url:'/admin/remove-category-offer',
-          data:{
-            offerId:offerId,
-            offCategory:offCategory
-          },
-          method:'post',
-          success:(response)=>{
-            location.reload()
-          }
-        })
-      }else{
-        
-      }
-    })
+				res.render('user/view-products', { products, categories, totalDoc: productCount, currentPage: pageNum, pages: pages, banner: banner })
+				
+			})
+		})
 
-  
+	});
+</script>
 
-}
+
+
+
+</script>

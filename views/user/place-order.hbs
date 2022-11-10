@@ -501,34 +501,4 @@
     }
 
 
-    function editAddress(userId,addressId){
-      console.log('save clicked')
-      name = document.getElementById('A1').value
-   //   email = document.getElementById('A2').value
-   //   number = document.getElementById('A3').value
-   //   address = document.getElementById('A4').value
-   //   state = document.getElementById('A5').value
-   //   pincode = document.getElementById('A6').value
-
-   //   console.log(userId)
-   //   console.log(email)
-      console.log(name)
-      $.ajax({
-        url: '/edit-address',
-        data: {
-          userId,
-          addressId,
-          name,
-          email,
-          number,
-          address,
-          state,
-          pincode
-        },
-        method: 'post',
-        success: (response) => {
-            notify();
-        }
-      })
-    }
   </script>

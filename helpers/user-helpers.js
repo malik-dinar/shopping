@@ -32,11 +32,11 @@ module.exports = {
             let userEmail = await db.get().collection(collection.USER_COLLECTIONS).findOne({ email: userData.email })
             let userMobile = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: userData.number })
             let refClaimed
-            if (userData.referl) {
-                refClaimed = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: ref })
-            } else {
-                refClaimed = true
-            }
+                    if (userData.referl) {
+                        refClaimed = await db.get().collection(collection.USER_COLLECTIONS).findOne({ number: ref })
+                    } else {
+                        refClaimed = true
+                    }
             console.log(refClaimed);
             if (userEmail) {
                 userEmail.emailcheck = true;
@@ -47,10 +47,15 @@ module.exports = {
             } else if (refClaimed == null) {
                 refFailed.refcheck = true
                 resolve(refFailed)
-            } else if(userData.password == userData.repeatpass){
-                passMissMatch.mismatch = true
-                resolve(mismatch)
+            } else if(userData.password != userData.repeatpass){
+                console.log('mismatched 1');
+                passMissMatch={}
+                passMissMatch.mismatch = true;
+                resolve(passMissMatch)
             }else{
+                console.log('111144111');
+                console.log(userData.password);
+                console.log(userData.repeatpass);
                 userData.password = await bcrypt.hash(userData.password, 10)
                 await db.get().collection(collection.USER_COLLECTIONS).insertOne(userData).then(async (userDetails) => {
                     wall = userDetails.insertedId
@@ -1196,5 +1201,7 @@ module.exports = {
                 resolve(price)
         })
     },
+
+
 }
 

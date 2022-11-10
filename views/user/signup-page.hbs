@@ -50,7 +50,9 @@
                         <input type="password" id="contact-password" class="form-control" name="repeatpass" onblur="validatePassword()" required />
                         <label class="form-label" for="registerRepeatPassword">Repeat password</label>
                     </div>
-                    <span class="text-danger" id="password-error"></span>
+                    {{#if redErr}}
+                        <span class="text-danger" id="password-error"></span>
+                    {{/if}}
 
                     <!-- Referel -->
                     <div class="form-outline mb-4">

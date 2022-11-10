@@ -351,4 +351,26 @@ module.exports = {
             })
         })
     },
+
+    getProductStock:async(details)=>{
+        return new Promise(async(resolve,reject)=>{
+            let stock=await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(details.product)})
+            console.log('available stock');
+            console.log(stock.stock);
+            resolve(stock.stock)
+        })
+    },
+
+    getProductCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let count=await db.get().collection(collection.PRODUCT_COLLECTION).countDocuments()
+            resolve(count)
+        })
+    },
+    getPaginatedProducts: (skip, limit) => {
+        return new Promise(async (resolve, reject) => {
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray()
+            resolve(products.reverse())
+        })
+    },
 }

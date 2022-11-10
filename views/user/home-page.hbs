@@ -50,6 +50,8 @@
           <h5 class="card-title text-muted">{{this.name}}</h5>
           <p class="card-text text-muted">{{this.category}}</p>
           <a href="/add-to-cart/{{this._id}}" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="add"></i>Add to Cart</a>
+          {{!-- <input type="submit" value="Add to Cart" onclick="window.location.replace('/add-to-cart/{{this._id}}')" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="add"></input> --}}
+          {{!-- <p ><input type="button" onclick="window.location.replace('jskhdcsbj')" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</input></p> --}}
           {{!-- <button class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" onclick="addToCart({{'this._id'}})">Add to Cart</button> --}}
           <a href="" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="buy"></i>Buy Now</a>
           <input type="text" id="stock" value="{{this.stock}}{{@index}}" hidden>
@@ -60,6 +62,25 @@
     {{/each}}
   </div>
 </div>
+
+<nav aria-label="Page navigation example">
+		<ul class="pagination">
+			<li class="page-item">
+				<a class="page-link" href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			{{#for 1 pages 1}}
+			 <li class="page-item "><a class="page-link {{#ifCond this ../currentPage}} active {{/ifCond}}" href="/home?page={{this}}">{{this}}</a></li>
+			{{/for}}
+
+			<li class="page-item">
+				<a class="page-link" href="#" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		</ul>
+</nav>
 
 
 
@@ -197,19 +218,6 @@
     tempPrice = `Rs.${tempPrice.toLocaleString('hi')}`
     price[i].innerHTML = tempPrice
   }
-
-
-
-
- // let outOfStock=document.getElementById('#stock').value
- // console.log(outOfStock)
- // if(outOfStock<=0){
- //   console.log('its zero')
- //   document.getElementById("buy").hidden =true;
- //   document.getElementById("add").hidden =true;
- // }
-
-
   
 </script>
 
