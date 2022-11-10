@@ -328,6 +328,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
   let products = await userHelpers.getCartProductList(userId)
    totalPrice = await userHelpers.getTotalAmount(userId)
   if(req.body.couponName){
+    console.log('hello');
+    console.log(req.body.couponName);
     totalPrice = await userHelpers.getTotalAmount(userId)
     let discountAmount = await userHelpers.PromocodePlace(req.body.couponName,totalPrice)
     totalPrice = totalPrice-discountAmount

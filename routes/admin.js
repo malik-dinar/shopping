@@ -69,14 +69,21 @@ router.post('/add-product',(req,res)=>{
   req.body.stock=parseInt(req.body.stock)
   productHelpers.addProduct(req.body).then((id)=>{ 
     let image=req.files.image
-    image.mv('./public/product-images/'+id+'.jpg',(err,done)=>{
-      if(!err){
-        res.redirect('/admin/admin-panel')
-      }else{
-        console.log(err);
-      }
-    })
-  })
+    let image2 = req.files.image2
+    let image3 = req.files.image3
+        image.mv('./public/images/' +  id+ '.jpg')
+        image2.mv('./public/images/' + id + '2.jpg')
+        image3.mv('./public/images/' +  id+ '3.jpg', (err, done) =>  {
+            if (!err) {
+              console.log('jjjjjjjj');
+            res.redirect('/admin/admin-panel')
+            }
+            else{
+              console.log('eerrre');
+              console.log(err)
+            } 
+        })
+  }) 
 })
 
 

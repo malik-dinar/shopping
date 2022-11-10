@@ -8,7 +8,6 @@ module.exports = {
 
     addProduct: (product) => {
         return new Promise(async (resolve, reject) => {
-            //user.password=await bcrypt.hash(user.password,10)
             product.offerprice=product.price
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(product).then((data) => {
                 console.log('add product done');

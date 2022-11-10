@@ -1,76 +1,103 @@
 <style>
   body {
-  line-height: 1.7;
-  color: #8c92a0;
-  font-weight: 300;
-  font-size: 16px; }
-</style> 
- 
- 
- <div class="site-section">
-      <div class="container mt-5">
-        <div class="row">
+    line-height: 1.7;
+    color: #8c92a0;
+    font-weight: 300;
+    font-size: 16px;
+  }
+</style>
 
-          <div class="col-md-6 xzoom-container">
-            {{!-- <img src="/product-images/{{product._id}}.jpg" alt="Image" class="img-fluid xzoom "style="width:25rem">  --}}
-            <img  src="/product-images/{{product._id}}.jpg" class="card-img img-fluid xzoom crosshair" style="width:25rem" xoriginal="/product-images/{{product._id}}.jpg" >           
-            <div class="xzoom-thumbs ">
-                {{!-- <a href="/product-images/{{product._id}}.jpg">
-                  <img class="xzoom-gallery" src="/product-images/{{product._id}}.jpg"  xpreview="/product-images/{{product._id}}.jpg">
-                </a> --}}
-            </div> 
-          </div>
-          <div class="col-md-6">
-            <h2 class="text-black">{{product.name}}</h2>
-            <p class="text-dark">{{product.category}}</p> 
-            <p >{{product.description}}</p>               
-            <p>100% Original Products <br>
-              Pay on delivery might be available <br>
-              Easy 30 days returns and exchanges <br>
-              Try and Buy might be available</p>
-            <p><strong class="text-primary h4">Rs.{{product.offerprice}}</strong></p>
-            {{!-- <div class="mb-1 d-flex">
-              <label for="option-sm" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-sm" name="shop-sizes"></span> <span class="d-inline-block text-black">Small</span>
-              </label>
-              <label for="option-md" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-md" name="shop-sizes"></span> <span class="d-inline-block text-black">Medium</span>
-              </label>
-              <label for="option-lg" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-lg" name="shop-sizes"></span> <span class="d-inline-block text-black">Large</span>
-              </label>
-              <label for="option-xl" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xl" name="shop-sizes"></span> <span class="d-inline-block text-black"> Extra Large</span>
-              </label>
-            </div> --}}
-            <p id="zero" class="text-danger">Only {{product.stock}} stocks left</p>   
-            <p id="out" hidden >Out of stock</p>       
-            <div class="mb-5">
-              <div class="input-group mb-3" >
-              <div class="input-group-prepend">
-                {{!-- <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button> --}}
-              </div>
-              {{!-- <input type="text" class="form-control text-center" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" style="max-width: 59px;"> --}}
-              <div class="input-group-append">
-                    {{!-- <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button> --}}
+
+<div class="site-section">
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col 6">
+        <div class="ecommerce-gallery" data-mdb-zoom-effect="true" data-mdb-auto-height="true">
+          <div class="row py-3 shadow-5">
+            <div class="col-11 mb-1 "  >
+              <div class="lightbox  xzoom-container">
+                <img  src="/product-images/{{product._id}}.jpg"  xoriginal="/product-images/{{product._id}}.jpg"
+                  alt="Gallery image 1" class="card-img img-fluid xzoom crosshair" />
               </div>
             </div>
+            <div class="col-2 mt-1">
+              <img  src="/product-images/{{product._id}}2.jpg" 
+                alt="Gallery image 1" class="active w-100" />
             </div>
-            <p style="float: left;"><a href="/add-to-cart/{{product._id}}" id="add" class="buy-now btn btn-sm btn-primary">Add To Cart</a></p>
-            <p ><a href="" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</a></p>
-            {{!-- <p ><input type="button" onclick="window.location.replace('jskhdcsbj')" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</input></p> --}}
-
+            <div class="col-2 mt-1">
+              <img  src="/product-images/{{product._id}}3.jpg" 
+                alt="Gallery image 2" class="w-100" />
+            </div>
+            <div class="col-2 mt-1">
+              <img  src="/product-images/{{product._id}}2.jpg" 
+                alt="Gallery image 3" class="w-100" />
+            </div>
+            <div class="col-2 mt-1">
+              <img  src="/product-images/{{product._id}}3.jpg"   
+                alt="Gallery image 4" class="w-100" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div class="col-md-6">
+        <h2 class="text-black">{{product.name}}</h2>
+        <p class="text-dark">{{product.category}}</p>
+        <p>{{product.description}}</p>
+        <p>100% Original Products <br>
+          Pay on delivery might be available <br>
+          Easy 30 days returns and exchanges <br>
+          Try and Buy might be available</p>
+        <p><strong class="text-primary h4">Rs.{{product.offerprice}}</strong></p>
+        {{!-- <div class="mb-1 d-flex">
+          <label for="option-sm" class="d-flex mr-3 mb-3">
+            <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-sm"
+                name="shop-sizes"></span> <span class="d-inline-block text-black">Small</span>
+          </label>
+          <label for="option-md" class="d-flex mr-3 mb-3">
+            <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-md"
+                name="shop-sizes"></span> <span class="d-inline-block text-black">Medium</span>
+          </label>
+          <label for="option-lg" class="d-flex mr-3 mb-3">
+            <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-lg"
+                name="shop-sizes"></span> <span class="d-inline-block text-black">Large</span>
+          </label>
+          <label for="option-xl" class="d-flex mr-3 mb-3">
+            <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xl"
+                name="shop-sizes"></span> <span class="d-inline-block text-black"> Extra Large</span>
+          </label>
+        </div> --}}
+        <p id="zero" class="text-danger">Only {{product.stock}} stocks left</p>
+        <p id="out" hidden>Out of stock</p>
+        <div class="mb-5">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              {{!-- <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button> --}}
+            </div>
+            {{!-- <input type="text" class="form-control text-center" value="1" placeholder=""
+              aria-label="Example text with button addon" aria-describedby="button-addon1" style="max-width: 59px;">
+            --}}
+            <div class="input-group-append">
+              {{!-- <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button> --}}
+            </div>
+          </div>
+        </div>
+        <p style="float: left;"><a href="/add-to-cart/{{product._id}}" id="add"
+            class="buy-now btn btn-sm btn-primary">Add To Cart</a></p>
+        <p><a href="" id="buy" class="buy-now btn btn-sm btn-primary ml-3">Buy Now</a></p>
+        {{!-- <p><input type="button" onclick="window.location.replace('jskhdcsbj')" id="buy"
+            class="buy-now btn btn-sm btn-primary ml-3">Buy Now</input></p> --}}
 
-    <!-- Footer -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
 <footer class="text-center text-lg-start bg-white text-muted">
   <!-- Section: Social media -->
   <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
     <!-- Left -->
-    <div class="me-5 d-none d-lg-block">  
+    <div class="me-5 d-none d-lg-block">
       <span>Get connected with us on social networks:</span>
     </div>
     <!-- Left -->
@@ -112,7 +139,8 @@
             <i class="fas fa-gem me-3 text-secondary"></i>D Dress
           </h6>
           <p>
-            Evening events are prime time for fashion. You look your best when you feel your best, and our dress can inspire confidence in anyone.
+            Evening events are prime time for fashion. You look your best when you feel your best, and our dress can
+            inspire confidence in anyone.
           </p>
         </div>
         <!-- Grid column -->
@@ -189,24 +217,24 @@
 
 
 <script>
-  $(function ($){
+  $(function ($) {
     $(".xzoom,.xzoom-gallery").xzoom({
-            zoomWidth: 760,
-            zoomHeight:650,
-            tint: "#333",
-            Xoffset: 15,
-        })
+      zoomWidth: 760,
+      zoomHeight: 650,
+      tint: "#333",
+      Xoffset: 15,
+    })
   })
 
   //$('.xzoom, .xzoom-gallery').xzoom({position: 'lens', lensShape: 'circle', bg:true, sourceClass: 'xzoom-hidden'});
 
-  let outOfStock={{product.stock}}
+  let outOfStock = {{ product.stock }}
   console.log(outOfStock)
-  if(outOfStock<=0){
+  if (outOfStock <= 0) {
     console.log('its zero')
     document.getElementById("out").hidden = false;
-    document.getElementById("zero").hidden =true;
-    document.getElementById("buy").hidden =true;
-    document.getElementById("add").hidden =true;
+    document.getElementById("zero").hidden = true;
+    document.getElementById("buy").hidden = true;
+    document.getElementById("add").hidden = true;
   }
 </script>

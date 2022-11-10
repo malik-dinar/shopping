@@ -28,6 +28,7 @@
         <input type="text" class="form-control" id="formGroupExampleInput2" name="description"
           placeholder="Description">
       </div>
+      {{!-- image...............1 --}}
       <div class="form-group">
         <label for="image">Image</label>
         <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"    {{!-- onchange="show(event)" --}}
@@ -39,6 +40,30 @@
         <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
       </div>
       <button type="button" class=" btn btn-outline-info " id="crop-1">Crop</button>
+
+      {{!-- image...............2 --}}
+         <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image2"    {{!-- onchange="show(event)" --}}
+          required>
+       
+        <img src="" id="image1" alt="" class="imggmi" style="height:100px">
+      </div>
+      <div style="display:flex">
+        <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
+      </div>
+
+      {{!-- image...............3 --}}
+         <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image3"    {{!-- onchange="show(event)" --}}
+          required>
+       
+        <img src="" id="image1" alt="" class="imggmi" style="height:100px">
+      </div>
+      <div style="display:flex">
+        <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
+      </div>
       <button class="btn btn-primary" type="submit">Submit form</button>
     </form>
   </div>
