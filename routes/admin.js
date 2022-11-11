@@ -71,12 +71,11 @@ router.post('/add-product',(req,res)=>{
     let image=req.files.image
     let image2 = req.files.image2
     let image3 = req.files.image3
-        image.mv('./public/images/' +  id+ '.jpg')
-        image2.mv('./public/images/' + id + '2.jpg')
-        image3.mv('./public/images/' +  id+ '3.jpg', (err, done) =>  {
+        image.mv('./public/product-images/' +  id+ '.jpg')
+        image2.mv('./public/product-images/' + id + '2.jpg')
+        image3.mv('./public/product-images/' +  id+ '3.jpg', (err, done) =>  {
             if (!err) {
-              console.log('jjjjjjjj');
-            res.redirect('/admin/admin-panel')
+              res.redirect('/admin/admin-panel')
             }
             else{
               console.log('eerrre');
@@ -348,5 +347,9 @@ router.post('/delete-offer-product',(req,res)=>{
   })
 })
 
+
+router.get('/banner', verifyAdminLogin,(req,res)=>{
+    res.render('admin/banner',{admin:true})
+})
 module.exports = router;
 

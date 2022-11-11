@@ -70,20 +70,39 @@ router.get('/home', async function (req, res) {
       accum += block.fn(i);
     return accum;
   });
-  
-  productHelpers.getCategory().then((datacategory) => {
-    // let user=req.session.user
-    productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
-      let cartCount = null;
-      if (req.session.user) {
-        cartCount = await userHelpers.getCartCount(req.session.user._id)
-        let user = req.session.user
-        res.render('user/home-page', { products, admin: false, user, datacategory, cartCount ,totalDoc: productCount, currentPage: pageNum, pages: pages});
-      } else {
-        res.render('user/home-page', { products, admin: false, datacategory ,totalDoc: productCount, currentPage: pageNum, pages: pages });
-      }
+
+  let search='';
+  console.log(req.query.search);
+  if(req.query.search){
+    console.log('aro searched');
+    search=req.query.search
+
+    productHelpers.getCategory().then((datacategory) => {
+      productHelpers.getSearchProducts(search).then(async (products) => {
+        if (req.session.user) {
+          cartCount = await userHelpers.getCartCount(req.session.user._id)
+          let user = req.session.user
+          res.render('user/home-page', { products, admin: false, user, datacategory, cartCount});
+        } else {
+          res.render('user/home-page', { products, admin: false, datacategory});
+        }
+      })
     })
-  })
+  }else{
+    productHelpers.getCategory().then((datacategory) => {
+      // let user=req.session.user
+      productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
+        let cartCount = null;
+        if (req.session.user) {
+          cartCount = await userHelpers.getCartCount(req.session.user._id)
+          let user = req.session.user
+          res.render('user/home-page', { products, admin: false, user, datacategory, cartCount ,totalDoc: productCount, currentPage: pageNum, pages: pages});
+        } else {
+          res.render('user/home-page', { products, admin: false, datacategory ,totalDoc: productCount, currentPage: pageNum, pages: pages });
+        }
+      })
+    })
+  }
 });
 
 //Get login Page

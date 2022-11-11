@@ -1,0 +1,15 @@
+<section style="    width: 80%; padding-left: 2rem;">
+  <div>
+    <h1>Add Banner</h1>
+    <form action="/admin/add-Banner" method="post" enctype="multipart/form-data">
+      {{!-- image.......... --}}
+      <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"    {{!-- onchange="show(event)" --}}
+          required>
+      </div>
+    </form>
+  </div>
+</section>
+
+

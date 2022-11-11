@@ -354,8 +354,6 @@ module.exports = {
     getProductStock:async(details)=>{
         return new Promise(async(resolve,reject)=>{
             let stock=await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(details.product)})
-            console.log('available stock');
-            console.log(stock.stock);
             resolve(stock.stock)
         })
     },
@@ -372,4 +370,21 @@ module.exports = {
             resolve(products.reverse())
         })
     },
+
+    getSearchProducts:(search)=>{
+        console.log('helpers search');
+        console.log(search);
+        return new Promise(async(resolve,reject)=>{
+            let products =await db.get().collection(collection.PRODUCT_COLLECTION).find({$or:[
+                {
+                    name:{ $regex: ".*" + search + ".*", $options: "i" }
+                },
+                {
+                    category: { $regex: ".*" + search + ".*", $options: "i" }
+                }
+            ]}).toArray()
+            console.log(products);
+            resolve(products)
+        })
+    }
 }
