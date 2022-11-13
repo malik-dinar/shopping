@@ -292,7 +292,6 @@
 
 
     function removeProduct(cartId, proId) {
-      console.log('1')
         $.ajax({
             url: '/remove-product',
             data: {
@@ -313,7 +312,7 @@
     function sweetAlertCart(cartId, proId) {
       swal({
         title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this Address",
+        text: "Once deleted, you will not be able to recover this product",
         icon: "warning",
         buttons: true,
         dangerMode: true,
