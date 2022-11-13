@@ -3,13 +3,95 @@
     <h1>Add Banner</h1>
     <form action="/admin/add-Banner" method="post" enctype="multipart/form-data">
       {{!-- image.......... --}}
+       <div class="form-group">
+        <label for="formGroupExampleInput">Banner Name</label>
+        <input type="text" class="form-control" id="formGroupExampleInput" name="bannerName" placeholder="name">
+      </div>
       <div class="form-group">
         <label for="image">Image</label>
-        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"    {{!-- onchange="show(event)" --}}
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"
           required>
       </div>
+        <button class="btn btn-primary" type="submit">Submit form</button>
     </form>
   </div>
 </section>
+
+<section  class="h-100 mt-4  ">
+      <h2 class="text-center">Banner</h2>
+    
+      <div class="container  table-responsive">
+        <table class="table shadow text-center ">
+          <thead class="table-dark">
+            <tr>
+             <th >Image</th>
+             <th>banner name</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody class="searchable "> 
+            {{#each banners}}         
+            <tr >
+            <td class="product-thumbnail">
+                {{!-- <img src="/product-images/{{this._id}}.jpg" alt="Image" style="width: auto;height: 8rem;"
+                  class="img-fluid"> --}}
+                <img src="/banner-images/{{this._id}}.jpg" alt="" style="width: 100px; height: auto;" id="imgView"> 
+              </td>
+              <td class="p-5">{{this.bannerName}}</td>
+              <td class="p-5"><button type="button" onclick="sweetAlert('{{this._id}}')"><i class="fa fa-trash"></i></button></td>  
+              {{/each}}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+</section>
+
+
+<script>
+  function viewImage(event){
+    document.getElementById('imgView').src=URL.createObjectURL(event.target.files[0])
+  }
+</script>
+
+
+<script>
+  function sweetAlert(couponId) {
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this Coupon",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            removeCoupon(couponId);
+            swal("Address deleted succesfully..", {
+              icon: "success",
+            });
+          } else {
+            swal("Address is safe");
+          }
+        });
+    }
+
+    function removeCoupon(couponId) {
+      $.ajax({
+        url: '/admin/delete-coupon',
+        data: {
+          couponId
+        },
+        method:'post',
+        success: (response) => {
+          if (response.removeCoupon) {
+            location.reload();
+          }
+        }
+      })
+    }
+
+</script>
+
+
 
 

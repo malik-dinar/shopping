@@ -3,6 +3,8 @@ const { response } = require('../app');
 var router = express.Router();
 var productHelpers=require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers');
+const Handlebars = require('handlebars');
+
 
 const emailDB="admin@gmail.com"
 const passDB="admin"
@@ -202,7 +204,7 @@ router.post('/edit-category/:cat',(req,res)=>{
 })
 
 
-router.get('/orders-admin', verifyAdminLogin,(req,res)=>{
+router.get('/orders-admin', verifyAdminLogin,async(req,res)=>{
   userHelpers.getOrders().then((order)=>{
     res.render('admin/order',{admin:true,order})
   })
@@ -228,14 +230,12 @@ router.post('/change-order-status',(req,res)=>{
 })
 
 router.get('/view-ordered-products-admin/:id',async(req,res)=>{
-
   let products=await userHelpers.getOrderProducts(req.params.id)
   res.render('admin/ordered-pro-admin',{admin:true,products})
 })
 
 
 router.get('/view-ordered-users-admin/:id',async(req,res)=>{
-
   let users=await userHelpers.getOrderUser(req.params.id)
   res.render('admin/ordered-user',{admin:true,users})
 })
@@ -348,8 +348,24 @@ router.post('/delete-offer-product',(req,res)=>{
 })
 
 
-router.get('/banner', verifyAdminLogin,(req,res)=>{
-    res.render('admin/banner',{admin:true})
+router.get('/banner', verifyAdminLogin,async(req,res)=>{
+  let banners=await productHelpers.getBanner();
+    res.render('admin/banner',{admin:true ,banners})
 })
+
+router.post('/add-Banner',(req,res)=>{
+  productHelpers.addBanner(req.body).then((id)=>{
+    let image=req.files.image
+    image.mv('./public/banner-images/'+id+'.jpg',(err,done)=>{
+      if(!err){
+        res.redirect('/admin/banner')
+      }else{
+        console.log(err);
+      }
+    })
+  })
+})
+
+
 module.exports = router;
 

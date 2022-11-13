@@ -30,6 +30,33 @@
 </div>
 
 
+{{!-- banner dynamic --}}
+{{!-- 
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    {{#each banner}}
+    <li data-target="#carouselExampleIndicators" data-slide-to="{{@index}}" class="active"></li>
+    {{/each}}
+  </ol>
+     {{#each banner}}
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="/banner-images/{{this._id}}.jpg" alt="First slide">
+    </div>
+  </div>
+   {{/each}}
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div> --}}
+
+
+
 
 
 
@@ -45,8 +72,8 @@
         <img style="width: 16rem; height: 16rem;" src="/product-images/{{this._id}}.jpg" alt="">
         
         <div class="card-body">
-          <h6><strike class="card-subtitle mb-2 text-muted format-price">{{this.price}}</strike></h6>
-          <h6 class="card-subtitle mb-2 text-muted format-price">{{this.offerprice}} </h6>
+          <h6><strike class="card-subtitle mb-2 text-muted format-price ogprice" style="display: none;">{{this.price}}</strike></h6>
+          <h6 class="card-subtitle mb-2 text-muted format-price offerprice">{{this.offerprice}} </h6>
           <h5 class="card-title text-muted">{{this.name}}</h5>
           <p class="card-text text-muted">{{this.category}}</p>
           <a href="/add-to-cart/{{this._id}}" class="btn" style="background-color: rgb(196, 39, 39);color: aliceblue;" id="add"></i>Add to Cart</a>
@@ -221,3 +248,21 @@
   
 </script>
 
+<script>
+
+  let offerprice=document.querySelectorAll('.offerprice')
+  let ogprice=document.querySelectorAll('.ogprice')
+  
+  console.log(offerprice)
+
+  for(i=0;i<offerprice.length;i++){
+		if(offerprice[i].innerText != ogprice[i].innerText){
+		console.log('equal'+i)
+	
+	console.log(ogprice[i].innerHTML)
+	console.log(offerprice[i].innerHTML)
+			ogprice[i].style.display="block";
+	
+		}
+	}
+</script>

@@ -246,19 +246,15 @@ module.exports = {
 
     addCategoryOffer:(details) =>{
         return new Promise(async(resolve,reject)=>{
-            console.log('1234556');
             let unique=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).findOne({category:details.category})
-            console.log(unique);
             if(unique){
                 offerAlreadyexist = true;
                 resolve(offerAlreadyexist)
             }else{
                 offerAlreadyexist = false;
-                let offer=await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).insertOne(details)
-                console.log('implemetn');
+                await db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).insertOne(details)
                let percent=parseInt(details.offerpercent)
 
-                resolve(offer)
                 await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({category:details.category},[
                     {
                         $set:{offerprice:{$subtract:['$price',{$floor:{$multiply:[{$divide:[percent,100]},'$offerprice']}}]}}
@@ -364,6 +360,12 @@ module.exports = {
             resolve(count)
         })
     },
+    getOrderCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let count=await db.get().collection(collection.ORDER_COLLECTION).countDocuments()
+            resolve(count)
+        })
+    },
     getPaginatedProducts: (skip, limit) => {
         return new Promise(async (resolve, reject) => {
             let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray()
@@ -385,6 +387,34 @@ module.exports = {
             ]}).toArray()
             console.log(products);
             resolve(products)
+        })
+    },
+
+    addBanner:(bannerImg)=>{
+        return new Promise(async (resolve, reject) => {
+            db.get().collection(collection.BANNER_COLLECTION).insertOne(bannerImg).then((data) => {
+                console.log('add banner');
+                console.log(data);
+                console.log(data.insertedId);
+                resolve(data.insertedId)
+            })
+        })
+    },
+
+    getBanner:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let banner=db.get().collection(collection.BANNER_COLLECTION).find().toArray()
+            resolve(banner)
+        })
+    },
+
+    getOrdersPaginated: (skip,limit) => {
+        return new Promise(async (resolve, reject) => {
+            let order = await db.get().collection(collection.ORDER_COLLECTION).find().skip(skip).limit(limit).toArray()
+            console.log(skip);
+            console.log(limit);
+            console.log(order)
+            resolve(order.reverse())
         })
     }
 }
