@@ -43,115 +43,135 @@ router.get('/', function (req, res, next) {
 
 //Get Homepage For Guest and Users 
 router.get('/home', async function (req, res) {
-  const perPage = 9;
-  let pageNum;
-  let skip;
-  let productCount;
-  let pages;
-  pageNum = parseInt(req.query.page);
-  console.log(typeof (pageNum))
-  skip = (pageNum - 1) * perPage
-  await productHelpers.getProductCount().then((count) => {
-    productCount = count;
-  })
-  pages = Math.ceil(productCount / perPage)
-
-  Handlebars.registerHelper('ifCond', function (v1, v2, options) {
-    if (v1 === v2) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  });
-  Handlebars.registerHelper('for', function (from, to, incr, block) {
-    var accum = '';
-    for (var i = from; i <= to; i += incr)
-      accum += block.fn(i);
-    return accum;
-  });
-
-  let search = '';
-  if (req.query.search) {
-    search = req.query.search
-
-    productHelpers.getCategory().then((datacategory) => {
-      productHelpers.getSearchProducts(search).then(async (products) => {
-        if (req.session.user) {
-          cartCount = await userHelpers.getCartCount(req.session.user._id)
-          let user = req.session.user
-          res.render('user/home-page', { products, admin: false, user, datacategory, cartCount });
-        } else {
-          res.render('user/home-page', { products, admin: false, datacategory });
-        }
-      })
+  try {
+    const perPage = 9;
+    let pageNum;
+    let skip;
+    let productCount;
+    let pages;
+    pageNum = parseInt(req.query.page);
+    console.log(typeof (pageNum))
+    skip = (pageNum - 1) * perPage
+    await productHelpers.getProductCount().then((count) => {
+      productCount = count;
     })
-  } else {
-    productHelpers.getBanner().then((banner) => {
+    pages = Math.ceil(productCount / perPage)
+
+    Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+      if (v1 === v2) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    });
+    Handlebars.registerHelper('for', function (from, to, incr, block) {
+      var accum = '';
+      for (var i = from; i <= to; i += incr)
+        accum += block.fn(i);
+      return accum;
+    });
+
+    let search = '';
+    if (req.query.search) {
+      search = req.query.search
+
       productHelpers.getCategory().then((datacategory) => {
-        // let user=req.session.user
-        productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
-          let cartCount = null;
+        productHelpers.getSearchProducts(search).then(async (products) => {
           if (req.session.user) {
             cartCount = await userHelpers.getCartCount(req.session.user._id)
             let user = req.session.user
-            res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
+            res.render('user/home-page', { products, admin: false, user, datacategory, cartCount });
           } else {
-            res.render('user/home-page', { products, admin: false, datacategory, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
+            res.render('user/home-page', { products, admin: false, datacategory });
           }
         })
       })
-    })
+    } else {
+      productHelpers.getBanner().then((banner) => {
+        productHelpers.getCategory().then((datacategory) => {
+          // let user=req.session.user
+          productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
+            let cartCount = null;
+            if (req.session.user) {
+              cartCount = await userHelpers.getCartCount(req.session.user._id)
+              let user = req.session.user
+              res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
+            } else {
+              res.render('user/home-page', { products, admin: false, datacategory, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
+            }
+          })
+        })
+      })
+    }
+  } catch (err) {
+    console.log(err + "error happened in home page");
+    res.redirect('/error')
   }
 });
 
 //Get login Page
 router.get('/login-page', function (req, res) {
-  res.render('user/login-page', { log: true });
+  try {
+    res.render('user/login-page', { log: true });
+  } catch (err) {
+    console.log(err + "error happened in product view");
+    res.redirect('/error')
+  }
 });
 
 router.get('/sign', (req, res) => {
-  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr, redErr: req.session.redErr })
-  req.session.emailErr = null;
-  req.session.numErr = null;
-  req.session.refErr = null;
-  req.session.redErr = null;
+  try {
+    res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr, redErr: req.session.redErr })
+    req.session.emailErr = null;
+    req.session.numErr = null;
+    req.session.refErr = null;
+    req.session.redErr = null;
+  }
+  catch (err) {
+    console.log(err + "error happened in product view");
+    res.redirect('/error')
+  }
 });
 
 
 //POST 
 router.post('/signup', (req, res) => {
-  refered = req.body.referl
-  userHelpers.doSignup(req.body).then((response) => {
-    if (response.emailcheck) {
-      req.session.emailErr = 'Email Already Exist'
-      res.redirect('/sign')
-    }
-    else if (response.numcheck) {
-      req.session.numErr = 'phone number already Exist'
-      res.redirect('/sign')
-    } else if (response.refcheck) {
-      req.session.refErr = 'referal id doesnt exists'
-      res.redirect('/sign')
-    }
-    else if (response.mismatch) {
-      req.session.redErr = 'password Mismatched'
-      res.redirect('/sign')
-    } else {
-      //req.session.user=response.user
-      // req.session.user = response
-      // console.log(req.session.user._id);
-      //req.session.user = true
-      req.session.user = response.user
-      if (refered) {
-        userHelpers.refered300(refered)
-        userHelpers.refered150(req.session.user._id)
+  try {
+    refered = req.body.referl
+    userHelpers.doSignup(req.body).then((response) => {
+      if (response.emailcheck) {
+        req.session.emailErr = 'Email Already Exist'
+        res.redirect('/sign')
       }
-      //  req.session.user=true
-      // req.session.user = response
-      // let user=req.session.user
-      res.redirect('/home')
-    }
-  })
-
+      else if (response.numcheck) {
+        req.session.numErr = 'phone number already Exist'
+        res.redirect('/sign')
+      } else if (response.refcheck) {
+        req.session.refErr = 'referal id doesnt exists'
+        res.redirect('/sign')
+      }
+      else if (response.mismatch) {
+        req.session.redErr = 'password Mismatched'
+        res.redirect('/sign')
+      } else {
+        //req.session.user=response.user
+        // req.session.user = response
+        // console.log(req.session.user._id);
+        //req.session.user = true
+        req.session.user = response.user
+        if (refered) {
+          userHelpers.refered300(refered)
+          userHelpers.refered150(req.session.user._id)
+        }
+        //  req.session.user=true
+        // req.session.user = response
+        // let user=req.session.user
+        res.redirect('/home')
+      }
+    })
+  } catch (err) {
+    console.log(err + "error happened in product view");
+    res.redirect('/error')
+  }
 });
 
 
@@ -219,9 +239,7 @@ router.get('/product-view/:id', async (req, res) => {
     if (req.session.user) {
       let user = req.session.user
       let product = await userHelpers.getProductDetailforuser(req.params.id)
-      //productHelpers.getCategoryname(req.params.id).then((allcat)=>{
-      res.render('user/product-view', { admin: false, product, user });
-      // })
+      res.render('user/product-view', { admin: false, product, user })
     } else {
       await userHelpers.getProductDetailforuser(req.params.id).then((product) => {
         res.render('user/product-view', { admin: false, product });
