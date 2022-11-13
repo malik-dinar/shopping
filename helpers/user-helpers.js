@@ -118,7 +118,6 @@ module.exports = {
     isBlocked: ((userId) => {
         return new Promise(async (resolve, reject) => {
             let Blocked = await db.get().collection(collection.USER_COLLECTIONS).findOne({ $and: [{ _id: objectId(userId) }, { isBlocked: true }] })
-
             if (Blocked) {
                 let error = "user is blocked"
                 reject(error)
@@ -132,9 +131,14 @@ module.exports = {
     //====================Product view page==================== 
     getProductDetailforuser: (proId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) }).then((product) => {
-                resolve(product)
-            })
+            try{
+                db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) }).then((product) => {
+                    resolve(product)
+                })
+            }catch(err){
+                console.log(err);
+                reject(err)
+            }
         })
     },
     //====================Otp checking user====================

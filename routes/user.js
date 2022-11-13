@@ -69,23 +69,23 @@ router.get('/home', async function (req, res) {
     return accum;
   });
 
-  let search='';
-  if(req.query.search){
-    search=req.query.search
+  let search = '';
+  if (req.query.search) {
+    search = req.query.search
 
     productHelpers.getCategory().then((datacategory) => {
       productHelpers.getSearchProducts(search).then(async (products) => {
         if (req.session.user) {
           cartCount = await userHelpers.getCartCount(req.session.user._id)
           let user = req.session.user
-          res.render('user/home-page', { products, admin: false, user, datacategory, cartCount});
+          res.render('user/home-page', { products, admin: false, user, datacategory, cartCount });
         } else {
-          res.render('user/home-page', { products, admin: false, datacategory});
+          res.render('user/home-page', { products, admin: false, datacategory });
         }
       })
     })
-  }else{
-    productHelpers.getBanner().then((banner)=>{
+  } else {
+    productHelpers.getBanner().then((banner) => {
       productHelpers.getCategory().then((datacategory) => {
         // let user=req.session.user
         productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
@@ -93,9 +93,9 @@ router.get('/home', async function (req, res) {
           if (req.session.user) {
             cartCount = await userHelpers.getCartCount(req.session.user._id)
             let user = req.session.user
-            res.render('user/home-page', { products, admin: false, user, datacategory, cartCount ,totalDoc: productCount, currentPage: pageNum, pages: pages ,banner});
+            res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
           } else {
-            res.render('user/home-page', { products, admin: false, datacategory ,totalDoc: productCount, currentPage: pageNum, pages: pages ,banner});
+            res.render('user/home-page', { products, admin: false, datacategory, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
           }
         })
       })
@@ -109,7 +109,7 @@ router.get('/login-page', function (req, res) {
 });
 
 router.get('/sign', (req, res) => {
-  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr, redErr: req.session.redErr})
+  res.render('user/signup-page', { log: true, Err: req.session.emailErr, Err1: req.session.numErr, Err2: req.session.refErr, redErr: req.session.redErr })
   req.session.emailErr = null;
   req.session.numErr = null;
   req.session.refErr = null;
@@ -132,10 +132,10 @@ router.post('/signup', (req, res) => {
       req.session.refErr = 'referal id doesnt exists'
       res.redirect('/sign')
     }
-    else if (response.mismatch){
+    else if (response.mismatch) {
       req.session.redErr = 'password Mismatched'
       res.redirect('/sign')
-    }else{
+    } else {
       //req.session.user=response.user
       // req.session.user = response
       // console.log(req.session.user._id);
@@ -215,17 +215,26 @@ router.get('/user-block', (req, res) => {
 })
 
 router.get('/product-view/:id', async (req, res) => {
-  if (req.session.user) {
-    let user = req.session.user
-    let product = await userHelpers.getProductDetailforuser(req.params.id)
-    //productHelpers.getCategoryname(req.params.id).then((allcat)=>{
-    res.render('user/product-view', { admin: false, product, user });
-    // })
-  } else {
-    let product = await userHelpers.getProductDetailforuser(req.params.id)
-    // productHelpers.getCategoryname(req.params.id).then((allcat)=>{
-    res.render('user/product-view', { admin: false, product });
-    // })
+  try {
+    if (req.session.user) {
+      let user = req.session.user
+      let product = await userHelpers.getProductDetailforuser(req.params.id)
+      //productHelpers.getCategoryname(req.params.id).then((allcat)=>{
+      res.render('user/product-view', { admin: false, product, user });
+      // })
+    } else {
+      await userHelpers.getProductDetailforuser(req.params.id).then((product) => {
+        res.render('user/product-view', { admin: false, product });
+      }).catch((err) => {
+        console.log(err + "error happened in product view");
+        res.redirect('/error')
+      })
+      // productHelpers.getCategoryname(req.params.id).then((allcat)=>{
+      // })
+    }
+  } catch (err) {
+    console.log(err + "error happened in product view");
+    res.redirect('/error')
   }
 })
 
@@ -265,7 +274,7 @@ router.get('/cart', verifyUserLogin, async (req, res) => {
 
 })
 
-router.get('/add-to-cart/:id',verifyUserLogin, async (req, res) => {
+router.get('/add-to-cart/:id', verifyUserLogin, async (req, res) => {
   if (req.session.user) {
     userHelpers.addToCart(req.params.id, req.session.user._id).then(() => {
       console.log(req.params.id);
@@ -278,36 +287,35 @@ router.get('/add-to-cart/:id',verifyUserLogin, async (req, res) => {
   }
 })
 
-router.post('/change-product-quantity',verifyUserLogin,async(req, res) => {
+router.post('/change-product-quantity', verifyUserLogin, async (req, res) => {
   let availableQty;
-  await productHelpers.getProductStock(req.body).then((stock)=>{
-    console.log(stock,'qty,',req.body.quantity)
-    availableQty=stock;
-  })    
-      if(parseInt(req.body.quantity)<parseInt(availableQty))
-      {
-        userHelpers.changeProductQuantity(req.body).then(async (response) => {
-            response.total = await userHelpers.getTotalAmount(req.body.user)
-            //response.total=await userHelpers.getTotalAmount(req.body.user._id)
-            res.json(response)
-        })
-      }else{
-        if(req.body.count == -1){
-          userHelpers.changeProductQuantity(req.body).then(async (response) => {
-            response.total = await userHelpers.getTotalAmount(req.body.user)  
-            //response.total=await userHelpers.getTotalAmount(req.body.user._id)
-            res.json(response)
-          })
-        }else{
-          let responseObj={}  
-          responseObj.availableQty=availableQty
-          responseObj.status=false
-          res.json(responseObj)
-        }
-      } 
+  await productHelpers.getProductStock(req.body).then((stock) => {
+    console.log(stock, 'qty,', req.body.quantity)
+    availableQty = stock;
+  })
+  if (parseInt(req.body.quantity) < parseInt(availableQty)) {
+    userHelpers.changeProductQuantity(req.body).then(async (response) => {
+      response.total = await userHelpers.getTotalAmount(req.body.user)
+      //response.total=await userHelpers.getTotalAmount(req.body.user._id)
+      res.json(response)
+    })
+  } else {
+    if (req.body.count == -1) {
+      userHelpers.changeProductQuantity(req.body).then(async (response) => {
+        response.total = await userHelpers.getTotalAmount(req.body.user)
+        //response.total=await userHelpers.getTotalAmount(req.body.user._id)
+        res.json(response)
+      })
+    } else {
+      let responseObj = {}
+      responseObj.availableQty = availableQty
+      responseObj.status = false
+      res.json(responseObj)
+    }
+  }
 })
 
-router.post('/remove-product',verifyUserLogin, (req, res) => {
+router.post('/remove-product', verifyUserLogin, (req, res) => {
   userHelpers.removeProductFromCart(req.body).then((response) => {
     res.json(response)
   })
@@ -326,8 +334,8 @@ router.get('/place-order', verifyUserLogin, async (req, res) => {
   else {
     walletView = false
   }
-    res.render('user/place-order', { user:req.session.user, total, products, totalOne, address, wallet, walletView ,Err:req.session.CouponErr});
-    req.session.CouponErr= null
+  res.render('user/place-order', { user: req.session.user, total, products, totalOne, address, wallet, walletView, Err: req.session.CouponErr });
+  req.session.CouponErr = null
 })
 
 router.get('/continue-shopping', verifyUserLogin, (req, res) => {
@@ -340,15 +348,15 @@ router.get('/order-placed', (req, res) => {
 
 router.post('/place-order', verifyUserLogin, async (req, res) => {
   let userId = req.session.user._id
-  let totalPrice=0
+  let totalPrice = 0
   let products = await userHelpers.getCartProductList(userId)
-   totalPrice = await userHelpers.getTotalAmount(userId)
-  if(req.body.couponName){
+  totalPrice = await userHelpers.getTotalAmount(userId)
+  if (req.body.couponName) {
     totalPrice = await userHelpers.getTotalAmount(userId)
-    let discountAmount = await userHelpers.PromocodePlace(req.body.couponName,totalPrice)
-    totalPrice = totalPrice-discountAmount
-  }else{
-      totalPrice = await userHelpers.getTotalAmount(userId)
+    let discountAmount = await userHelpers.PromocodePlace(req.body.couponName, totalPrice)
+    totalPrice = totalPrice - discountAmount
+  } else {
+    totalPrice = await userHelpers.getTotalAmount(userId)
   }
   userHelpers.placeOrder(req.body, products, totalPrice, userId).then(async (orderId) => {
     // res.redirect('/order-placed');
@@ -407,7 +415,7 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
           // res.redirect('/place-order');
         });
     } else if (req.body['paymentMethod'] == 'Wallet') {
-      userHelpers.useWallet(userId,totalPrice)
+      userHelpers.useWallet(userId, totalPrice)
       res.json({ codSuccess: true })
     } else {
       res.send('Error');
@@ -422,10 +430,10 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
 // Get Otp login Page
 router.get('/otp-page', (req, res) => {
   console.log('22');
-  res.render('user/otp-page', { otpSended: req.session.otpSended ,  otp: req.session.otpSend ,  noaccount: req.session.noaccount , otpErr:req.session.otpErr})
+  res.render('user/otp-page', { otpSended: req.session.otpSended, otp: req.session.otpSend, noaccount: req.session.noaccount, otpErr: req.session.otpErr })
   req.session.otpSended = false;
-  req.session.noaccount=false;
-    req.session.otpErr=false;
+  req.session.noaccount = false;
+  req.session.otpErr = false;
 })
 
 //POST Send Otp To Twilio 
@@ -443,12 +451,12 @@ router.post('/sendotp', (req, res) => {
           //  req.session.preuser=response.user
           req.session.user = response.user
           req.session.otpSended = true;
-          req.session.otpSend=true;
+          req.session.otpSend = true;
           res.redirect('/otp-page')
         })
     } else {
       console.log('number is not in db');
-      req.session.noaccount= true;
+      req.session.noaccount = true;
       res.redirect('/otp-page')
     }
   })
@@ -463,15 +471,15 @@ router.get('/sendotp2', (req, res) => {
       console.log(verification.status);
       req.session.otpSended = true
       res.redirect('/otp-page')
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log('errrorrooro')
-      console.log(err,'err')
+      console.log(err, 'err')
     })
 })
 
 
 router.post('/verifyotp', (req, res) => {
-   //console.log(`session phone number is ${req.session.phonenumber} and otp is ${req.body}`);
+  //console.log(`session phone number is ${req.session.phonenumber} and otp is ${req.body}`);
   console.log(req.session.number);
   let ph_no = req.session.number
   let otp = req.body.otp
@@ -488,7 +496,7 @@ router.post('/verifyotp', (req, res) => {
         res.redirect('/home')
       } else {
         console.log('entered wrong otp');
-        req.session.otpErr=true;
+        req.session.otpErr = true;
         res.redirect('/otp-page')
       }
     });
@@ -506,7 +514,7 @@ router.get('/orders', verifyUserLogin, async (req, res) => {
 
 
 
-router.get('/cancel-order/:id',verifyUserLogin, (req, res) => {
+router.get('/cancel-order/:id', verifyUserLogin, (req, res) => {
   let proId = req.params.id
   userHelpers.cancelOrder(proId).then((response) => {
     res.redirect('/orders')
@@ -529,7 +537,7 @@ router.post('/address-saved-profile', verifyUserLogin, async (req, res) => {
   })
 })
 
-router.post('/edit-profile/:id',verifyUserLogin, (req, res) => {
+router.post('/edit-profile/:id', verifyUserLogin, (req, res) => {
   console.log(req.body);
   console.log('params');
   console.log(req.params.id);
@@ -561,9 +569,9 @@ router.post('/changed-pass', verifyUserLogin, (req, res) => {
 
 })
 
-router.get('/view-ordered-products/:id',verifyUserLogin, async (req, res) => {
+router.get('/view-ordered-products/:id', verifyUserLogin, async (req, res) => {
   let products = await userHelpers.getOrderProducts(req.params.id)
-  await userHelpers.orderStatus(req.params.id).then((order) => {    
+  await userHelpers.orderStatus(req.params.id).then((order) => {
     let orderStatus = order.status
     if (orderStatus == 'placed') {
       console.log(orderStatus, 'orderstatus')
@@ -588,7 +596,7 @@ router.get('/view-ordered-products/:id',verifyUserLogin, async (req, res) => {
 })
 
 
-router.post('/change-order-status-to-cancel',verifyUserLogin, async (req, res) => {
+router.post('/change-order-status-to-cancel', verifyUserLogin, async (req, res) => {
   productHelpers.changeOrderStatustoCancel(req.body).then((response) => {
     req.session.cancelledPro = true;
     res.json(response)
@@ -601,7 +609,7 @@ router.post('/address-saved', verifyUserLogin, async (req, res) => {
   })
 })
 
-router.post('/verify-payment',verifyUserLogin, (req, res) => {
+router.post('/verify-payment', verifyUserLogin, (req, res) => {
   userHelpers.verifyPayment(req.body).then(() => {
     console.log(req.body['order[receipt]']);
     userHelpers.changePaymentStatus(req.body['order[receipt]']).then(() => {
@@ -617,7 +625,7 @@ router.post('/verify-payment',verifyUserLogin, (req, res) => {
 
 //=================================Delete saved Address======================//
 
-router.post('/delete-saved-address',verifyUserLogin, (req, res) => {
+router.post('/delete-saved-address', verifyUserLogin, (req, res) => {
   userHelpers.deleteAddress(req.body).then((response) => {
     console.log(response);
     res.json(response)
@@ -626,7 +634,7 @@ router.post('/delete-saved-address',verifyUserLogin, (req, res) => {
 
 //=================================Edit saved Address======================//
 
-router.post('/edit-address',verifyUserLogin, (req, res) => {
+router.post('/edit-address', verifyUserLogin, (req, res) => {
   console.log('look at this');
   console.log(req.body);
   userHelpers.updateAddress(req.body).then(() => {
@@ -636,12 +644,11 @@ router.post('/edit-address',verifyUserLogin, (req, res) => {
 
 
 
-router.post('/coupon-applied',verifyUserLogin,(req,res)=>{
+router.post('/coupon-applied', verifyUserLogin, (req, res) => {
   console.log(req.body);
-  userHelpers.Promocode(req.body).then((response)=>{
-    if(response.couponErr==true)
-    {
-      req.session.CouponErr='Invalid coupon'
+  userHelpers.Promocode(req.body).then((response) => {
+    if (response.couponErr == true) {
+      req.session.CouponErr = 'Invalid coupon'
     }
     res.json(response)
   })
