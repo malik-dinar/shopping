@@ -12,29 +12,25 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col 6">
-        <div class="ecommerce-gallery" data-mdb-zoom-effect="true" data-mdb-auto-height="true">
+        <div class="ecommerce-gallery product-links-wap" data-mdb-zoom-effect="true" data-mdb-auto-height="true" >
           <div class="row py-3 shadow-5">
-            <div class="col-11 mb-1 "  >
+            <div class="col-11 mb-1 ">
               <div class="lightbox  xzoom-container">
-                <img  src="/product-images/{{product._id}}.jpg"  xoriginal="/product-images/{{product._id}}.jpg"
-                  alt="Gallery image 1" class="card-img img-fluid xzoom crosshair" />
+                <img src="/product-images/{{product._id}}.jpg" xoriginal="/product-images/{{product._id}}.jpg"
+                  alt="Gallery image 1" class="card-img img-fluid xzoom crosshair" id="product-detail" />
               </div>
             </div>
             <div class="col-2 mt-1">
-              <img  src="/product-images/{{product._id}}2.jpg" 
-                alt="Gallery image 1" class="active w-100" />
+              <img src="/product-images/{{product._id}}2.jpg" alt="Gallery image 1" class="active w-100" />
             </div>
             <div class="col-2 mt-1">
-              <img  src="/product-images/{{product._id}}3.jpg" 
-                alt="Gallery image 2" class="w-100" />
+              <img src="/product-images/{{product._id}}3.jpg" alt="Gallery image 2" class="w-100" />
             </div>
             <div class="col-2 mt-1">
-              <img  src="/product-images/{{product._id}}2.jpg" 
-                alt="Gallery image 3" class="w-100" />
+              <img src="/product-images/{{product._id}}2.jpg" alt="Gallery image 3" class="w-100" />
             </div>
             <div class="col-2 mt-1">
-              <img  src="/product-images/{{product._id}}3.jpg"   
-                alt="Gallery image 4" class="w-100" />
+              <img src="/product-images/{{product._id}}3.jpg" alt="Gallery image 4" class="w-100" />
             </div>
           </div>
         </div>
@@ -237,4 +233,17 @@
     document.getElementById("buy").hidden = true;
     document.getElementById("add").hidden = true;
   }
+</script>
+
+
+<script>
+  $(document).ready(function () {
+
+    $('.product-links-wap a').click(function () {
+      var this_src = $(this).children('img').attr('src');
+      $('#product-detail').attr('src', this_src);
+      $('#product-detail').attr('xoriginal', this_src);
+      return false;
+    });
+  });
 </script>

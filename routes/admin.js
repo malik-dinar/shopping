@@ -89,7 +89,8 @@ router.post('/add-product', (req, res) => {
   try {
     req.body.price = parseInt(req.body.price)
     req.body.stock = parseInt(req.body.stock)
-    productHelpers.addProduct(req.body).then((id) => {
+    productHelpers.
+    addProduct(req.body).then((id) => {
       let image = req.files.image
       let image2 = req.files.image2
       let image3 = req.files.image3
@@ -146,15 +147,19 @@ router.post('/edit-product/:id', (req, res) => {
     let id = req.params.id
     req.body.price = parseInt(req.body.price)
     productHelpers.updateproduct(req.params.id, req.body).then(() => {
-      if (req.files.image) {
-        let image = req.files.image
+      if (req.files?.image) {
+        let image = req.files?.image
         image.mv('./public/product-images/' + id + '.jpg')
       }
-      res.redirect('/admin/admin-panel')
+      res.redirect('/admin/admin-panel')  
+    }).catch((err) => {
+      console.log(err + "error happened in admin edit product post");
+      res.redirect('/error')
     })
   } catch (err) {
     console.log(err + "error happened in admin edit product post");
     res.redirect('/error')
+    
   }
 })
 
@@ -322,7 +327,7 @@ router.post('/change-order-status', (req, res) => {
       console.log('find wallet from this');
       console.log(req.body);
       res.json(response)
-      // res.redirect('/orders')
+  
     })
   } catch (err) {
     console.log(err + "error happened in admin cange order status");
@@ -544,6 +549,20 @@ router.post('/add-Banner', (req, res) => {
     })
    }catch (err) {
     console.log(err + "error happened in admin add banner post");
+    res.redirect('/error')
+  }
+})  
+
+router.post('/delete-banner',(req,res)=>{
+  try{
+    productHelpers.deleteBanner(req.body).then((response)=>{
+      res.json(response)
+    }).catch((err)=>{
+      console.log(err);
+      res.redirect('/error')
+    })
+  }catch (err) {
+    console.log(`${err}error happened in admin delte banner`);
     res.redirect('/error')
   }
 })

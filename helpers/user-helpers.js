@@ -335,6 +335,8 @@ module.exports = {
             }
         })
     },
+    
+    
     removeProductFromCart: (remove) => {
         return new Promise((resolve, reject) => {
             try {
@@ -1231,7 +1233,7 @@ module.exports = {
                         }
                     },
                     {
-                        $sort: { "_id.day": 1 }
+                        $sort: { "_id.day": -1 }
                     },
                     {
                         $limit: 5

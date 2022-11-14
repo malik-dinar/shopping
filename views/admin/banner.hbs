@@ -55,37 +55,36 @@
 
 
 <script>
-  function sweetAlert(couponId) {
+  function sweetAlert(bannerId) {
       swal({
         title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this Coupon",
+        text: "Once deleted, you will not be able to recover this Banner",
         icon: "warning",
         buttons: true,
         dangerMode: true,
       })
         .then((willDelete) => {
           if (willDelete) {
-            removeCoupon(couponId);
-            swal("Address deleted succesfully..", {
+            deleteBanner(bannerId);
+            swal("Banner deleted succesfully..", {
               icon: "success",
             });
           } else {
-            swal("Address is safe");
+            swal("Banner is safe");
           }
         });
     }
 
-    function removeCoupon(couponId) {
+    function deleteBanner(bannerId) {
       $.ajax({
-        url: '/admin/delete-coupon',
+        url: '/admin/delete-banner',
         data: {
-          couponId
+          bannerId
         },
         method:'post',
         success: (response) => {
-          if (response.removeCoupon) {
+          console.log('deleted')
             location.reload();
-          }
         }
       })
     }

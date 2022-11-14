@@ -28,13 +28,14 @@
                     <td>{{this.PaymentMethod}}</td>
                     <td>Rs.{{this.totalAmount}}</td>
                     <td >
-                     <select class="form-select" name="status" id="{{this._id}}" onchange="changeStatus('{{this._id}}')" >
+                     <select class="form-select selectTagValue" name="status" id="{{this._id}}" onchange="changeStatus('{{this._id}}')" >
                         <option value={{this.status}}  selected>{{this.status}}</option>
-                        <option value="">placed</option>
-                        <option value="">shipped</option>
-                        <option value="">out of delivered</option> 
-                        <option value="">cancelled</option>
+                        <option value="" class="placed">placed</option>
+                        <option value="" class="shipped">shipped</option>
+                        <option value="" class="delivered">out of delivered</option> 
+                        <option value="" class="cancelled">cancelled</option>
                     </select> 
+                    <span class="spanStatus" style="display:none;">{{this.status}}</span>
                     </td>
                     <td> <a href="/admin/view-ordered-products-admin/{{this._id}}"  class="btn text-white bg-dark border-0" >products</a> </td>      
                     <td> <a href="/admin/view-ordered-users-admin/{{this._id}}"  class="btn text-white bg-dark border-0" >user Info</a> </td>                          
@@ -51,6 +52,31 @@
      var divs = document.querySelectorAll('.create_index');
      for (var i = 0; i < divs.length; ++i) {
         divs[i].innerHTML = i + 1;
+    }
+
+
+    let selectTag=document.querySelectorAll(".selectTagValue")
+    let spanStatus=document.querySelectorAll(".spanStatus")
+    let delivered=document.querySelectorAll(".delivered")
+    let shipped=document.querySelectorAll(".shipped")
+    let placed=document.querySelectorAll(".placed")
+    let cancelled=document.querySelectorAll(".cancelled")
+
+    for(let i=0;i<selectTag.length;i++){
+      selectTag[i].style.display="block"
+      selectTagValue=selectTag[i].options[selectTag[i].selectedIndex].text
+      if(selectTagValue==="Cancelled" || selectTagValue==="Delivered" ){
+        selectTag[i].style.display="none"
+        spanStatus[i].style.display="inline-block"
+      }
+      if(selectTagValue==="Placed"){
+        placed[i].style.display="none"
+      }
+      if(selectTagValue==="Pending"){
+        shipped[i].style.display="none"
+        delivered[i].style.display="none"
+        placed[i].style.display="block"
+      }
     }
 
     function changeStatus(orderId){

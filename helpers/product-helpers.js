@@ -358,6 +358,7 @@ module.exports = {
                             $set: { offerprice: { $subtract: ['$price', { $floor: { $multiply: [{ $divide: [percent, 100] }, '$offerprice'] } }] } }
                         }
                     ])
+                    resolve(offerAlreadyexist)
                 }
             } catch (err) {
                 console.log(err);
@@ -591,5 +592,20 @@ module.exports = {
             }
         })
     },
+
+
+    deleteBanner:(banner) =>{
+        return new Promise(async(resolve,reject) =>{
+            try{
+                db.get().collection(collection.BANNER_COLLECTION).deleteOne({_id: objectId(banner.bannerId)} ).then((response)=>{
+                    resolve(response)
+                }).catch((err)=>{
+                    reject(err)
+                })
+            }catch (err){
+                reject(err)
+            }
+        })
+    }
 
 }

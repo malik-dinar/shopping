@@ -87,6 +87,7 @@ router.get('/home', async function (req, res) {
       })
     } else {
       productHelpers.getBanner().then((banner) => {
+        console.log(banner);
         productHelpers.getCategory().then((datacategory) => {
           // let user=req.session.user
           productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
@@ -596,7 +597,6 @@ router.get('/orders', verifyUserLogin, async (req, res) => {
     //userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
     // res.render('user/view-order', { user: req.session.user, orders ,cancelledPro:req.session.cancelledPro})
     res.render('user/view-order', { user: req.session.user, orders })
-
     // })
   } catch (err) {
     console.log(err + "error happened in orders get");
