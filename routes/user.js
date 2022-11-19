@@ -44,7 +44,7 @@ router.get('/', function (req, res, next) {
 //Get Homepage For Guest and Users 
 router.get('/home', async function (req, res) {
   try {
-    const perPage = 9;
+    const perPage = 12;
     let pageNum;
     let skip;
     let productCount;
@@ -87,18 +87,29 @@ router.get('/home', async function (req, res) {
       })
     } else {
       productHelpers.getBanner().then((banner) => {
-        console.log(banner);
         productHelpers.getCategory().then((datacategory) => {
           // let user=req.session.user
           productHelpers.getPaginatedProducts(skip, perPage).then(async (products) => {
+            // productHelpers.getDiscountPercent().then(async(discountPercent)=>{
             let cartCount = null;
             if (req.session.user) {
-              cartCount = await userHelpers.getCartCount(req.session.user._id)
-              let user = req.session.user
-              res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
+              userHelpers.getWishlistProducts(req.session.user._id).then(async(data) => {
+                for (let i = 0; i < products.length; i++) {
+                    for (let j = 0; j < data.length; j++) {
+                        if (products[i]._id.toString() == data[j].item.toString()) {
+                            products[i].isWishlisted = true;  
+                      }
+                    }
+                }
+                console.log(products);
+                cartCount = await userHelpers.getCartCount(req.session.user._id)
+                let user = req.session.user
+                res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner }); 
+              })     
             } else {
               res.render('user/home-page', { products, admin: false, datacategory, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });
             }
+            //  })
           })
         })
       })
@@ -281,6 +292,7 @@ router.get('/category/:cat', (req, res) => {
     productHelpers.getCategory().then((datacategory) => {
       if (req.session.user) {
         productHelpers.getProductsInCategory(req.params.cat).then((products) => {
+          console.log(products);
           res.render('user/home-page2', { products, datacategory })
         })
       } else {
@@ -302,8 +314,6 @@ router.get('/category/:cat', (req, res) => {
 
 router.get('/cart', verifyUserLogin, async (req, res) => {
   try {
-    console.log('blaa');
-    console.log(req.session.user._id);
     let total = await userHelpers.getTotalAmount(req.session.user._id)
     let totalOne = await userHelpers.getAmountOne(req.session.user._id)
     let products = await userHelpers.getCartProducts(req.session.user._id)
@@ -322,6 +332,8 @@ router.get('/cart', verifyUserLogin, async (req, res) => {
 
 router.get('/add-to-cart/:id', verifyUserLogin, async (req, res) => {
   try {
+    console.log('djashf;kjaskd');
+    console.log(req.params.id);
     if (req.session.user) {
       userHelpers.addToCart(req.params.id, req.session.user._id).then(() => {
         console.log(req.params.id);
@@ -333,6 +345,30 @@ router.get('/add-to-cart/:id', verifyUserLogin, async (req, res) => {
     }
   } catch (err) {
     console.log(err + "error happened in add to cart get");
+    res.redirect('/error')
+  }
+})
+
+router.get('/wishlist', verifyUserLogin, async (req,res)=>{
+  await userHelpers.getWishlistProducts(req.session.user._id).then((products)=>{
+    res.render('user/wishlist',{products , user: req.session.user})
+  })
+})
+
+router.get('/add-to-wishlist/:id', verifyUserLogin, (req, res) => {
+  try {
+    if (req.session.user) {
+      console.log(req.params.id);
+      console.log( req.session.user._id);
+      userHelpers.addToWhislist(req.params.id, req.session.user._id).then(() => {
+        res.redirect('/home')
+      })
+    }
+    else {
+      res.redirect('/login-page')
+    }
+  } catch (err) {
+    console.log(err + "error happened in add to wishlist get");
     res.redirect('/error')
   }
 })
@@ -374,6 +410,23 @@ router.post('/remove-product', verifyUserLogin, (req, res) => {
   try {
     userHelpers.removeProductFromCart(req.body).then((response) => {
       res.json(response)
+    }).catch((err) => {
+      console.log(err + "error happened in remove product");
+      res.redirect('/error')
+    })
+  } catch (err) {
+    console.log(err + "error happened in remove product");
+    res.redirect('/error')
+  }
+})
+
+router.post('/remove-product-wishlist', verifyUserLogin, (req, res) => {
+  try {
+    userHelpers.removeProductFromWishlist(req.body).then((response) => {
+      res.json(response)
+    }).catch((err) => {
+      console.log(err + "error happened in remove product");
+      res.redirect('/error')
     })
   } catch (err) {
     console.log(err + "error happened in remove product");
@@ -388,6 +441,8 @@ router.get('/place-order', verifyUserLogin, async (req, res) => {
     let totalOne = await userHelpers.getAmountOne(req.session.user._id)
     let address = await userHelpers.getAllAddress(req.session.user._id)
     let wallet = await userHelpers.getWallet(req.session.user._id)
+    let codes = await productHelpers.getCouponCode()
+    console.log(codes);
     console.log(wallet.amount);
     if (wallet.amount > total) {
       walletView = true
@@ -395,7 +450,7 @@ router.get('/place-order', verifyUserLogin, async (req, res) => {
     else {
       walletView = false
     }
-    res.render('user/place-order', { user: req.session.user, total, products, totalOne, address, wallet, walletView, Err: req.session.CouponErr });
+    res.render('user/place-order', { user: req.session.user, total, products, totalOne, address, wallet, walletView, Err: req.session.CouponErr, codes });
     req.session.CouponErr = null
   } catch (err) {
     console.log(err + "error happened in place order view");
@@ -407,8 +462,8 @@ router.get('/continue-shopping', verifyUserLogin, (req, res) => {
   res.redirect('/home')
 })
 
-router.get('/order-placed', (req, res) => {
-  res.render('user/order-placed');
+router.get('/order-placed', verifyUserLogin, (req, res) => {
+  res.render('user/order-placed', { user: req.session.user });
 })
 
 router.post('/place-order', verifyUserLogin, async (req, res) => {
@@ -676,7 +731,6 @@ router.post('/changed-pass', verifyUserLogin, (req, res) => {
       }
       else {
         //req.session.passErr= true;
-        console.log('ko');
         req.session.passErr = "Enter the old password correctly";
         console.log(req.session.passErr);
         res.redirect('/password')
@@ -765,12 +819,12 @@ router.post('/verify-payment', verifyUserLogin, (req, res) => {
 //=================================Delete saved Address======================//
 
 router.post('/delete-saved-address', verifyUserLogin, (req, res) => {
-   try{
+  try {
     userHelpers.deleteAddress(req.body).then((response) => {
       console.log(response);
       res.json(response)
     })
-   } catch (err) {
+  } catch (err) {
     console.log(err + "error happened delete-saved-address post");
     res.redirect('/error')
   }
@@ -779,11 +833,11 @@ router.post('/delete-saved-address', verifyUserLogin, (req, res) => {
 //=================================Edit saved Address======================//
 
 router.post('/edit-address', verifyUserLogin, (req, res) => {
-   try{
+  try {
     userHelpers.updateAddress(req.body).then(() => {
       res.redirect('/place-order')
     })
-   } catch (err) {
+  } catch (err) {
     console.log(err + "error happened in edit address post");
     res.redirect('/error')
   }
@@ -792,7 +846,7 @@ router.post('/edit-address', verifyUserLogin, (req, res) => {
 
 
 router.post('/coupon-applied', verifyUserLogin, (req, res) => {
-  try{
+  try {
     userHelpers.Promocode(req.body).then((response) => {
       if (response.couponErr == true) {
         req.session.CouponErr = 'Invalid coupon'

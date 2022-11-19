@@ -1,13 +1,19 @@
-<div class="container-fluid">
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
+<div class="container  mt-5">
+    <div class="row d-flex mt-5 justify-content-center">
+        <div class="col-md-6 card p-5" style="background-color: #f7f7ff;;">
+
+            <div class="text-center">
+                <h1><a href="/" class="text-primary hover-zoom effect-shine">D-Dress</a></h1>
+                <h6 class="text-capitalize font-weight-light font-italic">"Fashions's Fade <br> style is eternal"</h6>
+            </div>
+
             <!-- Pills navs -->
             <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="tab-login" data-mdb-toggle="pill" href="#pills-login" role="tab"
                         aria-controls="pills-login" aria-selected="true">Login</a>
                 </li>
-               
+
             </ul>
             <!-- Pills navs -->
 
@@ -15,7 +21,7 @@
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
                     <form action="/login" method="post">
-                   
+
                         <!-- Email input -->
                         <div class="form-outline mb-4">
                             <input type="email" id="loginName" name="email" class="form-control" required />
@@ -24,8 +30,8 @@
 
                         <!-- Password input -->
                         <div class="form-outline mb-4">
-                            <input type="password" name="password" id="loginPassword" class="form-control" required/>
-                            <label class="form-label"  for="loginPassword">Password</label>
+                            <input type="password" name="password" id="loginPassword" class="form-control" required />
+                            <label class="form-label" for="loginPassword">Password</label>
                         </div>
                         {{#if logginErr}}
                         <p style="color: red;">{{logginErr}}</p>
@@ -56,6 +62,231 @@
                         </div>
                     </form>
                 </div>
+            </div>
         </div>
     </div>
-</div>
+
+
+
+    {{!-- login form additional start --}}
+
+    {{!-- <div class="container pt-5">
+        <div class="login-box">
+            <h2>Login</h2>
+            <form>
+                <div class="user-box">
+                    <input type="text" name="" required="">
+                    <label>Username</label>
+                </div>
+                <div class="user-box">
+                    <input type="password" name="" required="">
+                    <label>Password</label>
+                </div>
+                <a href="#">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    Submit
+                </a>
+            </form>
+        </div>
+    </div> --}}
+
+    {{!-- <style>
+
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            padding: 40px;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, .5);
+            box-sizing: border-box;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+            border-radius: 10px;
+        }
+
+        .login-box h2 {
+            margin: 0 0 30px;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+        .login-box .user-box {
+            position: relative;
+        }
+
+        .login-box .user-box input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 30px;
+            border: none;
+            border-bottom: 1px solid #fff;
+            outline: none;
+            background: transparent;
+        }
+
+        .login-box .user-box label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        .login-box .user-box input:focus~label,
+        .login-box .user-box input:valid~label {
+            top: -20px;
+            left: 0;
+            color: #03e9f4;
+            font-size: 12px;
+        }
+
+        .login-box form a {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #03e9f4;
+            font-size: 16px;
+            text-decoration: none;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: .5s;
+            margin-top: 40px;
+            letter-spacing: 4px
+        }
+
+        .login-box a:hover {
+            background: #03e9f4;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+        }
+
+        .login-box a span {
+            position: absolute;
+            display: block;
+        }
+
+        .login-box a span:nth-child(1) {
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #03e9f4);
+            animation: btn-anim1 1s linear infinite;
+        }
+
+        @keyframes btn-anim1 {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .login-box a span:nth-child(2) {
+            top: -100%;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #03e9f4);
+            animation: btn-anim2 1s linear infinite;
+            animation-delay: .25s
+        }
+
+        @keyframes btn-anim2 {
+            0% {
+                top: -100%;
+            }
+
+            50%,
+            100% {
+                top: 100%;
+            }
+        }
+
+        .login-box a span:nth-child(3) {
+            bottom: 0;
+            right: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg, transparent, #03e9f4);
+            animation: btn-anim3 1s linear infinite;
+            animation-delay: .5s
+        }
+
+        @keyframes btn-anim3 {
+            0% {
+                right: -100%;
+            }
+
+            50%,
+            100% {
+                right: 100%;
+            }
+        }
+
+        .login-box a span:nth-child(4) {
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(360deg, transparent, #03e9f4);
+            animation: btn-anim4 1s linear infinite;
+            animation-delay: .75s
+        }
+
+        @keyframes btn-anim4 {
+            0% {
+                bottom: -100%;
+            }
+
+            50%,
+            100% {
+                bottom: 100%;
+            }
+        }
+    </style> --}}
+
+    {{!-- login form additional end --}}
+
+<style>
+    <style>
+  @import url(https://fonts.googleapis.com/css?family=Dosis:300,400);
+
+
+
+/* effect-shine */
+a.effect-shine:hover {
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.6) 30%, #000 50%, rgba(0,0,0,.6) 70%);
+  -webkit-mask-size: 200%;
+  animation: shine 2s infinite;
+  text-decoration: none;
+}
+
+@-webkit-keyframes shine {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+</style>
+</style>

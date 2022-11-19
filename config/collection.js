@@ -7,5 +7,6 @@ module.exports={
     WALLET_COLLECTION:'wallet',
     OFFER_COLLECTION:'offer',
     OFFER_MANAGEMENT_COLLECTION:'offerMangement',
-    BANNER_COLLECTION:'banner'
+    BANNER_COLLECTION:'banner',
+    WHISHLIST_COLLECTION:'whislist'
 }

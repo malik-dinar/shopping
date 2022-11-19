@@ -356,6 +356,29 @@ module.exports = {
             }
         })
     },
+
+    removeProductFromWishlist: (remove) => {
+        return new Promise((resolve, reject) => {
+            try {
+                db.get().collection(collection.WHISHLIST_COLLECTION)
+                    .updateOne({ _id: objectId(remove.wishlistId) },
+                        {
+                            $pull: { products: { item: objectId(remove.product) } }
+                        }
+                    ).then(() => {
+                        console.log('removed');
+                        resolve({ removeProduct: true })
+                    }).catch((err) => {
+                        reject(err)
+                    })
+            } catch (err) { 
+                console.log(err);
+                reject(err)
+            }
+        })
+    },
+
+
     getTotalAmount: (userId) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -464,6 +487,8 @@ module.exports = {
         })
     },
     //====================Place Order====================
+    
+    
     placeOrder: (order, products, total, userId) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -1452,6 +1477,111 @@ module.exports = {
         })
     },
 
+    addToWhislist:async (proId,userId) =>{
+        let proName = await db.get().collection(collection.PRODUCT_COLLECTION).find({ _id: objectId(proId) }).toArray()
+        console.log('proName.name');
+        console.log(proName);
+        console.log(proName[0].name);
+        let proObj = {
+            item: objectId(proId),
+            name: proName[0].name
+        }
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                let userWhishlist = await db.get().collection(collection.WHISHLIST_COLLECTION).findOne({ user: objectId(userId) })
+                if (userWhishlist) {
+                    let proExist = userWhishlist.products.findIndex(product => product.item == proId)
+                    console.log('proExist');
+                    console.log(proExist);
+                    console.log(proObj);
+                    if (proExist != -1) {
+                        db.get().collection(collection.WHISHLIST_COLLECTION)
+                            .updateOne({ user: objectId(userId) },  
+                                {
+                                    $pull: { products: proObj }
+                                }
+                            ).then((response) => {
+                                resolve()
+                            }).catch((err) => {
+                                reject(err)
+                            })
+                    }else{
+                        db.get().collection(collection.WHISHLIST_COLLECTION)
+                            .updateOne({ user: objectId(userId) },
+                                {
+                                    $push: { products: proObj }
+                                }
+                            ).then((response) => {
+                                resolve()
+                            }).catch((err) => {
+                                reject(err)
+                            })
+                    }
+                } else {
+                    console.log('heloo');
+                    let cartObj = {
+                        user: objectId(userId),
+                        products: [proObj]
+                    }
+                    db.get().collection(collection.WHISHLIST_COLLECTION).insertOne(cartObj).then((response) => {
+                        resolve(response)
+                    }).catch((err) => {
+                        reject(err)
+                    })
+                }
+            } catch (err) {
+                console.log(err);
+                reject(err)
+            }
+        })
+    },
+
+
+    getWishlistProducts: (userId) => {
+        console.log(userId);
+        return new Promise(async (resolve, reject) => {
+            try {
+                let wishlistItems = await db.get().collection(collection.WHISHLIST_COLLECTION).aggregate([
+                    {
+                        $match: { user: objectId(userId) }  //user
+                    },
+                    {
+                        $unwind: '$products'
+                    },
+                    {
+                        $project: {
+                            item: '$products.item',
+                            quantity: '$products.quantity'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.PRODUCT_COLLECTION,
+                            localField: 'item',
+                            foreignField: '_id',
+                            as: 'product'
+                        }
+                    },
+                    {
+                        $project: {
+                            item: 1, product: { $arrayElemAt: ['$product', 0] }
+                        }
+                    }
+                ]).toArray()
+                // console.log(cartItems[0].products);
+                if (wishlistItems.length === 0) {
+                    console.log('wishlist');
+                    resolve()
+                } else {
+                    resolve(wishlistItems)
+                }
+            } catch (err) {
+                console.log(err);
+                reject(err)
+            }
+        })
+    },
 
 }
 

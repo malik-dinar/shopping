@@ -4,14 +4,13 @@
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">date</th>
-                    <th scope="col">name</th>
-                    <th scope="col">address</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">mobile</th>
-                    <th scope="col">Price</th>    
-                    <th scope="col">status</th>
-                    <th scope="col">orders</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">User Info</th>
+                    <th scope="col" style="background-color: #97DB9A;">Price</th>    
+                    <th scope="col">Status</th>
+                    <th scope="col">Orders</th>
                     {{!-- <th scope="col">cancel</th> --}}
                 </tr>
             </thead>
@@ -21,10 +20,9 @@
                     <td ><span class="create_index"></span></td>
                     <td>{{this.date}}</td>
                     <td class="text-capitalize"> {{this.deliveryDetails.name}}</td>           
-                    <td>{{this.deliveryDetails.address}} {{this.deliveryDetails.pincode}} {{this.deliveryDetails.state}} {{this.deliveryDetails.address2}}</td>
-                    <td>{{this.deliveryDetails.email}} {{this.deliveryDetails.email2}}</td>
-                    <td>{{this.deliveryDetails.mobile}}</td>
-                    <td>{{this.totalAmount}} 
+                    <td>{{this.deliveryDetails.address}} <br> {{this.deliveryDetails.pincode}} <br> {{this.deliveryDetails.state}} </td>
+                    <td>{{this.deliveryDetails.email}} <br>{{this.deliveryDetails.mobile}}</td>
+                    <td style="background-color: #97DB9A;">{{this.totalAmount}} 
                     {{!-- <br>Qty:{{this.quantity}} --}}
                     </td>
                     <td><p class="badge btn-danger text-capitalize" id="{{this._id}}">{{this.status}}</p> </td>                                   

@@ -59,7 +59,7 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/admin-panel', (req, res) => {
+router.get('/admin-panel',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.getAllProducts().then((products) => {
       res.render('admin/admin-panel', { products, admin: true })
@@ -72,7 +72,7 @@ router.get('/admin-panel', (req, res) => {
 
 
 
-router.get('/add-product', (req, res) => {
+router.get('/add-product', verifyAdminLogin, (req, res) => {
   try {
     productHelpers.getCategory().then((datacategory) => {
       res.render('admin/add-product', { admin: true, datacategory })
@@ -85,7 +85,7 @@ router.get('/add-product', (req, res) => {
 
 
 
-router.post('/add-product', (req, res) => {
+router.post('/add-product',verifyAdminLogin, (req, res) => {
   try {
     req.body.price = parseInt(req.body.price)
     req.body.stock = parseInt(req.body.stock)
@@ -113,7 +113,7 @@ router.post('/add-product', (req, res) => {
 })
 
 
-router.get('/delete-product/:id', (req, res) => {
+router.get('/delete-product/:id', verifyAdminLogin, (req, res) => {
   try {
     let proId = req.params.id
     console.log(proId);
@@ -126,7 +126,7 @@ router.get('/delete-product/:id', (req, res) => {
   }
 })
 
-router.get('/edit-product/:id', async (req, res) => {
+router.get('/edit-product/:id',verifyAdminLogin, async (req, res) => {
   try {
     let product = await productHelpers.getProductDetails(req.params.id)
     //console.log(product);     
@@ -142,28 +142,50 @@ router.get('/edit-product/:id', async (req, res) => {
 })
 
 
-router.post('/edit-product/:id', (req, res) => {
+router.post('/edit-product/:id',verifyAdminLogin,(req, res) => {
   try {
     let id = req.params.id
     req.body.price = parseInt(req.body.price)
     productHelpers.updateproduct(req.params.id, req.body).then(() => {
-      if (req.files?.image) {
-        let image = req.files?.image
-        image.mv('./public/product-images/' + id + '.jpg')
-      }
-      res.redirect('/admin/admin-panel')  
+      if (req.files) {
+        let image = req.files.image;
+        let image2 = req.files.image2;
+        let image3 = req.files.image3;
+        if (image) {
+            image.mv('./public/product-images/' + req.params.id + '.jpg', (err, done) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }
+        if (image2) {
+            image2.mv('./public/product-images/' + req.params.id + '2.jpg', (err, done) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }
+        if (image3) {
+            image3.mv('./public/product-images/' + req.params.id + '3.jpg', (err, done) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }
+    }
+
+      res.redirect('/admin/admin-panel') 
     }).catch((err) => {
       console.log(err + "error happened in admin edit product post");
       res.redirect('/error')
     })
-  } catch (err) {
+  }catch (err) {
     console.log(err + "error happened in admin edit product post");
-    res.redirect('/error')
-    
+    res.redirect('/error') 
   }
 })
 
-router.get('/admin-pannel', (req, res) => {
+router.get('/admin-pannel',verifyAdminLogin, (req, res) => {
   try {
     res.redirect('/admin/admin-panel')
   } catch (err) {
@@ -176,7 +198,7 @@ router.get('/admin-pannel', (req, res) => {
 
 
 
-router.get('/user-management', (req, res) => {
+router.get('/user-management',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.getUser().then((user) => {
       res.render('admin/user-management', { user, admin: true })
@@ -190,7 +212,7 @@ router.get('/user-management', (req, res) => {
   }
 })
 
-router.get('/user-block/:id', (req, res) => {
+router.get('/user-block/:id',verifyAdminLogin, (req, res) => {
   try {
     userHelpers.blockUser(req.params.id).then(() => {
       req.session.BError = true;
@@ -206,7 +228,7 @@ router.get('/user-block/:id', (req, res) => {
   }
 })
 
-router.get('/user-unblock/:id', (req, res) => {
+router.get('/user-unblock/:id',verifyAdminLogin, (req, res) => {
   try {
     userHelpers.UnblockUser(req.params.id).then(() => {
       res.redirect('/admin/user-management')
@@ -221,7 +243,7 @@ router.get('/user-unblock/:id', (req, res) => {
 })
 
 
-router.get('/category-admin', (req, res) => {
+router.get('/category-admin',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.getCategory(req.body).then((datacategory) => {
       console.log(datacategory);
@@ -239,7 +261,7 @@ router.get('/category-admin', (req, res) => {
 
 
 
-router.post('/add-category', (req, res) => {
+router.post('/add-category',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.addCategory(req.body).then((id) => {
       console.log(req.body);
@@ -257,7 +279,7 @@ router.post('/add-category', (req, res) => {
   }
 })
 
-router.get('/delete-category/:cat', (req, res) => {
+router.get('/delete-category/:cat',verifyAdminLogin, (req, res) => {
   try {
     let catId = req.params.cat
     console.log(catId);
@@ -276,7 +298,7 @@ router.get('/delete-category/:cat', (req, res) => {
   }
 })
 
-router.get('/edit-category/:cat', async (req, res) => {
+router.get('/edit-category/:cat', verifyAdminLogin,async (req, res) => {
   try {
     let catname = req.params.cat
     let oneCat = await productHelpers.getOneCatergory(catname)
@@ -287,7 +309,7 @@ router.get('/edit-category/:cat', async (req, res) => {
   }
 })
 
-router.post('/edit-category/:cat', (req, res) => {
+router.post('/edit-category/:cat',verifyAdminLogin, (req, res) => {
   try {
     //console.log(cat); 
     let newCat = req.body.category
@@ -321,11 +343,9 @@ router.get('/orders-admin', verifyAdminLogin, async (req, res) => {
 //   })
 // })
 
-router.post('/change-order-status', (req, res) => {
+router.post('/change-order-status',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.changeOrderStatus(req.body).then(() => {
-      console.log('find wallet from this');
-      console.log(req.body);
       res.json(response)
   
     })
@@ -335,7 +355,7 @@ router.post('/change-order-status', (req, res) => {
   }
 })
 
-router.get('/view-ordered-products-admin/:id', async (req, res) => {
+router.get('/view-ordered-products-admin/:id',verifyAdminLogin, async (req, res) => {
   try {
     let products = await userHelpers.getOrderProducts(req.params.id)
     res.render('admin/ordered-pro-admin', { admin: true, products })
@@ -346,7 +366,7 @@ router.get('/view-ordered-products-admin/:id', async (req, res) => {
 })
 
 
-router.get('/view-ordered-users-admin/:id', async (req, res) => {
+router.get('/view-ordered-users-admin/:id', verifyAdminLogin, async (req, res) => {
   try {
     let users = await userHelpers.getOrderUser(req.params.id)
     res.render('admin/ordered-user', { admin: true, users })
@@ -359,7 +379,7 @@ router.get('/view-ordered-users-admin/:id', async (req, res) => {
 
 //================================= Admin dashboard =======================//
 
-router.get('/admin-dashboard', async (req, res) => {
+router.get('/admin-dashboard',verifyAdminLogin, async (req, res) => {
   try {
     let total = await userHelpers.TotalSale()
     let totalUsers = await userHelpers.totalUsers()
@@ -380,7 +400,7 @@ router.get('/admin-dashboard', async (req, res) => {
   }
 })
 
-router.get('/view-users-products/:id', async (req, res) => {
+router.get('/view-users-products/:id', verifyAdminLogin, async (req, res) => {
   try {
     let users = await userHelpers.getOrderUser(req.params.id)
     let products = await userHelpers.getOrderProducts(req.params.id)
@@ -393,7 +413,7 @@ router.get('/view-users-products/:id', async (req, res) => {
 
 
 
-router.get('/coupon-page', async (req, res) => {
+router.get('/coupon-page',verifyAdminLogin, async (req, res) => {
   try {
     let coupon = await productHelpers.getCouponCode()
     res.render('admin/coupon-page', { admin: true, coupon, Err: req.session.AlreadyExists })
@@ -404,7 +424,7 @@ router.get('/coupon-page', async (req, res) => {
   }
 })
 
-router.post('/add-coupon', (req, res) => {
+router.post('/add-coupon',verifyAdminLogin, (req, res) => {
   try {
     productHelpers.addCoupon(req.body).then((couponAlreadyexist) => {
       if (couponAlreadyexist) {
@@ -421,7 +441,7 @@ router.post('/add-coupon', (req, res) => {
   }
 })
 
-router.post('/delete-coupon', (req, res) => {
+router.post('/delete-coupon',verifyAdminLogin, (req, res) => {
   try {
     console.log('hi');
     const obj = JSON.parse(JSON.stringify(req.body));
@@ -437,7 +457,7 @@ router.post('/delete-coupon', (req, res) => {
 
 
 
-router.get('/offer-cat', async (req, res) => {
+router.get('/offer-cat',verifyAdminLogin, async (req, res) => {
    try{
     productHelpers.getCategory().then((datacategory) => {
       productHelpers.getCategoryOffer().then((alloffer) => {
@@ -468,7 +488,7 @@ router.get('/offer-cat', async (req, res) => {
 })
 
 
-router.post('/add-offer-category', (req, res) => {
+router.post('/add-offer-category',verifyAdminLogin, (req, res) => {
    try{
     productHelpers.addCategoryOffer(req.body).then(() => {
       if (offerAlreadyexist) {
@@ -488,7 +508,7 @@ router.post('/add-offer-category', (req, res) => {
 })
 
 
-router.post('/delete-offer', (req, res) => {
+router.post('/delete-offer',verifyAdminLogin, (req, res) => {
   productHelpers.deleteOffer(req.body).then((response) => {
     res.json(response)
   }).catch((err)=>{
@@ -497,7 +517,7 @@ router.post('/delete-offer', (req, res) => {
   })
 })
 
-router.post('/add-offer-product', (req, res) => {
+router.post('/add-offer-product',verifyAdminLogin, (req, res) => {
   productHelpers.addProductOffer(req.body).then(() => {
     res.redirect('/admin/offer-cat')
   }).catch((err)=>{
@@ -506,7 +526,7 @@ router.post('/add-offer-product', (req, res) => {
   })
 })
 
-router.post('/offer-applied', (req, res) => {
+router.post('/offer-applied',verifyAdminLogin, (req, res) => {
   productHelpers.productOfferApplied(req.body).then(() => {
     res.redirect('/admin/offer-cat')
   }).catch((err)=>{
@@ -515,7 +535,7 @@ router.post('/offer-applied', (req, res) => {
   })
 })
 
-router.post('/delete-offer-product', (req, res) => {
+router.post('/delete-offer-product',verifyAdminLogin, (req, res) => {
   productHelpers.deleteProductOffer(req.body).then((response) => {
     res.json(response)
   }).catch((err)=>{
@@ -535,7 +555,7 @@ router.get('/banner', verifyAdminLogin, async (req, res) => {
   }
 })
 
-router.post('/add-Banner', (req, res) => {
+router.post('/add-Banner',verifyAdminLogin, (req, res) => {
    try{
     productHelpers.addBanner(req.body).then((id) => {
       let image = req.files.image

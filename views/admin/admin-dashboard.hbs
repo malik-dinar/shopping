@@ -1,5 +1,36 @@
 
+<style>
 
+
+.Button {
+  position: relative;
+  top: 0px;
+  padding: 5px 23px;
+  border: solid #1a1a1a 3px;
+  border-radius: 10px;
+  margin: 10px;
+  box-shadow: 0px 10px 0px #1a1a1a;
+}
+
+.Button:hover {
+  top: 2px;
+  box-shadow: 0px 8px 0px #1a1a1a;
+}
+.Button:active {
+  transition: 100ms ease;
+  top: 8px;
+  box-shadow: 0px 2px 0px #1a1a1a;
+}
+.Red {
+  background: #d22b2b;
+}
+.Red:hover {
+  background: #c21b2b;
+}
+.Red:active {
+  background: #b20b2b;
+}
+</style>
 
 <body>
     <div >
@@ -107,8 +138,10 @@
                         {{!-- <h6 class="mr">sales report</h6> --}}
                         {{!-- <h3 >Sales report</h3> --}}
                         <a class="ml-auto">Sales report</a>
-                        <button type="button"  id="btnExport" value="Export" onclick="Export()">pdf</button>
-                        <button type="submit"  onclick="exportTableToExcel('tableData')">exel</button>
+                        {{!-- <button type="button"  id="btnExport" value="Export" onclick="Export()">pdf</button> --}}
+                        <button class="Button Red" type="button"  id="btnExport" value="Export" onclick="Export()" >pdf</button>
+                        <button class="Button Red" type="submit"  onclick="exportTableToExcel('tableData')">exel</button>
+                        {{!-- <button type="submit"  onclick="exportTableToExcel('tableData')">exel</button> --}}
                         <a href="/admin/orders-admin">Show All</a>
                     </div>
                     <div class="table-responsive">
@@ -150,9 +183,9 @@
         <!-- Content End -->
 
 
-        <section>
-    <div   class="table-responsive">
-        <table  class="table text-start align-middle table-bordered table-hover mb-0" id="tableData" hidden>
+        <section >
+    <div   class="table-responsive" hidden>
+        <table  class="table text-start align-middle table-bordered table-hover mb-0" id="tableData" >
             <thead>
                 <tr>
                     <th rowspan="2">No</th>
@@ -203,15 +236,15 @@
 
 
 
-{{!-- 
-<script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
+
+{{!-- <script  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"> </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script> --}}
 
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+{{!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> --}}
 
 {{!-- another pdf link --}}
 {{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>

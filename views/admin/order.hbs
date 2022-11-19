@@ -7,8 +7,7 @@
                     <th scope="col">date</th>
                     <th scope="col">name</th>
                     <th scope="col">address</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">mobile</th>
+                    <th scope="col">user info</th>
                     <th scope="col">payment Method</th>
                     <th scope="col">Amount</th>
                     <th scope="col">status</th> 
@@ -22,9 +21,8 @@
                     <td ><span class="create_index"></span></td>
                     <td>{{this.date}}</td>
                     <td> {{this.deliveryDetails.name}}</td>           
-                    <td>{{this.deliveryDetails.address}} {{this.deliveryDetails.pincode}} {{this.deliveryDetails.state}}</td>
-                    <td>{{this.deliveryDetails.email}}</td>
-                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.deliveryDetails.address}} <br> {{this.deliveryDetails.pincode}} <br>  {{this.deliveryDetails.state}}</td>
+                    <td>{{this.deliveryDetails.email}} <br> {{this.deliveryDetails.mobile}}</td>
                     <td>{{this.PaymentMethod}}</td>
                     <td>Rs.{{this.totalAmount}}</td>
                     <td >
@@ -55,29 +53,29 @@
     }
 
 
-    let selectTag=document.querySelectorAll(".selectTagValue")
-    let spanStatus=document.querySelectorAll(".spanStatus")
-    let delivered=document.querySelectorAll(".delivered")
-    let shipped=document.querySelectorAll(".shipped")
-    let placed=document.querySelectorAll(".placed")
-    let cancelled=document.querySelectorAll(".cancelled")
-
-    for(let i=0;i<selectTag.length;i++){
-      selectTag[i].style.display="block"
-      selectTagValue=selectTag[i].options[selectTag[i].selectedIndex].text
-      if(selectTagValue==="Cancelled" || selectTagValue==="Delivered" ){
-        selectTag[i].style.display="none"
-        spanStatus[i].style.display="inline-block"
-      }
-      if(selectTagValue==="Placed"){
-        placed[i].style.display="none"
-      }
-      if(selectTagValue==="Pending"){
-        shipped[i].style.display="none"
-        delivered[i].style.display="none"
-        placed[i].style.display="block"
-      }
-    }
+    //let selectTag=document.querySelectorAll(".selectTagValue")
+    //let spanStatus=document.querySelectorAll(".spanStatus")
+    //let delivered=document.querySelectorAll(".delivered")
+    //let shipped=document.querySelectorAll(".shipped")
+    //let placed=document.querySelectorAll(".placed")
+    //let cancelled=document.querySelectorAll(".cancelled")
+    //
+    //for(let i=0;i<selectTag.length;i++){
+    //  selectTag[i].style.display="block"
+    //  selectTagValue=selectTag[i].options[selectTag[i].selectedIndex].text
+    //  if(selectTagValue==="Cancelled" || selectTagValue==="Delivered" ){
+    //    selectTag[i].style.display="none"
+    //    spanStatus[i].style.display="inline-block"
+    //  }
+    //  if(selectTagValue==="Placed"){
+    //    placed[i].style.display="none"
+    //  }
+    //  if(selectTagValue==="Pending"){
+    //    shipped[i].style.display="none"
+    //    delivered[i].style.display="none"
+    //    placed[i].style.display="block"
+    //  }
+    //}
 
     function changeStatus(orderId){
             let st=document.getElementById(orderId)    

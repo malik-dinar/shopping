@@ -4,7 +4,7 @@
     <form action="/admin/add-product" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="formGroupExampleInput">Product Name</label>
-        <input type="text" class="form-control" id="formGroupExampleInput" name="name" placeholder="name">
+        <input type="text" class="form-control" id="formGroupExampleInput" name="name" placeholder="name" required>
       </div>
       <div class="form-group">
         <label for="formGroupExampleInput2">Categoty</label>
@@ -17,23 +17,21 @@
       </div>
       <div class="form-group">
         <label for="formGroupExampleInput2">price</label>
-        <input type="number" class="form-control" id="formGroupExampleInput2" name="price" placeholder="price">
+        <input type="number" class="form-control" id="formGroupExampleInput2" name="price" placeholder="price" required>
       </div>
       <div class="form-group">
         <label for="formGroupExampleInput2">Stock</label>
-        <input type="number" class="form-control" id="formGroupExampleInput2" name="stock" placeholder="stock">
+        <input type="number" class="form-control" id="formGroupExampleInput2" name="stock" placeholder="stock" required>
       </div>
       <div class="form-group">
         <label for="formGroupExampleInput2">Description</label>
         <input type="text" class="form-control" id="formGroupExampleInput2" name="description"
-          placeholder="Description">
+          placeholder="Description" required>
       </div>
       {{!-- image...............1 --}}
       <div class="form-group">
         <label for="image">Image</label>
-        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image"    {{!-- onchange="show(event)" --}}
-          required>
-       
+        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image" {{!--onchange="viewImage(event)" --}} required> 
         <img src="" id="image1" alt="" class="imggmi" style="height:100px">
       </div>
       <div style="display:flex">
@@ -42,34 +40,39 @@
       <button type="button" class=" btn btn-outline-info " id="crop-1">Crop</button>
 
       {{!-- image...............2 --}}
-         <div class="form-group">
-        <label for="image">Image</label>
-        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image2"    {{!-- onchange="show(event)" --}}
-          required>
-       
-        <img src="" id="image1" alt="" class="imggmi" style="height:100px">
-      </div>
-      <div style="display:flex">
-        <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
-      </div>
+     <div class="form-group">
+              <label for="image">Image</label>
+              <input type="file" class="form-control-file image" id="imgFile2" accept="image2/*" name="image2" {{!--onchange="viewImage (event)" --}} required>
+              <img src="" id="image2" alt="" class="imggmi" style="height:100px">
+            </div>
+            <div style="display:flex">
+              <div id="screen2" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
+            </div>
+      <button type="button" class=" btn btn-outline-info " id="crop-2">Crop</button>
+
 
       {{!-- image...............3 --}}
-         <div class="form-group">
+      <div class="form-group">
         <label for="image">Image</label>
-        <input type="file" class="form-control-file image" id="imgFile" accept="image/*" name="image3"    {{!-- onchange="show(event)" --}}
-          required>
-       
-        <img src="" id="image1" alt="" class="imggmi" style="height:100px">
+        <input type="file" class="form-control-file image" id="imgFile3" accept="image3/*" name="image3" required>
+
+        <img src="" id="image3" alt="" class="imggmi" style="height:100px">
       </div>
       <div style="display:flex">
-        <div id="screen1" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
+        <div id="screen3" class="imggmi image-container" style="height: auto; width: auto"></div> <br>
       </div>
+      <button type="button" class=" btn btn-outline-info " id="crop-3">Crop</button>
       <button class="btn btn-primary" type="submit">Submit form</button>
     </form>
   </div>
 </section>
 
 
+<script>
+  function viewImage(event) {
+    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+  }
+</script>
 
 
 
@@ -125,9 +128,125 @@
         document.getElementById('image1').src = URL.createObjectURL(fileInputElement1.files[0])
         document.getElementById('screen1').style.display = 'none'
         document.getElementById('crop-1').style.display = 'none'
+        if(document.getElementById('crop-2').style.display === 'none'){
+                  document.getElementById("addbtn").disabled = false;
+              }
       })
     })
+  })
+</script>
 
+
+
+<script>
+  const imagebox2 = document.getElementById('screen2')
+  const crop_btn2 = document.getElementById('crop-2')
+  const input2 = document.getElementById('imgFile2')
+
+
+  function viewImage2(event) {
+    var fileInput2 = document.getElementById('imgFile2');
+    var filePath2 = fileInput2.value;
+    var allowedExtensions = /(\.jpg)$/i;
+    if (!allowedExtensions.exec(filePath2)) {
+      fileInput2.value = '';
+      swal("There is a problem!", "Please choose image file.");
+      return false;
+    } else {
+      document.getElementById('image2').src = URL.createObjectURL(event.target.files[0])
+    }
+  }
+
+  input2.addEventListener('change', () => {
+    const img_data2= input2.files[0]
+    const url2 = URL.createObjectURL(img_data2)
+    imagebox2.innerHTML = `<img src="${url2}" id="img2" style="width:100%;">`
+    const img2 = document.getElementById('img2')
+    document.getElementById('screen2').style.display = 'block'
+
+    document.getElementById('crop-2').style.display = 'block'
+    document.getElementById('image2').style.display = 'block'
+
+    const cropper2 = new Cropper(img2, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 50,
+      minCropBoxHeight: 50,
+      aspectRatio: 1 / 1,
+    })
+
+    crop_btn2.addEventListener('click', () => {
+
+      cropper2.getCroppedCanvas().toBlob((blob) => {
+        let fileInputElement2 = document.getElementById('imgFile2');
+        let file2 = new File([blob], img_data2.name, { type: "image2/*", lastModified: new Date().getTime() });
+        let container2 = new DataTransfer();
+        container2.items.add(file2);
+        fileInputElement2.files = container2.files;
+        document.getElementById('image2').src = URL.createObjectURL(fileInputElement2.files[0])
+        document.getElementById('screen2').style.display = 'none'
+        document.getElementById('crop-2').style.display = 'none'
+      })
+    })
   })
 
+</script>
+
+
+<script>
+  const imagebox3 = document.getElementById('screen3')
+  const crop_btn3 = document.getElementById('crop-3')
+  const fileInput3 = document.getElementById('imgFile3')
+
+
+  function viewImage3(event) {
+    var fileInput3 = document.getElementById('imgFile3');
+    var filePath3 = fileInput3.value;
+    var allowedExtensions = /(\.jpg)$/i;
+    if (!allowedExtensions.exec(filePath3)) {
+      fileInput3.value = '';
+      swal("There is a problem!", "Please choose image file.");
+      return false;
+    } else {
+      document.getElementById('image3').src = URL.createObjectURL(event.target.files[0])
+    }
+  }
+
+  fileInput3.addEventListener('change', () => {
+    const img_data3= input3.files[0]
+    const url3 = URL.createObjectURL(img_data3)
+    imagebox3.innerHTML = `<img src="${url3}" id="img3" style="width:100%;">`
+    const img3 = document.getElementById('img3')
+    document.getElementById('screen3').style.display = 'block'
+
+    document.getElementById('crop-3').style.display = 'block'
+    document.getElementById('image3').style.display = 'block'
+
+    const cropper3 = new Cropper(img3, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 50,
+      minCropBoxHeight: 50,
+      aspectRatio: 1 / 1,
+    })
+
+    crop_btn3.addEventListener('click', () => {
+      cropper3.getCroppedCanvas().toBlob((blob) => {
+        let fileInputElement3 = document.getElementById('imgFile3');
+        let file3 = new File([blob], img_data3.name, { type: "image3/*", lastModified: new Date().getTime() });
+        let container3 = new DataTransfer();
+        container3.items.add(file3);
+        fileInputElement3.files = container3.files;
+        document.getElementById('image3').src = URL.createObjectURL(fileInputElement3.files[0])
+        document.getElementById('screen3').style.display = 'none'
+        document.getElementById('crop-3').style.display = 'none'
+      })
+    })
+  })
 </script>

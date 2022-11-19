@@ -1,0 +1,134 @@
+  <div class="twelve mt-2">
+    <h1>Wishlist</h1>
+  </div>
+
+ <div class="site-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="site-blocks-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="product-thumbnail">Image</th>
+                                <th class="product-name">Product</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Add to Cart</th>
+                                <th class="product-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products}}
+                            <tr>
+                                <td class="product-thumbnail">
+                                    <img src="/product-images/{{this.product._id}}.jpg" alt="Image"
+                                        style="width: 200px; height: 130px;" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black text-capitalize">{{this.product.name}}</h2>
+                                </td> 
+                                <td>Rs.{{this.product.offerprice}}</td>
+                                <td>
+                                   <a href="/add-to-cart/{{this.product._id}}" class="btn btn-primary btn-sm"><i class="fas fa-cart-plus"></i></a>
+                                </td>
+                                <td><button class="btn btn-primary btn-sm" onclick="sweetAlertWishlist('{{this._id}}','{{this.product._id}}')">X</button></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>+
+            </div>
+        </div>
+
+
+
+
+  <style>
+.hh {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+  font-weight: 300;
+  font-size: 40px;
+  color: #080808;
+  -webkit-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
+}
+.twelve h1 {
+  font-size:26px; font-weight:700;  letter-spacing:1px; text-transform:uppercase; width:160px; text-align:center; margin:auto; white-space:nowrap; padding-bottom:13px;
+}
+.twelve h1:before {
+    background-color: #c50000;
+    content: '';
+    display: block;
+    height: 3px;
+    width: 75px;
+    margin-bottom: 5px;
+}
+/* ------- Helper Styles -------------*/
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.twelve1 {
+  position: relative;
+  background: #f8f8f8;
+  width: 90%;
+  max-width: 500px;
+  padding: 2em;
+  margin: 1.5em auto;
+  border: 3px solid rgba(0, 0, 0, 0.08);
+}
+
+h1:before,
+h1:after {
+  background-color: #c50000;
+}
+
+  </style>
+
+  <script>
+
+      function removeProduct(wishlistId, proId) {
+              $.ajax({
+                  url: '/remove-product-wishlist',
+                  data: {
+                      wishlistId: wishlistId,
+                      product: proId,
+                  },
+                  method: 'post',
+                  success: (response) => {
+                      if (response.removeProduct) {
+                         console.log('delete avandethaan')
+                          location.reload()
+                      }
+                  }
+              })
+          }
+
+
+     function sweetAlertWishlist(wishlistId, proId) {
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this product",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            removeProduct(wishlistId, proId);
+            swal("product deleted succesfully..", {
+              icon: "success",
+            });
+          } else {
+            swal("product is safe");
+          }
+        });
+    }
+  </script>

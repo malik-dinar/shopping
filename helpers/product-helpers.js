@@ -81,12 +81,15 @@ module.exports = {
     updateproduct: (productId, productDetails) => {
         return new Promise((resolve, reject) => {
             try {
+                console.log('1');
+                console.log(productDetails);
+                console.log(productDetails.category);
                 db.get().collection(collection.PRODUCT_COLLECTION)
                     .updateOne({ _id: objectId(productId) }, {
 
                         $set: {
                             name: productDetails.name,
-                            Category: productDetails.Category,
+                            category: productDetails.category,
                             price: productDetails.price,
                             description: productDetails.description,
                         }
@@ -135,7 +138,7 @@ module.exports = {
     getProductsInCategory: (Cate) => {
         return new Promise((resolve, reject) => {
             try {
-                db.get().collection(collection.PRODUCT_COLLECTION).find({ category: Cate }).toArray().then((product) => {  //ask       
+                db.get().collection(collection.PRODUCT_COLLECTION).find({$and:[{category: Cate},{stock:{$gte:1}}]}).toArray().then((product) => {     
                     console.log(Cate)
                     console.log(product)
                     resolve(product)
@@ -230,7 +233,7 @@ module.exports = {
             }
         })
     },
-    changeOrderStatus: (details) => {
+        changeOrderStatus: (details) => {
         return new Promise(async (resolve, reject) => {
             try {
                 await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(details.order) }, {
@@ -530,7 +533,7 @@ module.exports = {
     getPaginatedProducts: (skip, limit) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray()
+                let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({stock:{$gte:1}}).skip(skip).limit(limit).toArray()
                 resolve(products.reverse())
             } catch (err) {
                 console.log(err);
@@ -545,14 +548,18 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({
-                    $or: [
+                    $and:[
                         {
-                            name: { $regex: ".*" + search + ".*", $options: "i" }
-                        },
-                        {
-                            category: { $regex: ".*" + search + ".*", $options: "i" }
-                        }
-                    ]
+                            $or: [
+                                {
+                                    name: { $regex: ".*" + search + ".*", $options: "i" }
+                                },
+                                {
+                                    category: { $regex: ".*" + search + ".*", $options: "i" }
+                                }
+                            ]
+                        },{stock:{$gte:1}}
+                    ]   
                 }).toArray()
                 console.log(products);
                 resolve(products)
@@ -606,6 +613,18 @@ module.exports = {
                 reject(err)
             }
         })
-    }
+    },
+
+    
+
+    // getDiscountPercent:()=>{
+    //     return new Promise((resolve,reject)=>{
+    //         try{
+    //             db.get().collection(collection.OFFER_MANAGEMENT_COLLECTION).find().toArray()
+    //         }catch (err){
+    //             reject(err)
+    //         }
+    //     })
+    // }
 
 }

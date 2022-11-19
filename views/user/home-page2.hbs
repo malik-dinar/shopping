@@ -1,4 +1,4 @@
-<div class="container mx-auto mt-4">
+{{!-- <div class="container mx-auto mt-4">
   <div class="row d-flex justify-content-center">
     {{#each products}}
     <div class="col-md-4 d-flex justify-content-center">
@@ -20,7 +20,39 @@
     </div>
     {{/each}}
   </div>
-</div>
+</div> --}}
+
+
+
+<section>
+  <div class="row d-flex justify-content-center p-5"> 
+    {{#each products}}
+    <div class="col-md-3 col-sm-6">  
+      <div class="product-grid mt-3 ">
+        <div class="product-image">
+          <a href="/product-view/{{this._id}}" class="image">
+            <img class="pic-1" src="/product-images/{{this._id}}.jpg">
+            <img class="pic-2" src="/product-images/{{this._id}}2.jpg">
+          </a>
+          {{#if this.isWishlisted}}
+                  <a href="/add-to-wishlist/{{this._id}}" class="product-like-icon"><i style="color: red;" class="fas fa-heart"></i></a>
+          {{else}}
+                <a href="/add-to-wishlist/{{this._id}}" class="product-like-icon"><i class="fas fa-heart"></i></a>
+          {{/if}}
+          <span class="product-discount-label">-30%</span>
+        </div>
+        <div class="product-content">
+          <h3 class="title"><a href="#">{{this.name}}</a></h3>
+          <div><strike class="card-subtitle mb-2 format-price ogprice"
+              style="display: none;">{{this.price}}</strike></div>
+          <h6 class="card-subtitle mb-2 format-price offerprice">{{this.offerprice}} </h6>
+          <a class="add-cart"  href="/add-to-cart/{{this._id}}" > Add to cart </a>
+        </div>
+      </div>
+    </div>
+     {{/each}}
+  </div>
+</section>
 
 
 
@@ -144,3 +176,155 @@
   </div>
   <!-- Copyright -->
 </footer>
+
+
+
+
+<style>
+  .product-grid{
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    border-radius: 25px;
+    overflow: hidden;
+    transition: all .5s ease;
+}
+.product-grid:hover{ box-shadow: 0 0 21px 0 rgba(39,39,39,.15); }
+.product-grid .product-image{
+    overflow: hidden;
+    position: relative;
+}
+.product-grid .product-image a.image{ display: block; }
+.product-grid .product-image img{ width: 100%; }
+.product-grid .product-image .pic-1{ 
+    transform: scale(1);
+    transition: all .5s ease; 
+}
+.product-grid:hover .product-image .pic-1{ 
+    opacity: 0;
+    transform: scale(.9);
+}
+.product-grid .product-image .pic-2{
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    opacity: 0;
+    transform: scale(1.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all .5s ease;
+}
+.product-grid:hover .product-image .pic-2{ 
+    opacity: 1;
+    transform: scale(1);
+}
+.product-grid .product-discount-label{
+    color: #fff;
+    background: #fe4343;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform:capitalize;
+    line-height: 35px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    box-shadow: 0 6px 14px 0 rgba(39,39,39,.25);
+    position: absolute;
+    top:15px;
+    left: 15px;
+}
+.product-grid .product-full-view{
+    color: #272727;
+    background-color: #fff;
+    font-size: 14px;
+    line-height: 40px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 5%);
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transition: all .5s ease;
+}
+.product-grid:hover .product-full-view{ opacity: 1; }
+.product-grid .product-full-view:hover{
+    color: #fff;
+    background-color: #f1252b;
+}
+.product-grid .product-like-icon{
+    color: #d9d9d9;
+    display: block;
+    font-size: 25px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    transition: all 0.3s ;
+}
+.product-grid .product-like-icon:hover{ color: #fbaf3f; }
+.product-grid .product-content{ padding: 18px; }
+.product-grid .title{
+    font-size: 17px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+}
+.product-grid .title a{
+    color: #272727;
+    transition: all 0.3s ease 0s;
+}
+.product-grid .title a:hover{ color: #f1252b; }
+.product-grid .price{
+    color: #ff0404;
+    font-size: 16px;
+    font-weight:700;
+    display: block;
+    margin: 0 0 12px;
+}
+.product-grid .price span{
+    color: #ababab;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: line-through;
+}
+.product-grid .add-cart{
+    color:#272727;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 10px 30px;
+    border: 1px solid #272727;
+    border-radius: 25px;
+    display: inline-block;
+    position: relative;
+    transition: all .5s ease;
+}
+.product-grid .add-cart:hover{
+    color: transparent;
+    background: #f1252b; 
+    border: 1px solid #f1252b; 
+}
+.product-grid .add-cart:before{
+    content: "\f290";
+    color: #fff;
+    font-family: "Font Awesome 5 Free";
+    font-size: 18px;
+    font-weight: 900;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all .2s ease;
+}
+.product-grid .add-cart:hover:before{
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+}
+@media screen and (max-width: 990px){
+    .product-grid{ margin-bottom: 30px; }
+}
+</style>
