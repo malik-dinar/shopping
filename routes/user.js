@@ -13,13 +13,14 @@ const paypal = require('paypal-rest-sdk');
 const { route } = require('./admin');
 const flash = require('connect-flash');
 const Handlebars = require('handlebars');
+require('dotenv').config()
 
 
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live 
-  'client_id': 'AWg1WYasdHj_AUw2WqSFEIAld6COjgrNi35aalmUR_GsuqWVnd6h6WZVxtDnX4sM4p80oC5vDb_ZLD9i',
-  'client_secret': 'EJVcBHZWa46bJRL-n2zzAK_wM0OdKJAKAQn31nBN41mPIeIYbBDgssueS8tAIjEu-zyie8UfXZLnNl0B'
+  'client_id': process.env.PAYPAL_SANDBOX_CLIENT_ID,
+  'client_secret': process.env.PAYPAL_SANDBOX_CLIENT_SECRET
 });
 
 //Custome Middleware to check if user is logged in
@@ -576,7 +577,6 @@ router.post('/sendotp', (req, res) => {
           .verifications
           .create({ to: ph_no, channel: 'sms' })
           .then(verification => {
-            console.log('pending');
             console.log(verification.status)
             //  req.session.preuser=response.user
             req.session.user = response.user

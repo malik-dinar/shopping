@@ -12,11 +12,12 @@ const { resolve } = require('node:path')
 //paypal
 var paypal = require('paypal-rest-sdk');
 const { Transaction, Collection } = require('mongodb')
+require('dotenv').config()
 
 
 var instance = new Razorpay({
-    key_id: 'rzp_test_6vEG39h3aWdPl9',
-    key_secret: '0btas9V3TFb1btY4IuDw4xp6',
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 module.exports = {
