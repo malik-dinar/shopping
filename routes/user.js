@@ -94,7 +94,10 @@ router.get('/home', async function (req, res) {
             // productHelpers.getDiscountPercent().then(async(discountPercent)=>{
             let cartCount = null;
             if (req.session.user) {
+              console.log(products.length);
               userHelpers.getWishlistProducts(req.session.user._id).then(async(data) => {
+                console.log(data);
+                console.log(data.length);
                 for (let i = 0; i < products.length; i++) {
                     for (let j = 0; j < data.length; j++) {
                         if (products[i]._id.toString() == data[j].item.toString()) {
@@ -106,6 +109,8 @@ router.get('/home', async function (req, res) {
                 cartCount = await userHelpers.getCartCount(req.session.user._id)
                 let user = req.session.user
                 res.render('user/home-page', { products, admin: false, user, datacategory, cartCount, totalDoc: productCount, currentPage: pageNum, pages: pages, banner }); 
+              }).catch((err)=>{
+                console.log(err);
               })     
             } else {
               res.render('user/home-page', { products, admin: false, datacategory, totalDoc: productCount, currentPage: pageNum, pages: pages, banner });

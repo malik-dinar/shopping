@@ -1573,7 +1573,7 @@ module.exports = {
                 // console.log(cartItems[0].products);
                 if (wishlistItems.length === 0) {
                     console.log('wishlist');
-                    resolve()
+                    resolve(wishlistItems)
                 } else {
                     resolve(wishlistItems)
                 }
