@@ -299,11 +299,11 @@ router.get('/category/:cat', (req, res) => {
       if (req.session.user) {
         productHelpers.getProductsInCategory(req.params.cat).then((products) => {
           console.log(products);
-          res.render('user/home-page2', { products, datacategory })
+          res.render('user/home-page2', { products, datacategory ,user: req.session.user })
         })
       } else {
         productHelpers.getProductsInCategory(req.params.cat).then((products) => {
-          res.render('user/home-page2', { products, datacategory })
+          res.render('user/home-page2', { products, datacategory ,user: req.session.user})
         })
       }
     })
@@ -503,8 +503,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
             "payment_method": "paypal"
           },
           "redirect_urls": {
-            "return_url": "http://localhost:3000/order-placed",
-            "cancel_url": "http://localhost:3000/place-order"
+            "return_url": "/order-placed",
+            "cancel_url": "/place-order"
           },
           "transactions": [{
             "amount": {
