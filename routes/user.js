@@ -503,8 +503,8 @@ router.post('/place-order', verifyUserLogin, async (req, res) => {
             "payment_method": "paypal"
           },
           "redirect_urls": {
-            "return_url": "/order-placed",
-            "cancel_url": "/place-order"
+            "return_url": "https://d-dress.tk/order-placed",
+            "cancel_url": "https://d-dress.tk/place-order"
           },
           "transactions": [{
             "amount": {
