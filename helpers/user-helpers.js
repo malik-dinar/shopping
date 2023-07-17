@@ -49,12 +49,10 @@ module.exports = {
                 refFailed.refcheck = true
                 resolve(refFailed)
             } else if (userData.password != userData.repeatpass) {
-                console.log('mismatched 1');
                 passMissMatch = {}
                 passMissMatch.mismatch = true;
                 resolve(passMissMatch)
             } else {
-                console.log('111144111');
                 console.log(userData.password);
                 console.log(userData.repeatpass);
                 userData.password = await bcrypt.hash(userData.password, 10)
@@ -111,7 +109,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 db.get().collection(collection.USER_COLLECTIONS).updateOne({ _id: objectId(userId) }, { $set: { "isBlocked": true } })
-                resolve()
+                resolve()                                                                   
             } catch (err) {
                 console.log(err);
                 reject(err)
