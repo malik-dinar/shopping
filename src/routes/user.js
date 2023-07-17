@@ -25,7 +25,6 @@ paypal.configure({
 
 //Custome Middleware to check if user is logged in
 const verifyUserLogin = (req, res, next) => {
-
   if (req.session.user) {
     next()
   }
